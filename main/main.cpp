@@ -16,72 +16,85 @@
 //______________________________________________________________________
 //
 
-#define PIN_LED 2
 
-Log logger(1024);
 
 
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
-LambdaSource	<uint32_t> systemHeap([]()
-{
+LambdaSource	<uint32_t> systemHeap([]() {
 	return xPortGetFreeHeapSize();
 });
-LambdaSource<uint64_t> systemUptime([]()
-{
+LambdaSource<uint64_t> systemUptime([]() {
 	return Sys::millis();
 });
 
-Thread thisThread;
 
-class Pinger : public Actor
-{
-	int _counter=0;
-public:
-	ValueSource<int> out;
-	Sink<int,3> in;
-	Pinger(Thread& thr) : Actor(thr)
-	{
-		in.async(thread(),[&](const int& i)
-		{
+class Pinger : public Actor {
+		int _counter=0;
+	public:
+		ValueSource<int> out;
+		Sink<int,3> in;
+		Pinger(Thread& thr) : Actor(thr) {
+			symbols.add(this,"Pinger");
+			symbols.add(this,&out,"out");
+			symbols.add(this,&in,"in");
+			in.async(thread(),[&](const int& i) {
+				out=_counter++;
+			});
+		}
+		void start() {
 			out=_counter++;
-		});
-	}
-	void start()
-	{
-		out=_counter++;
-		out=_counter++;
-	}
+		}
 };
 
-class Echo : public Actor
-{
-public:
-	ValueSource<int> out;
-	Sink<int,3> in;
-	Echo(Thread& thr) : Actor(thr)
-	{
-		in.async(thread(),[&](const int& i)
-		{
-			if ( i %1000 == 0 ) INFO(" handled %d messages ",i);
-			out=i;
-		});
-	}
+class Echo : public Actor {
+	public:
+		ValueSource<int> out;
+		Sink<int,3> in;
+		Echo(Thread& thr) : Actor(thr) {
+			symbols.add(this,"Echo");
+			symbols.add(this,&out,"out");
+			symbols.add(this,&in,"in");
+
+			in.async(thread(),[&](const int& i) {
+				if ( i %100000 == 0 ) {
+					INFO(" handled %d messages ",i);
+					vTaskDelay(1);
+				}
+				out=i;
+			});
+		}
 };
 
+#define PIN_LED 2
 
-extern "C" void app_main(void)
-{
+#ifdef MQTT_SERIAL
+#include <MqttSerial.h>
+#else
+#include <Wifi.h>
+#include <Mqtt.h>
+#endif
+
+
+Log logger(1024);
+Thread thisThread("thread-main");
+Thread ledThread("led");
+Thread  pingerThread("pinger");
+
+
+extern "C" void app_main(void) {
 	//    ESP_ERROR_CHECK(nvs_flash_erase());
 
 	Sys::hostname(S(HOSTNAME));
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
-
-
-	DigitalOut& pin=DigitalOut::create(17);
-	pin.init();
-	pin.write(1);
+	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
+	LedBlinker led(ledThread,PIN_LED, 1001);
+	Pinger pinger(ledThread);
+	Echo echo(ledThread);
+	Wifi wifi;
+	led.init();
+	wifi.init();
 
 #ifndef HOSTNAME
 	std::string hn;
@@ -89,12 +102,11 @@ extern "C" void app_main(void)
 	Sys::hostname(hn.c_str());
 	systemHostname = hn;
 #endif
-	LedBlinker led(thisThread,PIN_LED, 100);
-	led.init();
-	Pinger pinger(thisThread);
-	Echo echo(thisThread);
+
 	pinger.out >> echo.in;
 	echo.out >> pinger.in;
-	thisThread.run();
-	// DON'T EXIT , local varaibale will be destroyed
+	pinger.start();
+	ledThread.start();
+	pingerThread.start();
+	thisThread.run(); // DON'T EXIT , local variable will be destroyed
 }
