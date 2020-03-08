@@ -33,12 +33,13 @@ class Pinger : public Actor {
 		int _counter=0;
 	public:
 		ValueSource<int> out;
-		Sink<int,3> in;
+		Sink<int,5> in;
 		Pinger(Thread& thr) : Actor(thr) {
 			symbols.add(this,"Pinger");
 			symbols.add(this,&out,"out");
 			symbols.add(this,&in,"in");
 			in.async(thread(),[&](const int& i) {
+				//		INFO(" pinger RXD ");
 				out=_counter++;
 			});
 		}
@@ -50,13 +51,14 @@ class Pinger : public Actor {
 class Echo : public Actor {
 	public:
 		ValueSource<int> out;
-		Sink<int,3> in;
+		Sink<int,5> in;
 		Echo(Thread& thr) : Actor(thr) {
 			symbols.add(this,"Echo");
 			symbols.add(this,&out,"out");
 			symbols.add(this,&in,"in");
 
 			in.async(thread(),[&](const int& i) {
+//				INFO(" echo RXD ");
 				if ( i %100000 == 0 ) {
 					INFO(" handled %d messages ",i);
 					vTaskDelay(1);
@@ -80,6 +82,7 @@ Log logger(1024);
 Thread thisThread("thread-main");
 Thread ledThread("led");
 Thread  pingerThread("pinger");
+Thread  echoThread("echo");
 
 
 extern "C" void app_main(void) {
@@ -89,9 +92,10 @@ extern "C" void app_main(void) {
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
-	LedBlinker led(ledThread,PIN_LED, 1001);
-	Pinger pinger(ledThread);
-	Echo echo(ledThread);
+	LedBlinker led(ledThread,PIN_LED, 301);
+	Pinger pinger(pingerThread);
+	Echo echo(echoThread);
+	Echo echo2(echoThread);
 	Wifi wifi;
 	led.init();
 	wifi.init();
@@ -104,9 +108,12 @@ extern "C" void app_main(void) {
 #endif
 
 	pinger.out >> echo.in;
+	pinger.out >> echo2.in;
 	echo.out >> pinger.in;
+	echo2.out >> pinger.in;
 	pinger.start();
 	ledThread.start();
 	pingerThread.start();
+	echoThread.start();
 	thisThread.run(); // DON'T EXIT , local variable will be destroyed
 }

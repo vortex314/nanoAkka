@@ -4,10 +4,12 @@
 LedBlinker::LedBlinker(Thread& thr,uint32_t pin, uint32_t delay)
 	: Actor(thr) {
 	symbols.add(this,"LedBlinker");
+	symbols.add(this,&timerHandler,"timerHandler");
+	symbols.add(this,&blinkSlow,"blinkSLow");
 	blinkTimer = new TimerSource(thr,BLINK_TIMER_ID,delay,true);
 	symbols.add(this,blinkTimer,"blinkTimer");
 
-	timerHandler.sync([&](const TimerMsg tm) {
+	timerHandler.async(thread(),[&](const TimerMsg tm) {
 		gpio_set_level((gpio_num_t)_pin, _on  );
 		_on = _on ? 0 : 1 ;
 	});

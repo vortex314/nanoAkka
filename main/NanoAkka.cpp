@@ -17,13 +17,17 @@ void Thread::createQueue() {
 }
 
 void Thread::start() {
-	xTaskCreatePinnedToCore([](void* task) {
+	xTaskCreate([](void* task) {
 		((Thread*)task)->run();
-	}, _name.c_str(), 20000, this, 17, NULL, PRO_CPU);
+	}, _name.c_str(), 20000, this, 17, NULL);
+	/*
+		xTaskCreatePinnedToCore([](void* task) {
+			((Thread*)task)->run();
+		}, _name.c_str(), 20000, this, 17, NULL, PRO_CPU);*/
 }
 
 int Thread::enqueue(Invoker* invoker) {
-//	INFO("Thread '%s' enqueue '%s'",_name.c_str(),symbols(invoker));
+//	INFO("Thread '%s' >>> '%s'",_name.c_str(),symbols(invoker));
 	if (_workQueue)
 		if (xQueueSend(_workQueue, &invoker, (TickType_t)0) != pdTRUE) {
 			WARN("Thread '%s' queue overflow [%X]",_name.c_str(),invoker);
@@ -66,8 +70,8 @@ void Thread::run() {
 			if (waitTime < 0)
 				waitTime = 0;
 			uint32_t queueCounter = 0;
-			while (xQueueReceive(_workQueue, &prq, (TickType_t)waitTime) == pdTRUE) {
-//				INFO("Thread '%s' dequeue '%s'",_name.c_str(),symbols(prq));
+			if (xQueueReceive(_workQueue, &prq, (TickType_t)waitTime) == pdTRUE) {
+//				INFO("Thread '%s' <<< '%s'",_name.c_str(),symbols(prq));
 				prq->invoke();
 				waitTime == pdMS_TO_TICKS(expTime - Sys::millis());
 				if (waitTime > 0)

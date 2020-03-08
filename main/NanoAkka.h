@@ -320,22 +320,29 @@ class Sink : public Subscriber<T>, public Invoker {
 
 		void on(const T& t) {
 			if ( _thread ) {
-				_t.write(t);
+				if ( _t.write(t) ) {
+					ERROR(" sink full %s ",symbols(this));
+				} else {
+//					INFO(" async call");
+					_thread->enqueue(this);
+				}
 //				INFO("enqueue %s",symbols(this));
-				_thread->enqueue(this);
+			} else {
+				INFO(" sync call %s ",symbols(this));
+				_func(t);
+			}
+		}
+
+		virtual void request() {invoke();}
+		void invoke() {
+			T t;
+			if ( _t.read(t) ) {
+				WARN(" no data ");
 			} else {
 				_func(t);
 			}
 		}
 
-		virtual void request() {			invoke();		}
-		void invoke() {
-			while ( _t.size()) {
-				T t;
-				_t.read(t);
-				_func(t);
-			}
-		}
 		void async ( Thread& thread,std::function<void(const T&)> func) {
 			_func=func;
 			_thread=&thread;
