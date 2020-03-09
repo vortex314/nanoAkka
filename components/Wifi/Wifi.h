@@ -7,7 +7,7 @@
 
 #include "esp_wifi.h"
 #include "esp_wifi_types.h"
-#include "esp_event_loop.h"
+#include "esp_netif.h"
 #include "esp_system.h"
 #include "esp_event.h"
 #include "freertos/event_groups.h"
@@ -24,27 +24,28 @@
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
 
-class Wifi {
-		uint8_t _mac[6];
+class Wifi
+{
+	uint8_t _mac[6];
 
-	public:
-		ValueSource<bool> connected=false;
-		ValueSource<int> rssi;
-		ValueSource<std::string> ipAddress;
-		ValueSource<std::string> ssid;
-		ValueSource<uint64_t> mac;
-		ValueSource<std::string> macAddress;
-		ValueSource<std::string> password;
-		ValueSource<std::string> prefix;
+public:
+	ValueSource<bool> connected=false;
+	ValueSource<int> rssi;
+	ValueSource<std::string> ipAddress;
+	ValueSource<std::string> ssid;
+	ValueSource<uint64_t> mac;
+	ValueSource<std::string> macAddress;
+	ValueSource<std::string> password;
+	ValueSource<std::string> prefix;
 
-		Wifi( );
-		~Wifi();
-		void init();
-		static esp_err_t wifi_event_handler(void* ctx, system_event_t* event);
-		bool scanDoneHandler();
-		void connectToAP(const char* AP);
-		void startScan();
-		void wifiInit();
+	Wifi( );
+	~Wifi();
+	void init();
+	static void 	wifi_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
+	bool scanDoneHandler();
+	void connectToAP(const char* AP);
+	void startScan();
+	void wifiInit();
 };
 
 #endif // WIFI_H

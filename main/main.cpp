@@ -21,51 +21,61 @@
 
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
-LambdaSource	<uint32_t> systemHeap([]() {
+LambdaSource	<uint32_t> systemHeap([]()
+{
 	return xPortGetFreeHeapSize();
 });
-LambdaSource<uint64_t> systemUptime([]() {
+LambdaSource<uint64_t> systemUptime([]()
+{
 	return Sys::millis();
 });
 
 
-class Pinger : public Actor {
-		int _counter=0;
-	public:
-		ValueSource<int> out;
-		Sink<int,5> in;
-		Pinger(Thread& thr) : Actor(thr) {
-			symbols.add(this,"Pinger");
-			symbols.add(this,&out,"out");
-			symbols.add(this,&in,"in");
-			in.async(thread(),[&](const int& i) {
-				//		INFO(" pinger RXD ");
-				out=_counter++;
-			});
-		}
-		void start() {
+class Pinger : public Actor
+{
+	int _counter=0;
+public:
+	ValueSource<int> out;
+	Sink<int,5> in;
+	Pinger(Thread& thr) : Actor(thr)
+	{
+		symbols.add(this,"Pinger");
+		symbols.add(this,&out,"out");
+		symbols.add(this,&in,"in");
+		in.async(thread(),[&](const int& i)
+		{
+			//		INFO(" pinger RXD ");
 			out=_counter++;
-		}
+		});
+	}
+	void start()
+	{
+		out=_counter++;
+	}
 };
 
-class Echo : public Actor {
-	public:
-		ValueSource<int> out;
-		Sink<int,5> in;
-		Echo(Thread& thr) : Actor(thr) {
-			symbols.add(this,"Echo");
-			symbols.add(this,&out,"out");
-			symbols.add(this,&in,"in");
+class Echo : public Actor
+{
+public:
+	ValueSource<int> out;
+	Sink<int,5> in;
+	Echo(Thread& thr) : Actor(thr)
+	{
+		symbols.add(this,"Echo");
+		symbols.add(this,&out,"out");
+		symbols.add(this,&in,"in");
 
-			in.async(thread(),[&](const int& i) {
+		in.async(thread(),[&](const int& i)
+		{
 //				INFO(" echo RXD ");
-				if ( i %100000 == 0 ) {
+			if ( i %100000 == 0 )
+				{
 					INFO(" handled %d messages ",i);
 					vTaskDelay(1);
 				}
-				out=i;
-			});
-		}
+			out=i;
+		});
+	}
 };
 
 #define PIN_LED 2
@@ -85,8 +95,25 @@ Thread  pingerThread("pinger");
 Thread  echoThread("echo");
 
 
-extern "C" void app_main(void) {
+extern "C" void app_main(void)
+{
 	//    ESP_ERROR_CHECK(nvs_flash_erase());
+	PointerQueue q(8);
+	int x;
+	int *px;
+	uint32_t max=10000;
+	while(true)
+		{
+			uint64_t start=Sys::millis();
+			for(int i=0; i<max; i++)
+				{
+					q.write((void*)&x);
+					q.read((void**)&px);
+				}
+			uint64_t end = Sys::millis();
+			uint32_t delta = end-start;
+			INFO(" time taken for %d iterations : %u ",max,delta);
+		}
 
 	Sys::hostname(S(HOSTNAME));
 	systemHostname = S(HOSTNAME);

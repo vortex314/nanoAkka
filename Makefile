@@ -23,7 +23,8 @@ CXXFLAGS +=  $(DEFINES)  -I../Common -I../microAkka
 CXXFLAGS +=  -I$(WORKSPACE)/ArduinoJson/src -I $(IDF_PATH)/components/freertos/include/freertos 
 CXXFLAGS +=  -fno-rtti -ffunction-sections -fdata-sections 
 EXTRA_COMPONENT_DIRS = mqtt
-# LDFLAGS += -Wl,--gc-sections
+# LDFLAGS += -Wl,-latomic 
+# -Wl,--gc-sections
 
 include $(IDF_PATH)/make/project.mk
 
