@@ -21,61 +21,54 @@
 
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
-LambdaSource	<uint32_t> systemHeap([]()
-{
+LambdaSource	<uint32_t> systemHeap([]() {
 	return xPortGetFreeHeapSize();
 });
-LambdaSource<uint64_t> systemUptime([]()
-{
+LambdaSource<uint64_t> systemUptime([]() {
 	return Sys::millis();
 });
 
 
-class Pinger : public Actor
-{
-	int _counter=0;
-public:
-	ValueSource<int> out;
-	Sink<int,5> in;
-	Pinger(Thread& thr) : Actor(thr)
-	{
-		symbols.add(this,"Pinger");
-		symbols.add(this,&out,"out");
-		symbols.add(this,&in,"in");
-		in.async(thread(),[&](const int& i)
-		{
-			//		INFO(" pinger RXD ");
+class Pinger : public Actor {
+		int _counter=0;
+	public:
+		ValueSource<int> out;
+		Sink<int,4> in;
+		Pinger(Thread& thr) : Actor(thr) {
+			symbols.add(this,"Pinger");
+			symbols.add(this,&out,"out");
+			symbols.add(this,&in,"in");
+
+			in.async(thread(),[&](const int& i) {
+				out=_counter++;
+			});
+		}
+		void start() {
 			out=_counter++;
-		});
-	}
-	void start()
-	{
-		out=_counter++;
-	}
+		}
 };
+#define DELTA 100000
+class Echo : public Actor {
+		uint64_t _startTime;
+	public:
+		ValueSource<int> out;
+		Sink<int,4> in;
+		Echo(Thread& thr) : Actor(thr) {
+			symbols.add(this,"Echo");
+			symbols.add(this,&out,"out");
+			symbols.add(this,&in,"in");
 
-class Echo : public Actor
-{
-public:
-	ValueSource<int> out;
-	Sink<int,5> in;
-	Echo(Thread& thr) : Actor(thr)
-	{
-		symbols.add(this,"Echo");
-		symbols.add(this,&out,"out");
-		symbols.add(this,&in,"in");
-
-		in.async(thread(),[&](const int& i)
-		{
-//				INFO(" echo RXD ");
-			if ( i %100000 == 0 )
-				{
-					INFO(" handled %d messages ",i);
+			in.async(thread(),[&](const int& i) {
+				if ( i %DELTA == 0 ) {
+					uint64_t endTime=Sys::millis();
+					uint32_t delta = endTime - _startTime;
+					INFO(" handled %d messages in %u msec = %u msg/msec ",DELTA,delta,DELTA/delta);
+					_startTime=Sys::millis();
 					vTaskDelay(1);
 				}
-			out=i;
-		});
-	}
+				out=i;
+			});
+		}
 };
 
 #define PIN_LED 2
@@ -92,8 +85,7 @@ Log logger(1024);
 
 #define HOSTNAME tester
 
-extern "C" void app_main(void)
-{
+extern "C" void app_main(void) {
 	//    ESP_ERROR_CHECK(nvs_flash_erase());
 	Thread thisThread("thread-main");
 	Thread ledThread("led");
@@ -103,27 +95,23 @@ extern "C" void app_main(void)
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
-
+#ifdef TEST
 	ArrayQueue<int,16> q;
 	uint32_t max=100000;
-	volatile int ii=1000;
-	__sync_fetch_and_sub(&ii,1);
 	int x;
-	while(true)
-		{
-			uint64_t start=Sys::millis();
-			for(int i=0; i<max; i++)
-				{
-					x=i;
-					if ( q.push(x) ) ERROR("write failed");
-					if ( q.pop(x) ) ERROR("read failed");
-					if ( x!=i ) ERROR(" x!=i ");
-				}
-			uint64_t end = Sys::millis();
-			uint32_t delta = end-start;
-			INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
+	while(true) {
+		uint64_t start=Sys::millis();
+		for(int i=0; i<max; i++) {
+			x=i;
+			if ( q.push(x) ) ERROR("write failed");
+			if ( q.pop(x) ) ERROR("read failed");
+			if ( x!=i ) ERROR(" x!=i ");
 		}
-
+		uint64_t end = Sys::millis();
+		uint32_t delta = end-start;
+		INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
+	}
+#endif
 
 	LedBlinker led(ledThread,PIN_LED, 301);
 	Pinger pinger(pingerThread);
@@ -141,9 +129,7 @@ extern "C" void app_main(void)
 #endif
 
 	pinger.out >> echo.in;
-	pinger.out >> echo2.in;
 	echo.out >> pinger.in;
-	echo2.out >> pinger.in;
 	pinger.start();
 	ledThread.start();
 	pingerThread.start();
