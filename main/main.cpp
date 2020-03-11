@@ -95,11 +95,10 @@ extern "C" void app_main(void) {
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
-#ifdef TEST
-	ArrayQueue<int,16> q;
-	uint32_t max=100000;
-	int x;
-	while(true) {
+	for( int cnt=0; cnt<10; cnt++) {
+		ArrayQueue<int,16> q;
+		uint32_t max=100000;
+		int x;
 		uint64_t start=Sys::millis();
 		for(int i=0; i<max; i++) {
 			x=i;
@@ -111,13 +110,13 @@ extern "C" void app_main(void) {
 		uint32_t delta = end-start;
 		INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
 	}
-#endif
 
 	LedBlinker led(ledThread,PIN_LED, 301);
 	Pinger pinger(pingerThread);
 	Echo echo(echoThread);
 	Echo echo2(echoThread);
 	Wifi wifi;
+	Mqtt mqtt(ledThread);
 	led.init();
 	wifi.init();
 
@@ -128,11 +127,16 @@ extern "C" void app_main(void) {
 	systemHostname = hn;
 #endif
 
-	pinger.out >> echo.in;
+	pinger.out >> echo.in; // the wiring
 	echo.out >> pinger.in;
 	pinger.start();
 	ledThread.start();
 	pingerThread.start();
 	echoThread.start();
+
+	wifi.connected >> mqtt.wifiConnected;
+
+
 	thisThread.run(); // DON'T EXIT , local variable will be destroyed
+
 }

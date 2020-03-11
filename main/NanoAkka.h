@@ -346,12 +346,9 @@ class Sink : public Subscriber<T>, public Invoker {
 				if ( _t.push(t) ) {
 					ERROR(" sink full %s ",symbols(this));
 				} else {
-//					INFO(" async call");
 					_thread->enqueue(this);
 				}
-//				INFO("enqueue %s",symbols(this));
 			} else {
-				INFO(" sync call %s ",symbols(this));
 				_func(t);
 			}
 		}
