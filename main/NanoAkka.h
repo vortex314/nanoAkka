@@ -307,11 +307,11 @@ class TimerSource : public Source<TimerMsg> {
 		}
 		void request() {
 			if (Sys::millis() >= _expireTime) {
-				INFO("Timer[%X] '%s' %d triggered.",this,symbols(this),_interval);
+//				INFO("Timer[%X] '%s' %d triggered.",this,symbols(this),_interval);
 				if ( _repeat )
-					_expireTime += _interval;
+					_expireTime = Sys::millis()+ _interval;
 				else
-					_expireTime += UINT32_MAX;
+					_expireTime = Sys::millis()+ UINT32_MAX;
 				TimerMsg tm= {_id};
 				this->emit(tm);
 			}

@@ -84,19 +84,26 @@ class Echo : public Actor {
 Log logger(1024);
 
 #define HOSTNAME tester
+Thread thisThread("thread-main");
+Thread ledThread("led");
+Thread  pingerThread("pinger");
+Thread  echoThread("echo");
+LedBlinker led(ledThread,PIN_LED, 301);
+Pinger pinger(pingerThread);
+Echo echo(echoThread);
+Echo echo2(echoThread);
+Wifi wifi;
+Mqtt mqtt(ledThread);
+ArrayQueue<int,16> q;
 
 extern "C" void app_main(void) {
 	//    ESP_ERROR_CHECK(nvs_flash_erase());
-	Thread thisThread("thread-main");
-	Thread ledThread("led");
-	Thread  pingerThread("pinger");
-	Thread  echoThread("echo");
+
 	Sys::hostname(S(HOSTNAME));
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
 	for( int cnt=0; cnt<10; cnt++) {
-		ArrayQueue<int,16> q;
 		uint32_t max=100000;
 		int x;
 		uint64_t start=Sys::millis();
@@ -111,14 +118,10 @@ extern "C" void app_main(void) {
 		INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
 	}
 
-	LedBlinker led(ledThread,PIN_LED, 301);
-	Pinger pinger(pingerThread);
-	Echo echo(echoThread);
-	Echo echo2(echoThread);
-	Wifi wifi;
-	Mqtt mqtt(ledThread);
+
 	led.init();
 	wifi.init();
+	mqtt.init();
 
 #ifndef HOSTNAME
 	std::string hn;
