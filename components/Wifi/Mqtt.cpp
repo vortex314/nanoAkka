@@ -53,13 +53,18 @@ void Mqtt::init() {
 
 	_reportTimer.start();
 
-	wifiConnected.async(thread(),[=](bool conn) {
+	wifiConnected.async(thread(),[&](bool conn) {
 		INFO("WiFi %sconnected ",conn?"":"dis");
 		if(conn) {
 			esp_mqtt_client_start(_mqttClient);
 		} else {
 			if(connected()) esp_mqtt_client_stop(_mqttClient);
 		}
+	});
+	outgoing.async(thread(),[&](const MqttMessage& m) {
+		std::string topic = _hostPrefix;
+		topic += m.topic;
+		mqttPublish(topic.c_str(),m.message.c_str());
 	});
 }
 //________________________________________________________________________
@@ -122,7 +127,7 @@ int Mqtt::mqtt_event_handler(esp_mqtt_event_t* event) {
 			//			INFO("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
 			break;
 		case MQTT_EVENT_DATA: {
-				DEBUG("MQTT_EVENT_DATA");
+				INFO("MQTT_EVENT_DATA");
 				bool busy = false;
 				if(!busy) {
 					busy = true;
@@ -146,7 +151,7 @@ int Mqtt::mqtt_event_handler(esp_mqtt_event_t* event) {
 						topic = topic.substr(me._hostPrefix.length());
 					}
 					if(ready) {
-//               INFO("MQTT RXD %s=%s", topic.c_str(), data.c_str());
+						INFO("MQTT RXD topic : %s , message  : %s", topic.c_str(), data.c_str());
 						me.incoming.emit({topic, data});
 					}
 					busy = false;
@@ -171,7 +176,7 @@ typedef enum { PING = 0, PUBLISH, PUBACK, SUBSCRIBE, SUBACK } CMD;
 //
 void Mqtt::mqttPublish(const char* topic, const char* message) {
 	if(connected() == false) return;
-//    INFO("PUB : %s = %s", topic, message);
+	INFO("PUB : %s = %s", topic, message);
 	int id = esp_mqtt_client_publish(_mqttClient, topic, message, 0, 0, 0);
 	if(id < 0) WARN("esp_mqtt_client_publish() failed.");
 }

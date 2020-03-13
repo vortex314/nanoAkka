@@ -9,26 +9,11 @@
 //
 //____________________________________________________________________________
 //
-
 #define PRO_CPU 0
 #define APP_CPU 1
 
 //______________________________________________________________________
 //
-
-
-
-
-ValueSource<std::string> systemBuild("NOT SET");
-ValueSource<std::string> systemHostname("NOT SET");
-LambdaSource	<uint32_t> systemHeap([]() {
-	return xPortGetFreeHeapSize();
-});
-LambdaSource<uint64_t> systemUptime([]() {
-	return Sys::millis();
-});
-
-
 class Pinger : public Actor {
 		int _counter=0;
 	public:
@@ -71,7 +56,6 @@ class Echo : public Actor {
 		}
 };
 
-#define PIN_LED 2
 
 #ifdef MQTT_SERIAL
 #include <MqttSerial.h>
@@ -80,20 +64,45 @@ class Echo : public Actor {
 #include <Mqtt.h>
 #endif
 
+#define HOSTNAME tester
+
+class Poller : public Actor,public Sink<TimerMsg,2> {
+		TimerSource _pollInterval;
+		std::vector<Requestable*> _publishers;
+		uint32_t _idx=0;
+		bool _connected;
+	public:
+		Sink<bool,2> connected;
+		Poller(Thread& t) : Actor(t),_pollInterval(t,1,1000,true) {
+			_pollInterval >> this;
+			connected.async(thread(),[&](const bool& b) {_connected=b;});
+			async(thread(),[&](const TimerMsg tm) {if( _publishers.size() && _connected ) _publishers[_idx++ % _publishers.size()]->request();});
+		};
+		void setInterval(uint32_t t) { _pollInterval.interval(t); }
+		Poller& operator()(Requestable& rq ) { _publishers.push_back(&rq); return *this;}
+};
 
 Log logger(1024);
-
-#define HOSTNAME tester
+// ---------------------------------------------- THREAD
 Thread thisThread("thread-main");
 Thread ledThread("led");
-Thread  pingerThread("pinger");
-Thread  echoThread("echo");
+// Thread  pingerThread("pinger");
+// Thread  echoThread("echo");
+//  --------------------------------------------- ACTOR
+#define PIN_LED 2
+
 LedBlinker led(ledThread,PIN_LED, 301);
-Pinger pinger(pingerThread);
-Echo echo(echoThread);
-Echo echo2(echoThread);
+Pinger pinger(ledThread);
+Echo echo(ledThread);
 Wifi wifi;
 Mqtt mqtt(ledThread);
+// ---------------------------------------------- system properties
+ValueSource<std::string> systemBuild("NOT SET");
+ValueSource<std::string> systemHostname("NOT SET");
+LambdaSource<uint32_t> systemHeap([]() {return xPortGetFreeHeapSize();});
+LambdaSource<uint64_t> systemUptime([]() {return Sys::millis();});
+Poller poller(ledThread);
+
 ArrayQueue<int,16> q;
 
 extern "C" void app_main(void) {
@@ -103,7 +112,7 @@ extern "C" void app_main(void) {
 	systemHostname = S(HOSTNAME);
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
-	for( int cnt=0; cnt<10; cnt++) {
+	for( int cnt=0; cnt<5; cnt++) {
 		uint32_t max=100000;
 		int x;
 		uint64_t start=Sys::millis();
@@ -117,11 +126,18 @@ extern "C" void app_main(void) {
 		uint32_t delta = end-start;
 		INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
 	}
-
-
 	led.init();
 	wifi.init();
 	mqtt.init();
+	wifi.connected >> mqtt.wifiConnected;
+	mqtt.connected >> poller.connected;
+	wifi.connected >> led.blinkSlow;
+
+	systemUptime >> mqtt.toTopic<uint64_t>("system/upTime");
+	systemHeap >> mqtt.toTopic<uint32_t>("system/heap");
+	systemHostname >> mqtt.toTopic<std::string>("system/hostname");
+	systemBuild >> mqtt.toTopic<std::string>("system/build");
+	poller(systemUptime)(systemHeap)(systemHostname)(systemBuild);
 
 #ifndef HOSTNAME
 	std::string hn;
@@ -132,14 +148,11 @@ extern "C" void app_main(void) {
 
 	pinger.out >> echo.in; // the wiring
 	echo.out >> pinger.in;
+
 	pinger.start();
 	ledThread.start();
-	pingerThread.start();
-	echoThread.start();
-
-	wifi.connected >> mqtt.wifiConnected;
-
-
+//	pingerThread.start();
+//	echoThread.start();
 	thisThread.run(); // DON'T EXIT , local variable will be destroyed
 
 }

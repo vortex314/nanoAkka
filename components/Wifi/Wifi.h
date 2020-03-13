@@ -24,28 +24,29 @@
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
 
-class Wifi
-{
-	uint8_t _mac[6];
+class Wifi {
+		uint8_t _mac[6];
+		wifi_init_config_t _wifiConfig;
+	public:
+		ValueSource<bool> connected=false;
+		ValueSource<int> rssi;
+		ValueSource<std::string> ipAddress;
+		ValueSource<std::string> ssid;
+		ValueSource<uint64_t> mac;
+		ValueSource<std::string> macAddress;
+		ValueSource<std::string> password;
+		ValueSource<std::string> prefix;
 
-public:
-	ValueSource<bool> connected=false;
-	ValueSource<int> rssi;
-	ValueSource<std::string> ipAddress;
-	ValueSource<std::string> ssid;
-	ValueSource<uint64_t> mac;
-	ValueSource<std::string> macAddress;
-	ValueSource<std::string> password;
-	ValueSource<std::string> prefix;
+		Wifi( );
+		~Wifi();
+		void init();
+		static void wifi_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
+		static void ip_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
 
-	Wifi( );
-	~Wifi();
-	void init();
-	static void 	wifi_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
-	bool scanDoneHandler();
-	void connectToAP(const char* AP);
-	void startScan();
-	void wifiInit();
+		bool scanDoneHandler();
+		void connectToAP(const char* AP);
+		void startScan();
+		void wifiInit();
 };
 
 #endif // WIFI_H

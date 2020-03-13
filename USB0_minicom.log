@@ -1,227 +1,597 @@
 [0m
-I (60) boot: Partition Table:
-I (63) boot: ## Label            Usage          Type ST Offset   Length
-I (71) boot:  0 nvs              WiFi data        01 02 00009000 00006000
-I (78) boot:  1 phy_init         RF data          01 01 0000f000 00001000
-I (85) boot:  2 factory          factory app      00 00 00010000 00100000
-I (93) boot: End of partition table
-I (97) boot_comm: chip revision: 1, min. application chip revision: 0
-I (104) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25db4 (155060) map
-I (170) esp_image: segment 1: paddr=0x00035ddc vaddr=0x3ffb0000 size=0x03948 ( 14664) load
-I (176) esp_image: segment 2: paddr=0x0003972c vaddr=0x40080000 size=0x00400 (  1024) load
-I (177) esp_image: segment 3: paddr=0x00039b34 vaddr=0x40080400 size=0x064e4 ( 25828) load
-I (196) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa1edc (663260) map
-I (437) esp_image: segment 5: paddr=0x000e1f04 vaddr=0x400868e4 size=0x0f074 ( 61556) load
-I (475) boot: Loaded app from partition at offset 0x10000
-I (475) boot: Disabling RNG early entropy source...
-I (475) cpu_start: Pro cpu up.
-I (479) cpu_start: Application information:
-I (484) cpu_start: Project name:     nanoAkka
-I (489) cpu_start: App version:      1852b37-dirty
-I (494) cpu_start: Compile time:     Mar 11 2020 23:35:56
-I (500) cpu_start: ELF file SHA256:  6175052137aa2c14...
-I (506) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
-I (513) cpu_start: Starting app cpu, entry point is 0x400812ac
+I (64) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25eac (155308) map
+I (155) esp_image: segment 1: paddr=0x00035ed4 vaddr=0x3ffb0000 size=0x03948 ( 14664) load
+I (162) esp_image: segment 2: paddr=0x00039824 vaddr=0x40080000 size=0x00400 (  1024) load
+I (163) esp_image: segment 3: paddr=0x00039c2c vaddr=0x40080400 size=0x063ec ( 25580) load
+I (182) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa2034 (663604) map
+I (423) esp_image: segment 5: paddr=0x000e205c vaddr=0x400867ec size=0x0f16c ( 61804) load
+I (461) boot: Loaded app from partition at offset 0x10000
+I (461) boot: Disabling RNG early entropy source...
+I (462) cpu_start: Pro cpu up.
+I (465) cpu_start: Application information:
+I (470) cpu_start: Project name:     nanoAkka
+I (475) cpu_start: App version:      5d2141d-dirty
+I (480) cpu_start: Compile time:     Mar 12 2020 18:00:01
+I (486) cpu_start: ELF file SHA256:  38aa7cf6082a238c...
+I (492) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
+I (499) cpu_start: Starting app cpu, entry point is 0x400812ac
 I (0) cpu_start: App cpu up.
-I (523) heap_init: Initializing. RAM available for dynamic allocation:
-I (530) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
-I (536) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
-I (542) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
-I (549) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
-I (555) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
-I (561) cpu_start: Pro cpu start user code
-  3FFAFAB4 I |        1 | ESP32-42503 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
-  3FFAFAB4 I |        2 | ESP32-42503 |      NanoAkka.h: 164 | Thread 'led' ctor.
-  3FFAFAB4 I |        6 | ESP32-42503 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
-  3FFAFAB4 I |       13 | ESP32-42503 |      NanoAkka.h: 164 | Thread 'echo' ctor.
-  3FFAFAB4 I |       23 | ESP32-42503 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
-  3FFAFAB4 I |       31 | ESP32-42503 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
-  3FFAFAB4 I |       37 | ESP32-42503 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
-I (625) spi_flash: detected chip: generic
-I (628) spi_flash: flash io: dio
-I (641) cpu_start: Starting scheduler on PRO CPU.
+I (509) heap_init: Initializing. RAM available for dynamic allocation:
+I (516) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (522) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
+I (528) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (535) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (541) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
+I (547) cpu_start: Pro cpu start user code
+  3FFAFAB4 I |        1 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
+  3FFAFAB4 I |        2 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'led' ctor.
+  3FFAFAB4 I |        6 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
+  3FFAFAB4 I |       13 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'echo' ctor.
+  3FFAFAB4 I |       22 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
+  3FFAFAB4 I |       31 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
+  3FFAFAB4 I |       37 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
+I (611) spi_flash: detected chip: gd
+I (614) spi_flash: flash io: dio
+I (618) cpu_start: Starting scheduler on PRO CPU.
 I (0) cpu_start: Starting scheduler on APP CPU.
-  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 11 2020 23:44:39 
-  3FFBD660 I |      847 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 13 2020 09:52:04 
+  3FFBD660 I |      846 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
   3FFBD660 I |     1622 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
   3FFBD660 I |     2397 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-  3FFBD660 I |     3173 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-  3FFBD660 I |     3948 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-  3FFBD660 I |     4723 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-E (10643) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:
-E (10643) task_wdt:  - IDLE0 (CPU 0)
-E (10643) task_wdt: Tasks currently running:
-E (10643) task_wdt: CPU 0: main
-E (10643) task_wdt: CPU 1: IDLE1
-  3FFBD660 I |     5514 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 791 msec  => 126 /msec
-  3FFBD660 I |     6290 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 774 msec  => 129 /msec
-  3FFBD660 I |     7065 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-  3FFBD660 I |     7840 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
-I (13413) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
-I (13473) wifi: wifi driver task: 3ffc3158, prio:23, stack:3584, core=0
-I (13473) system_api: Base MAC address is not set
-I (13473) system_api: read default base MAC address from EFUSE
-I (13493) wifi: wifi firmware version: 3f7ead7
-I (13493) wifi: config NVS flash: enabled
-I (13493) wifi: config nano formating: disabled
-I (13493) wifi: Init dynamic tx buffer num: 32
-I (13503) wifi: Init data frame dynamic rx buffer num: 32
-I (13503) wifi: Init management frame dynamic rx buffer num: 32
-I (13513) wifi: Init management short buffer num: 32
-I (13513) wifi: Init static rx buffer size: 1600
-I (13523) wifi: Init static rx buffer num: 10
-I (13523) wifi: Init dynamic rx buffer num: 32
-  3FFC1964 I |     7956 | tester |        Wifi.cpp:  54 | WIFI_EVENT_STA_STOP
-I (13633) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
-I (13643) wifi: mode : sta (30:ae:a4:ff:37:08)
-  3FFC1964 I |     8066 | tester |        Wifi.cpp:  60 | WIFI_EVENT_STA_START
-  3FFC1964 I |     8069 | tester |        Wifi.cpp: 135 |  starting WiFi scan.
-  3FFBD660 I |     8079 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
-  3FFBDDC4 I |     8087 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
-  3FFBDDC4 I |     8092 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
-  3FFBDDC4 I |     8099 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
-  3FFBDDC4 I |     8106 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
-  3FFBDDC4 I |     8114 | tester |        main.cpp:  65 |  handled 100000 messages in 8113 msec = 12 msg/msec 
-  3FFBD660 I |     8124 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
-  3FFC1964 I |    10130 | tester |        Wifi.cpp:  45 | WIFI_EVENT_SCAN_DONE
-  3FFC1964 I |    10131 | tester |        Wifi.cpp: 108 |  found 7 AP's , size : 80 
-  3FFC1964 I |    10134 | tester |        Wifi.cpp: 118 |  Merckx2 : -72 
-  3FFC1964 I |    10140 | tester |        Wifi.cpp: 118 |  Merckx3 : -81 
-  3FFC1964 I |    10147 | tester |        Wifi.cpp: 118 |  TelenetWiFree : -85 
-  3FFC1964 I |    10154 | tester |        Wifi.cpp: 118 |  Merckx10 : -86 
-  3FFC1964 I |    10160 | tester |        Wifi.cpp: 118 |  telenet-E52A7 : -86 
-  3FFC1964 I |    10167 | tester |        Wifi.cpp: 118 |  Orange-b3755 : -90 
-  3FFC1964 I |    10174 | tester |        Wifi.cpp: 118 |  Guest-Orange-b3755 : -90 
-  3FFC1964 I |    10182 | tester |        Wifi.cpp: 130 |  found strongest AP : 'Merckx2'.
-  3FFC1964 I |    10190 | tester |        Wifi.cpp:  93 |  connecting to SSID : Merckx2
-I (16143) wifi: new:<4,0>, old:<1,0>, ap:<255,255>, sta:<4,0>, prof:1
-I (17353) wifi: state: init -> auth (b0)
-I (17353) wifi: state: auth -> assoc (0)
-I (17353) wifi: state: assoc -> run (10)
-I (20363) wifi: state: run -> init (2c0)
-I (20363) wifi: new:<4,0>, old:<4,0>, ap:<255,255>, sta:<4,0>, prof:1
-I (20363) wifi: new:<4,0>, old:<4,0>, ap:<255,255>, sta:<4,0>, prof:1
-  3FFC1964 I |    14792 | tester |        Wifi.cpp:  79 | WIFI_EVENT_STA_DISCONNECTED
-  3FFC3158 I |    14799 | tester |        Mqtt.cpp:  57 | WiFi disconnected 
-  3FFDCB84 I |    15499 | tester |        main.cpp:  65 |  handled 100000 messages in 7374 msec = 13 msg/msec 
-  3FFC1964 I |    16853 | tester |        Wifi.cpp:  79 | WIFI_EVENT_STA_DISCONNECTED
-  3FFC3158 I |    16854 | tester |        Mqtt.cpp:  57 | WiFi disconnected 
-I (22553) wifi: new:<4,0>, old:<4,0>, ap:<255,255>, sta:<4,0>, prof:1
-I (22553) wifi: state: init -> auth (b0)
-I (22553) wifi: state: auth -> assoc (0)
-I (22553) wifi: state: assoc -> run (10)
-I (22573) wifi: connected with Merckx2, aid = 4, channel 4, BW20, bssid = 00:23:cd:19:fc:f5
-I (22573) wifi: security type: 4, phy: b, rssi: -75
-I (22573) wifi: pm start, type: 1
+  3FFBD660 I |     3172 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3947 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+I (8393) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (8453) wifi: wifi driver task: 3ffc320c, prio:23, stack:3584, core=0
+I (8453) system_api: Base MAC address is not set
+I (8453) system_api: read default base MAC address from EFUSE
+I (8473) wifi: wifi firmware version: 3f7ead7
+I (8473) wifi: config NVS flash: enabled
+I (8473) wifi: config nano formating: disabled
+I (8473) wifi: Init dynamic tx buffer num: 32
+I (8483) wifi: Init data frame dynamic rx buffer num: 32
+I (8483) wifi: Init management frame dynamic rx buffer num: 32
+I (8493) wifi: Init management short buffer num: 32
+I (8493) wifi: Init static rx buffer size: 1600
+I (8503) wifi: Init static rx buffer num: 10
+I (8503) wifi: Init dynamic rx buffer num: 32
+  3FFC1A28 I |     4061 | tester |        Wifi.cpp:  78 | WIFI_EVENT_STA_STOP
+I (8613) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (8613) wifi: mode : sta (30:ae:a4:06:09:9c)
+  3FFC1A28 I |     4162 | tester |        Wifi.cpp:  84 | WIFI_EVENT_STA_START
+  3FFC1A28 I |     4166 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFBD660 I |     4176 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBDDC4 I |     4184 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
+  3FFBDDC4 I |     4188 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
+  3FFBDDC4 I |     4196 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
+  3FFBDDC4 I |     4203 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
+  3FFBDDC4 I |     4211 | tester |        main.cpp:  65 |  handled 100000 messages in 4204 msec = 23 msg/msec 
+  3FFBD660 I |     4221 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
+  3FFC1A28 I |     6228 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     6229 | tester |        Wifi.cpp: 124 |  found 4 AP's , size : 80 
+  3FFC1A28 I |     6233 | tester |        Wifi.cpp: 134 |  Merckx2 : -80 
+  3FFC1A28 I |     6239 | tester |        Wifi.cpp: 134 |  Merckx10 : -89 
+  3FFC1A28 I |     6245 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -91 
+  3FFC1A28 I |     6252 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -93 
+  3FFC1A28 W |     6259 | tester |        Wifi.cpp: 142 |  no AP found matching pattern '€ü?', restarting scan.
+  3FFC1A28 I |     6269 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFC1A28 I |     8330 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     8331 | tester |        Wifi.cpp: 124 |  found 5 AP's , size : 80 
+  3FFC1A28 I |     8335 | tester |        Wifi.cpp: 134 |  Merckx2 : -81 
+  3FFC1A28 I |     8341 | tester |        Wifi.cpp: 134 |  Merckx10 : -88 
+  3FFC1A28 I |     8347 | tester |        Wifi.cpp: 134 |  Merckx3 : -91 
+  3FFC1A28 I |     8354 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -91 
+  3FFC1A28 I |     8361 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -91 
+  3FFC1A28 I |     8368 | tester |        Wifi.cpp: 146 |  found strongest AP : 'Merckx3'.
+  3FFC1A28 I |     8376 | tester |        Wifi.cpp: 107 |  connecting to SSID : Merckx3
+I (13563) wifi: new:<6,0>, old:<1,0>, ap:<255,255>, sta:<6,0>, prof:1
+I (14383) wifi: state: init -> auth (b0)
+I (14383) wifi: state: auth -> assoc (0)
+I (14403) wifi: state: assoc -> run (10)
+I (14413) wifi: connected with Merckx3, aid = 4, channel 6, BW20, bssid = c4:e9:84:a3:a3:56
+I (14413) wifi: security type: 3, phy: b, rssi: -87
+I (14423) wifi: pm start, type: 1
 
-  3FFC1964 I |    17001 | tester |        Wifi.cpp:  74 | WIFI_EVENT_STA_CONNECTED
-  3FFD2C7C I |    17008 | tester |        Mqtt.cpp:  57 | WiFi connected 
-  3FFDCB84 I |    17015 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (22593) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |    17027 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |    17033 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-I (22633) wifi: AP's beacon interval = 102400 us, DTIM period = 1
-  3FFBDDC4 I |    22716 | tester |        main.cpp:  65 |  handled 100000 messages in 7217 msec = 13 msg/msec 
-  3FFDCB84 I |    29975 | tester |        main.cpp:  65 |  handled 100000 messages in 7257 msec = 13 msg/msec 
-  3FFDCB84 I |    32043 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (37623) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |    32045 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |    32051 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |    37284 | tester |        main.cpp:  65 |  handled 100000 messages in 7307 msec = 13 msg/msec 
-  3FFD7C00 I |    42053 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (47633) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |    42055 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |    42061 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |    44589 | tester |        main.cpp:  65 |  handled 100000 messages in 7305 msec = 13 msg/msec 
-  3FFDCB84 I |    51900 | tester |        main.cpp:  65 |  handled 100000 messages in 7309 msec = 13 msg/msec 
-  3FFDE730 I |    52078 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (57653) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |    52080 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |    52087 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |    59184 | tester |        main.cpp:  65 |  handled 100000 messages in 7283 msec = 13 msg/msec 
-  3FFDE730 I |    62093 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (67673) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |    62095 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFD7C00 I |    62102 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |    66486 | tester |        main.cpp:  65 |  handled 100000 messages in 7301 msec = 13 msg/msec 
-  3FFDCB84 I |    72113 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (77693) MQTT_CLIENT: Error transport connect
-  3FFD7C00 W |    72115 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDCB84 I |    72121 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |    73728 | tester |        main.cpp:  65 |  handled 100000 messages in 7242 msec = 13 msg/msec 
-  3FFBDDC4 I |    80972 | tester |        main.cpp:  65 |  handled 100000 messages in 7244 msec = 13 msg/msec 
-  3FFDE730 I |    82144 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (87723) MQTT_CLIENT: Error transport connect
-  3FFD7C00 W |    82146 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFD7C00 I |    82153 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |    88330 | tester |        main.cpp:  65 |  handled 100000 messages in 7358 msec = 13 msg/msec 
-  3FFBDDC4 I |    95676 | tester |        main.cpp:  65 |  handled 100000 messages in 7346 msec = 13 msg/msec 
-  3FFD7C00 I |    97153 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (102733) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |    97155 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFD7C00 I |    97161 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   102954 | tester |        main.cpp:  65 |  handled 100000 messages in 7278 msec = 13 msg/msec 
-  3FFDE730 I |   107173 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (112753) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |   107176 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDCB84 I |   107182 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   110254 | tester |        main.cpp:  65 |  handled 100000 messages in 7300 msec = 13 msg/msec 
-  3FFDE730 I |   117183 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (122763) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   117185 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   117192 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   117545 | tester |        main.cpp:  65 |  handled 100000 messages in 7291 msec = 13 msg/msec 
-  3FFDCB84 I |   124825 | tester |        main.cpp:  65 |  handled 100000 messages in 7280 msec = 13 msg/msec 
-  3FFDCB84 I |   127193 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (132773) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   127195 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   127201 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   132107 | tester |        main.cpp:  65 |  handled 100000 messages in 7281 msec = 13 msg/msec 
-  3FFDE730 I |   137204 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (142783) MQTT_CLIENT: Error transport connect
-  3FFD7C00 W |   137206 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFD7C00 I |   137213 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   139496 | tester |        main.cpp:  65 |  handled 100000 messages in 7389 msec = 13 msg/msec 
-  3FFBDDC4 I |   146840 | tester |        main.cpp:  65 |  handled 100000 messages in 7344 msec = 13 msg/msec 
-  3FFD7C00 I |   147223 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (152803) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   147225 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   147231 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |   154193 | tester |        main.cpp:  65 |  handled 100000 messages in 7353 msec = 13 msg/msec 
-  3FFDE730 I |   157234 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (162813) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |   157236 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFD7C00 I |   157243 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |   161454 | tester |        main.cpp:  65 |  handled 100000 messages in 7260 msec = 13 msg/msec 
-  3FFBDDC4 I |   168771 | tester |        main.cpp:  65 |  handled 100000 messages in 7316 msec = 13 msg/msec 
-  3FFD7C00 I |   172243 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (177823) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   172245 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   172251 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   176056 | tester |        main.cpp:  65 |  handled 100000 messages in 7285 msec = 13 msg/msec 
-  3FFD7C00 I |   182263 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (187843) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   182265 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   182271 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   183416 | tester |        main.cpp:  65 |  handled 100000 messages in 7358 msec = 13 msg/msec 
-  3FFBDDC4 I |   190689 | tester |        main.cpp:  65 |  handled 100000 messages in 7272 msec = 13 msg/msec 
-  3FFDCB84 I |   192273 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (197853) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   192275 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   192281 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   197999 | tester |        main.cpp:  65 |  handled 100000 messages in 7310 msec = 13 msg/msec 
-  3FFDE730 I |   202298 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (207873) MQTT_CLIENT: Error transport connect
-  3FFDCB84 W |   202301 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   202307 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFBDDC4 I |   205269 | tester |        main.cpp:  65 |  handled 100000 messages in 7269 msec = 13 msg/msec 
-  3FFDCB84 I |   212313 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (217893) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   212315 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDCB84 I |   212321 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
-  3FFDCB84 I |   212585 | tester |        main.cpp:  65 |  handled 100000 messages in 7315 msec = 13 msg/msec 
-  3FFBDDC4 I |   219858 | tester |        main.cpp:  65 |  handled 100000 messages in 7273 msec = 13 msg/msec 
-  3FFDCB84 I |   222333 | tester |        Mqtt.cpp:  95 | MQTT_EVENT_BEFORE_CONNECT
-E (227913) MQTT_CLIENT: Error transport connect
-  3FFDE730 W |   222335 | tester |        Mqtt.cpp: 159 | MQTT_EVENT_ERROR
-  3FFDE730 I |   222342 | tester |        Mqtt.cpp: 111 | MQTT_EVENT_DISCONNECTED
+  3FFC1A28 I |     9973 | tester |        Wifi.cpp:  90 | WIFI_EVENT_STA_CONNECTED
+E (14433) esp_netif_lwip: dhcp client start failed
+I (14523) wifi: AP's beacon interval = 102400 us, DTIM period = 1
+  3FFBDDC4 I |    13207 | tester |        main.cpp:  65 |  handled 100000 messages in 8987 msec = 11 msg/msec 
+Guru Meditation Error: Core  0 panic'ed (InstrFetchProhibited). Exception was unhandled.
+Core 0 register dump:
+PC      : 0x00000000  PS      : 0x00060130  A0      : 0x8016ebb0  A1      : 0x3ffc2f40  
+A2      : 0x3ffdcd98  A3      : 0x00000000  A4      : 0x3ffdd054  A5      : 0x3ffdd320  
+A6      : 0x3ffdcd38  A7      : 0xffffffff  A8      : 0x80152663  A9      : 0x3ffc2f10  
+A10     : 0x3ffdd054  A11     : 0x3ffdcd98  A12     : 0x00000041  A13     : 0x00000000  
+A14     : 0x00000000  A15     : 0x00000000  SAR     : 0x00000010  EXCCAUSE: 0x00000014  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+ELF file SHA256: 38aa7cf6082a238cbf6a925c2cf714c47ff018e6e2a6bbae6975dd01811d74ea
+
+Backtrace: 0xfffffffd:0x3ffc2f40 |<-CORRUPTED
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7004
+load:0x40078000,len:13784
+load:0x40080400,len:3872
+entry 0x40080678
+I (29) boot: ESP-IDF v4.2-dev-622-g63cd2b061-dirty 2nd stage bootloader
+I (29) boot: compile time 11:15:02
+I (30) boot: chip revision: 0
+I (34) boot.esp32: SPI Speed      : 40MHz
+I (39) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (48) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (57) boot: ## Label            Usage          Type ST Offset   Length
+I (64) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (79) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25eac (155308) map
+I (156) esp_image: segment 1: paddr=0x00035ed4 vaddr=0x3ffb0000 size=0x03948 ( 14664) load
+I (162) esp_image: segment 2: paddr=0x00039824 vaddr=0x40080000 size=0x00400 (  1024) load
+I (163) esp_image: segment 3: paddr=0x00039c2c vaddr=0x40080400 size=0x063ec ( 25580) load
+I (182) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa2034 (663604) map
+I (423) esp_image: segment 5: paddr=0x000e205c vaddr=0x400867ec size=0x0f16c ( 61804) load
+I (461) boot: Loaded app from partition at offset 0x10000
+I (461) boot: Disabling RNG early entropy source...
+I (462) cpu_start: Pro cpu up.
+I (465) cpu_start: Application information:
+I (470) cpu_start: Project name:     nanoAkka
+I (475) cpu_start: App version:      5d2141d-dirty
+I (481) cpu_start: Compile time:     Mar 12 2020 18:00:01
+I (487) cpu_start: ELF file SHA256:  38aa7cf6082a238c...
+I (493) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
+I (499) cpu_start: Starting app cpu, entry point is 0x400812ac
+I (491) cpu_start: App cpu up.
+I (510) heap_init: Initializing. RAM available for dynamic allocation:
+I (517) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (523) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
+I (529) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (535) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (542) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
+I (548) cpu_start: Pro cpu start user code
+  3FFAFAB4 I |        1 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
+  3FFAFAB4 I |        2 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'led' ctor.
+  3FFAFAB4 I |        6 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
+  3FFAFAB4 I |       13 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'echo' ctor.
+  3FFAFAB4 I |       23 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
+  3FFAFAB4 I |       31 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
+  3FFAFAB4 I |       37 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
+I (611) spi_flash: detected chip: gd
+I (614) spi_flash: flash io: dio
+I (618) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 13 2020 09:52:04 
+  3FFBD660 I |      846 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     1622 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     2397 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3172 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3947 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+I (8393) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (8453) wifi: wifi driver task: 3ffc320c, prio:23, stack:3584, core=0
+I (8453) system_api: Base MAC address is not set
+I (8453) system_api: read default base MAC address from EFUSE
+I (8473) wifi: wifi firmware version: 3f7ead7
+I (8473) wifi: config NVS flash: enabled
+I (8473) wifi: config nano formating: disabled
+I (8473) wifi: Init dynamic tx buffer num: 32
+I (8483) wifi: Init data frame dynamic rx buffer num: 32
+I (8483) wifi: Init management frame dynamic rx buffer num: 32
+I (8493) wifi: Init management short buffer num: 32
+I (8493) wifi: Init static rx buffer size: 1600
+I (8503) wifi: Init static rx buffer num: 10
+I (8503) wifi: Init dynamic rx buffer num: 32
+  3FFC1A28 I |     4061 | tester |        Wifi.cpp:  78 | WIFI_EVENT_STA_STOP
+I (8613) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (8613) wifi: mode : sta (30:ae:a4:06:09:9c)
+  3FFC1A28 I |     4165 | tester |        Wifi.cpp:  84 | WIFI_EVENT_STA_START
+  3FFC1A28 I |     4169 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFBD660 I |     4179 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBDDC4 I |     4187 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
+  3FFBDDC4 I |     4191 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
+  3FFBDDC4 I |     4198 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
+  3FFBDDC4 I |     4205 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
+  3FFBDDC4 I |     4213 | tester |        main.cpp:  65 |  handled 100000 messages in 4208 msec = 23 msg/msec 
+  3FFBD660 I |     4223 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
+  3FFC1A28 I |     6230 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     6231 | tester |        Wifi.cpp: 124 |  found 5 AP's , size : 80 
+  3FFC1A28 I |     6235 | tester |        Wifi.cpp: 134 |  Merckx2 : -78 
+  3FFC1A28 I |     6241 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -84 
+  3FFC1A28 I |     6248 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -85 
+  3FFC1A28 I |     6255 | tester |        Wifi.cpp: 134 |  Merckx3 : -88 
+  3FFC1A28 I |     6261 | tester |        Wifi.cpp: 134 |  Merckx10 : -89 
+  3FFC1A28 I |     6268 | tester |        Wifi.cpp: 146 |  found strongest AP : 'Merckx3'.
+  3FFC1A28 I |     6276 | tester |        Wifi.cpp: 107 |  connecting to SSID : Merckx3
+I (11463) wifi: new:<6,0>, old:<1,0>, ap:<255,255>, sta:<6,0>, prof:1
+I (12283) wifi: state: init -> auth (b0)
+I (12293) wifi: state: auth -> assoc (0)
+I (12313) wifi: state: assoc -> run (10)
+I (12343) wifi: connected with Merckx3, aid = 4, channel 6, BW20, bssid = c4:e9:84:a3:a3:56
+I (12343) wifi: security type: 3, phy: b, rssi: -86
+I (12343) wifi: pm start, type: 1
+
+  3FFC1A28 I |     7900 | tester |        Wifi.cpp:  90 | WIFI_EVENT_STA_CONNECTED
+E (12353) esp_netif_lwip: dhcp client start failed
+I (12413) wifi: AP's beacon interval = 102400 us, DTIM period = 1
+  3FFBDDC4 I |    13264 | tester |        main.cpp:  65 |  handled 100000 messages in 9041 msec = 11 msg/msec 
+Guru Meditation Error: Core  0 panic'ed (InstrFetchProhibited). Exception was unhandled.
+Core 0 register dump:
+PC      : 0x00000000  PS      : 0x00060d30  A0      : 0x8016ebb0  A1      : 0x3ffc2f40  
+A2      : 0x3ffdcdcc  A3      : 0x00000000  A4      : 0x3ffdd044  A5      : 0x3ffdd278  
+A6      : 0x3ffdcce4  A7      : 0xffffffff  A8      : 0x80152663  A9      : 0x3ffc2f10  
+A10     : 0x3ffdd044  A11     : 0x3ffdcdcc  A12     : 0x00000041  A13     : 0x00000000  
+A14     : 0x00000000  A15     : 0x00000000  SAR     : 0x00000010  EXCCAUSE: 0x00000014  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+ELF file SHA256: 38aa7cf6082a238cbf6a925c2cf714c47ff018e6e2a6bbae6975dd01811d74ea
+
+Backtrace: 0xfffffffd:0x3ffc2f40 |<-CORRUPTED
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7004
+load:0x40078000,len:13784
+load:0x40080400,len:3872
+entry 0x40080678
+I (29) boot: ESP-IDF v4.2-dev-622-g63cd2b061-dirty 2nd stage bootloader
+I (29) boot: compile time 11:15:02
+I (30) boot: chip revision: 0
+I (34) boot.esp32: SPI Speed      : 40MHz
+I (39) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (48) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (57) boot: ## Label            Usage          Type ST Offset   Length
+I (64) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (79) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25eac (155308) map
+I (156) esp_image: segment 1: paddr=0x00035ed4 vaddr=0x3ffb0000 size=0x03948 ( 14664) load
+I (162) esp_image: segment 2: paddr=0x00039824 vaddr=0x40080000 size=0x00400 (  1024) load
+I (163) esp_image: segment 3: paddr=0x00039c2c vaddr=0x40080400 size=0x063ec ( 25580) load
+I (182) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa2034 (663604) map
+I (423) esp_image: segment 5: paddr=0x000e205c vaddr=0x400867ec size=0x0f16c ( 61804) load
+I (461) boot: Loaded app from partition at offset 0x10000
+I (461) boot: Disabling RNG early entropy source...
+I (462) cpu_start: Pro cpu up.
+I (465) cpu_start: Application information:
+I (470) cpu_start: Project name:     nanoAkka
+I (475) cpu_start: App version:      5d2141d-dirty
+I (481) cpu_start: Compile time:     Mar 12 2020 18:00:01
+I (487) cpu_start: ELF file SHA256:  38aa7cf6082a238c...
+I (493) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
+I (499) cpu_start: Starting app cpu, entry point is 0x400812ac
+I (491) cpu_start: App cpu up.
+I (510) heap_init: Initializing. RAM available for dynamic allocation:
+I (517) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (523) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
+I (529) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (535) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (542) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
+I (548) cpu_start: Pro cpu start user code
+  3FFAFAB4 I |        1 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
+  3FFAFAB4 I |        2 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'led' ctor.
+  3FFAFAB4 I |        6 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
+  3FFAFAB4 I |       13 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'echo' ctor.
+  3FFAFAB4 I |       23 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
+  3FFAFAB4 I |       31 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
+  3FFAFAB4 I |       37 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
+I (611) spi_flash: detected chip: gd
+I (614) spi_flash: flash io: dio
+I (618) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 13 2020 09:52:04 
+  3FFBD660 I |      846 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     1622 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     2397 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3172 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3947 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+I (8393) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (8453) wifi: wifi driver task: 3ffc320c, prio:23, stack:3584, core=0
+I (8453) system_api: Base MAC address is not set
+I (8453) system_api: read default base MAC address from EFUSE
+I (8473) wifi: wifi firmware version: 3f7ead7
+I (8473) wifi: config NVS flash: enabled
+I (8473) wifi: config nano formating: disabled
+I (8473) wifi: Init dynamic tx buffer num: 32
+I (8483) wifi: Init data frame dynamic rx buffer num: 32
+I (8483) wifi: Init management frame dynamic rx buffer num: 32
+I (8493) wifi: Init management short buffer num: 32
+I (8493) wifi: Init static rx buffer size: 1600
+I (8503) wifi: Init static rx buffer num: 10
+I (8503) wifi: Init dynamic rx buffer num: 32
+  3FFC1A28 I |     4061 | tester |        Wifi.cpp:  78 | WIFI_EVENT_STA_STOP
+I (8613) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (8613) wifi: mode : sta (30:ae:a4:06:09:9c)
+  3FFC1A28 I |     4163 | tester |        Wifi.cpp:  84 | WIFI_EVENT_STA_START
+  3FFC1A28 I |     4167 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFBD660 I |     4177 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBDDC4 I |     4185 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
+  3FFBDDC4 I |     4189 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
+  3FFBDDC4 I |     4196 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
+  3FFBDDC4 I |     4204 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
+  3FFBDDC4 I |     4212 | tester |        main.cpp:  65 |  handled 100000 messages in 4208 msec = 23 msg/msec 
+  3FFBD660 I |     4221 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
+  3FFC1A28 I |     6228 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     6229 | tester |        Wifi.cpp: 124 |  found 5 AP's , size : 80 
+  3FFC1A28 I |     6233 | tester |        Wifi.cpp: 134 |  Merckx2 : -77 
+  3FFC1A28 I |     6239 | tester |        Wifi.cpp: 134 |  Merckx10 : -87 
+  3FFC1A28 I |     6246 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -87 
+  3FFC1A28 I |     6253 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -87 
+  3FFC1A28 I |     6260 | tester |        Wifi.cpp: 134 |  Merckx3 : -88 
+  3FFC1A28 I |     6266 | tester |        Wifi.cpp: 146 |  found strongest AP : 'Merckx3'.
+  3FFC1A28 I |     6274 | tester |        Wifi.cpp: 107 |  connecting to SSID : Merckx3
+I (11463) wifi: new:<6,0>, old:<1,0>, ap:<255,255>, sta:<6,0>, prof:1
+I (12273) wifi: state: init -> auth (b0)
+I (12293) wifi: state: auth -> assoc (0)
+I (12293) wifi: state: assoc -> run (10)
+I (12353) wifi: connected with Merckx3, aid = 4, channel 6, BW20, bssid = c4:e9:84:a3:a3:56
+I (12353) wifi: security type: 3, phy: b, rssi: -89
+I (12353) wifi: pm start, type: 1
+
+  3FFC1A28 I |     7911 | tester |        Wifi.cpp:  90 | WIFI_EVENT_STA_CONNECTED
+E (12373) esp_netif_lwip: dhcp client start failed
+I (12403) wifi: AP's beacon interval = 102400 us, DTIM period = 1
+  3FFBDDC4 I |    13009 | tester |        main.cpp:  65 |  handled 100000 messages in 8788 msec = 11 msg/msec 
+Guru Meditation Error: Core  0 panic'ed (InstrFetchProhibited). Exception was unhandled.
+Core 0 register dump:
+PC      : 0x00000000  PS      : 0x00060530  A0      : 0x8016ebb0  A1      : 0x3ffc2f40  
+A2      : 0x3ffdcdcc  A3      : 0x00000000  A4      : 0x3ffdd044  A5      : 0x3ffdd278  
+A6      : 0x3ffdcce4  A7      : 0xffffffff  A8      : 0x80152663  A9      : 0x3ffc2f10  
+A10     : 0x3ffdd044  A11     : 0x3ffdcdcc  A12     : 0x00000041  A13     : 0x00000000  
+A14     : 0x00000000  A15     : 0x00000000  SAR     : 0x00000010  EXCCAUSE: 0x00000014  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+ELF file SHA256: 38aa7cf6082a238cbf6a925c2cf714c47ff018e6e2a6bbae6975dd01811d74ea
+
+Backtrace: 0xfffffffd:0x3ffc2f40 |<-CORRUPTED
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7004
+load:0x40078000,len:13784
+load:0x40080400,len:3872
+entry 0x40080678
+I (29) boot: ESP-IDF v4.2-dev-622-g63cd2b061-dirty 2nd stage bootloader
+I (29) boot: compile time 11:15:02
+I (30) boot: chip revision: 0
+I (34) boot.esp32: SPI Speed      : 40MHz
+I (39) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (48) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (57) boot: ## Label            Usage          Type ST Offset   Length
+I (64) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (79) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25eac (155308) map
+I (156) esp_image: segment 1: paddr=0x00035ed4 vaddr=0x3ffb0000 size=0x03948 ( 14664) load
+I (162) esp_image: segment 2: paddr=0x00039824 vaddr=0x40080000 size=0x00400 (  1024) load
+I (163) esp_image: segment 3: paddr=0x00039c2c vaddr=0x40080400 size=0x063ec ( 25580) load
+I (182) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa2034 (663604) map
+I (423) esp_image: segment 5: paddr=0x000e205c vaddr=0x400867ec size=0x0f16c ( 61804) load
+I (461) boot: Loaded app from partition at offset 0x10000
+I (461) boot: Disabling RNG early entropy source...
+I (462) cpu_start: Pro cpu up.
+I (465) cpu_start: Application information:
+I (470) cpu_start: Project name:     nanoAkka
+I (475) cpu_start: App version:      5d2141d-dirty
+I (481) cpu_start: Compile time:     Mar 12 2020 18:00:01
+I (487) cpu_start: ELF file SHA256:  38aa7cf6082a238c...
+I (493) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
+I (499) cpu_start: Starting app cpu, entry point is 0x400812ac
+I (491) cpu_start: App cpu up.
+I (510) heap_init: Initializing. RAM available for dynamic allocation:
+I (517) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (523) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
+I (529) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (535) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (542) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
+I (548) cpu_start: Pro cpu start user code
+  3FFAFAB4 I |        1 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
+  3FFAFAB4 I |        2 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'led' ctor.
+  3FFAFAB4 I |        6 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
+  3FFAFAB4 I |       13 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'echo' ctor.
+  3FFAFAB4 I |       23 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
+  3FFAFAB4 I |       31 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
+  3FFAFAB4 I |       37 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
+I (611) spi_flash: detected chip: gd
+I (614) spi_flash: flash io: dio
+I (618) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 13 2020 09:52:04 
+  3FFBD660 I |      846 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     1622 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     2397 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3172 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3947 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+I (8393) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (8453) wifi: wifi driver task: 3ffc320c, prio:23, stack:3584, core=0
+I (8453) system_api: Base MAC address is not set
+I (8453) system_api: read default base MAC address from EFUSE
+I (8473) wifi: wifi firmware version: 3f7ead7
+I (8473) wifi: config NVS flash: enabled
+I (8473) wifi: config nano formating: disabled
+I (8473) wifi: Init dynamic tx buffer num: 32
+I (8483) wifi: Init data frame dynamic rx buffer num: 32
+I (8483) wifi: Init management frame dynamic rx buffer num: 32
+I (8493) wifi: Init management short buffer num: 32
+I (8493) wifi: Init static rx buffer size: 1600
+I (8503) wifi: Init static rx buffer num: 10
+I (8503) wifi: Init dynamic rx buffer num: 32
+  3FFC1A28 I |     4061 | tester |        Wifi.cpp:  78 | WIFI_EVENT_STA_STOP
+I (8613) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (8613) wifi: mode : sta (30:ae:a4:06:09:9c)
+  3FFC1A28 I |     4162 | tester |        Wifi.cpp:  84 | WIFI_EVENT_STA_START
+  3FFC1A28 I |     4166 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFBD660 I |     4176 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBDDC4 I |     4184 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
+  3FFBDDC4 I |     4188 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
+  3FFBDDC4 I |     4195 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
+  3FFBDDC4 I |     4202 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
+  3FFBDDC4 I |     4210 | tester |        main.cpp:  65 |  handled 100000 messages in 4204 msec = 23 msg/msec 
+  3FFBD660 I |     4220 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
+  3FFC1A28 I |     6228 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     6229 | tester |        Wifi.cpp: 124 |  found 5 AP's , size : 80 
+  3FFC1A28 I |     6233 | tester |        Wifi.cpp: 134 |  Merckx2 : -80 
+  3FFC1A28 I |     6239 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -85 
+  3FFC1A28 I |     6245 | tester |        Wifi.cpp: 134 |  Merckx3 : -86 
+  3FFC1A28 I |     6252 | tester |        Wifi.cpp: 134 |  Merckx10 : -87 
+  3FFC1A28 I |     6259 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -88 
+  3FFC1A28 I |     6266 | tester |        Wifi.cpp: 146 |  found strongest AP : 'Merckx3'.
+  3FFC1A28 I |     6274 | tester |        Wifi.cpp: 107 |  connecting to SSID : Merckx3
+  3FFC1A28 I |     8337 | tester |        Wifi.cpp:  94 | WIFI_EVENT_STA_DISCONNECTED
+I (13513) wifi: new:<6,0>, old:<1,0>, ap:<255,255>, sta:<6,0>, prof:1
+I (14333) wifi: state: init -> auth (b0)
+I (14353) wifi: state: auth -> assoc (0)
+I (14373) wifi: state: assoc -> run (10)
+I (14413) wifi: connected with Merckx3, aid = 4, channel 6, BW20, bssid = c4:e9:84:a3:a3:56
+I (14413) wifi: security type: 3, phy: b, rssi: -90
+I (14413) wifi: pm start, type: 1
+
+  3FFC1A28 I |     9969 | tester |        Wifi.cpp:  90 | WIFI_EVENT_STA_CONNECTED
+E (14423) esp_netif_lwip: dhcp client start failed
+Guru Meditation Error: Core  0 panic'ed (InstrFetchProhibited). Exception was unhandled.
+Core 0 register dump:
+PC      : 0x00000000  PS      : 0x00060330  A0      : 0x8016ebb0  A1      : 0x3ffc2f40  
+A2      : 0x3ffdcdcc  A3      : 0x00000000  A4      : 0x3ffdd044  A5      : 0x3ffdd30c  
+A6      : 0x3ffdcce4  A7      : 0xffffffff  A8      : 0x80152663  A9      : 0x3ffc2f10  
+A10     : 0x3ffdd044  A11     : 0x3ffdcdcc  A12     : 0x00000041  A13     : 0x00000000  
+A14     : 0x00000000  A15     : 0x00000000  SAR     : 0x00000010  EXCCAUSE: 0x00000014  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+ELF file SHA256: 38aa7cf6082a238cbf6a925c2cf714c47ff018e6e2a6bbae6975dd01811d74ea
+
+Backtrace: 0xfffffffd:0x3ffc2f40 |<-CORRUPTED
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7004
+load:0x40078000,len:13784
+load:0x40080400,len:3872
+entry 0x40080678
+I (29) boot: ESP-IDF v4.2-dev-622-g63cd2b061-dirty 2nd stage bootloader
+I (29) boot: compile time 11:15:02
+I (30) boot: chip revision: 0
+I (34) boot.esp32: SPI Speed      : 40MHz
+I (39) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (48) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (57) boot: ## Label            Usage          Type ST Offset   Length
+I (64) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (79) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x25eac (155308) map
+I (156) esp_image: segment 1: paddr=0x00035ed4 vaddr=0x3ffb0000 size=0x03948 ( 14664) load
+I (162) esp_image: segment 2: paddr=0x00039824 vaddr=0x40080000 size=0x00400 (  1024) load
+I (163) esp_image: segment 3: paddr=0x00039c2c vaddr=0x40080400 size=0x063ec ( 25580) load
+I (182) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0xa2034 (663604) map
+I (423) esp_image: segment 5: paddr=0x000e205c vaddr=0x400867ec size=0x0f16c ( 61804) load
+I (461) boot: Loaded app from partition at offset 0x10000
+I (461) boot: Disabling RNG early entropy source...
+I (462) cpu_start: Pro cpu up.
+I (465) cpu_start: Application information:
+I (470) cpu_start: Project name:     nanoAkka
+I (475) cpu_start: App version:      5d2141d-dirty
+I (481) cpu_start: Compile time:     Mar 12 2020 18:00:01
+I (487) cpu_start: ELF file SHA256:  38aa7cf6082a238c...
+I (493) cpu_start: ESP-IDF:          v4.2-dev-622-g63cd2b061
+I (499) cpu_start: Starting app cpu, entry point is 0x400812ac
+I (491) cpu_start: App cpu up.
+I (510) heap_init: Initializing. RAM available for dynamic allocation:
+I (517) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (523) heap_init: At 3FFBACD8 len 00025328 (148 KiB): DRAM
+I (529) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (535) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (542) heap_init: At 40095958 len 0000A6A8 (41 KiB): IRAM
+I (548) cpu_start: Pro cpu start user code
+  3FFAFAB4 I |        1 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'thread-main' ctor.
+  3FFAFAB4 I |        2 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'led' ctor.
+  3FFAFAB4 I |        6 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'pinger' ctor.
+  3FFAFAB4 I |       13 | ESP32-12857 |      NanoAkka.h: 164 | Thread 'echo' ctor.
+  3FFAFAB4 I |       23 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFAFF88] 1,301 
+  3FFAFAB4 I |       31 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F58] 0,4294967295 
+  3FFAFAB4 I |       37 | ESP32-12857 |      NanoAkka.h: 281 | Timer[3FFB4F88] 0,4294967295 
+I (611) spi_flash: detected chip: gd
+I (614) spi_flash: flash io: dio
+I (618) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD660 I |       64 | tester |        main.cpp: 105 | tester : Mar 13 2020 09:52:04 
+  3FFBD660 I |      846 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     1622 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     2397 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3172 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+  3FFBD660 I |     3947 | tester |        main.cpp: 118 |  time taken for 100000 iterations : 775 msec  => 129 /msec
+I (8393) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (8453) wifi: wifi driver task: 3ffc320c, prio:23, stack:3584, core=0
+I (8453) system_api: Base MAC address is not set
+I (8453) system_api: read default base MAC address from EFUSE
+I (8473) wifi: wifi firmware version: 3f7ead7
+I (8473) wifi: config NVS flash: enabled
+I (8473) wifi: config nano formating: disabled
+I (8473) wifi: Init dynamic tx buffer num: 32
+I (8483) wifi: Init data frame dynamic rx buffer num: 32
+I (8483) wifi: Init management frame dynamic rx buffer num: 32
+I (8493) wifi: Init management short buffer num: 32
+I (8493) wifi: Init static rx buffer size: 1600
+I (8503) wifi: Init static rx buffer num: 10
+I (8503) wifi: Init dynamic rx buffer num: 32
+  3FFC1A28 I |     4061 | tester |        Wifi.cpp:  78 | WIFI_EVENT_STA_STOP
+I (8613) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (8613) wifi: mode : sta (30:ae:a4:06:09:9c)
+  3FFC1A28 I |     4164 | tester |        Wifi.cpp:  84 | WIFI_EVENT_STA_START
+  3FFC1A28 I |     4168 | tester |        Wifi.cpp: 151 |  starting WiFi scan.
+  3FFBD660 I |     4177 | tester |        Mqtt.cpp:  40 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBDDC4 I |     4186 | tester |    NanoAkka.cpp:  49 | Thread 'led' started 
+  3FFBDDC4 I |     4190 | tester |    NanoAkka.cpp:  49 | Thread 'pinger' started 
+  3FFBDDC4 I |     4197 | tester |    NanoAkka.cpp:  49 | Thread 'echo' started 
+  3FFBDDC4 I |     4204 | tester |    NanoAkka.cpp:  64 | Timer[3FFAFF88] already expired
+  3FFBDDC4 I |     4212 | tester |        main.cpp:  65 |  handled 100000 messages in 4208 msec = 23 msg/msec 
+  3FFBD660 I |     4222 | tester |    NanoAkka.cpp:  49 | Thread 'thread-main' started 
+  3FFC1A28 I |     6229 | tester |        Wifi.cpp:  69 | WIFI_EVENT_SCAN_DONE
+  3FFC1A28 I |     6230 | tester |        Wifi.cpp: 124 |  found 5 AP's , size : 80 
+  3FFC1A28 I |     6234 | tester |        Wifi.cpp: 134 |  Merckx2 : -82 
+  3FFC1A28 I |     6240 | tester |        Wifi.cpp: 134 |  TelenetWiFree : -84 
+  3FFC1A28 I |     6247 | tester |        Wifi.cpp: 134 |  Merckx10 : -85 
+  3FFC1A28 I |     6253 | tester |        Wifi.cpp: 134 |  telenet-E52A7 : -87 
+  3FFC1A28 I |     6260 | tester |        Wifi.cpp: 134 |  Merckx3 : -89 
+  3FFC1A28 I |     6267 | tester |        Wifi.cpp: 146 |  found strongest AP : 'Merckx3'.
+  3FFC1A28 I |     6275 | tester |        Wifi.cpp: 107 |  connecting to SSID : Merckx3
+  3FFC1A28 I |     8338 | tester |        Wifi.cpp:  94 | WIFI_EVENT_STA_DISCONNECTED
+  3FFC1A28 I |    10393 | tester |        Wifi.cpp:  94 | WIFI_EVENT_STA_DISCONNECTED
+  3FFC1A28 I |    12449 | tester |        Wifi.cpp:  94 | WIFI_EVENT_STA_DISCONNECTED
+  3FFBDDC4 I |    13001 | tester |        main.cpp:  65 |  handled 100000 messages in 8779 msec = 11 msg/msec 
+I (17623) wifi: new:<6,0>, old:<1,0>, ap:<255,255>, sta:<6,0>, prof:1

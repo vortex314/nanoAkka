@@ -98,30 +98,28 @@ public:
 
 	void request() {};
 };
+ * */
 //____________________________________________________________________________________________________________
 //
 template <class T>
-class ToMqtt : public Flow<T, MqttMessage>
-{
-	std::string _name;
-
-public:
-	ToMqtt(std::string name)
-		: _name(name) {};
-	void onNext(const T& event)
-	{
-		std::string s;
-		DynamicJsonDocument doc(100);
-		JsonVariant variant = doc.to<JsonVariant>();
-		variant.set(event);
-		serializeJson(doc, s);
-		this->emit({_name, s});
-		// emit doesn't work as such
-		// https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
-	}
-	void request() {};
+class ToMqtt : public Flow<T, MqttMessage> {
+		std::string _name;
+		MqttMessage _msg;
+	public:
+		ToMqtt(std::string name)
+			: _name(name) {};
+		MqttMessage&  convert(const T& event) {
+			std::string s;
+			DynamicJsonDocument doc(100);
+			JsonVariant variant = doc.to<JsonVariant>();
+			variant.set(event);
+			serializeJson(doc, s);
+			_msg = {_name,s};
+			return _msg;
+		}
+		void request() {};
 };
-
+/*
 //_______________________________________________________________________________________________________________
 //
 template <class T>
@@ -199,11 +197,13 @@ class Mqtt : public Actor { // public Sink<TimerMsg>, public Flow<MqttMessage, M
 		void onNext(const TimerMsg&);
 		void onNext(const MqttMessage&);
 		void request();
-		/*template <class T>
-			Sink<T>& toTopic(const char* name) {
-				return *(new ToMqtt<T>(name)) >> outgoing;
-			}
-			template <class T>
+		template <class T>
+		Subscriber<T>& toTopic(const char* name) {
+			auto flow = new ToMqtt<T>(name);
+			*flow >> outgoing;
+			return *flow;
+		}
+		/*	template <class T>
 			Source<T>& fromTopic(const char* name) {
 				auto newSource = new FromMqtt<T>(name);
 				incoming >> *newSource;

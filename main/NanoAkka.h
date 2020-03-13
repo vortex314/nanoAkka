@@ -81,6 +81,7 @@ class Publisher {
 };
 
 class Requestable {
+	public:
 		virtual void request()=0;
 };
 #define BUSY (1<<31)
@@ -145,9 +146,6 @@ class ArrayQueue : public AbstractQueue<T> {
 		}
 
 };
-
-
-
 // STREAMS
 class TimerSource;
 
@@ -219,7 +217,6 @@ class Source : public Publisher<T>,public Requestable {
 			Source<OUT> source = *(new Source<OUT>());
 			return source;
 		}
-
 };
 
 template <class T>
@@ -252,9 +249,6 @@ class ValueSource : public Source<T> {
 			return _t;
 		}
 };
-
-
-
 //__________________________________________________________________________`
 //
 // TimerSource
@@ -333,6 +327,7 @@ class Sink : public Subscriber<T>, public Invoker {
 		int next(int index) {
 			return ++index % S;
 		}
+		T _lastValue;
 	public:
 		Sink() {
 			_func=[&](const T& t) {
@@ -357,11 +352,10 @@ class Sink : public Subscriber<T>, public Invoker {
 			invoke();
 		}
 		void invoke() {
-			T t;
-			if ( _t.pop(t) ) {
+			if ( _t.pop(_lastValue) ) {
 				WARN(" no data ");
 			} else {
-				_func(t);
+				_func(_lastValue);
 			}
 		}
 
@@ -374,8 +368,10 @@ class Sink : public Subscriber<T>, public Invoker {
 			_func=func;
 		}
 
+
+
 		T operator()() {
-			return _t.lastValue();
+			return _lastValue;
 		}
 };
 
@@ -392,6 +388,19 @@ class QueueSource : public Sink<T,S>,public Source<T> {
 			if ( _queue.pop(t)==0) this->emit(t);
 		}
 };
+
+template <class IN,class OUT>
+class Flow : public Subscriber<IN>,public Source<OUT> {
+	public :
+		void on ( const IN& in) {
+			this->emit(convert(in));
+			// emit doesn't work as such
+			// https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
+		}
+		void request() {}
+		virtual OUT& convert(const IN& in) =0;
+};
+
 //______________________________________ Actor __________________________
 class Actor {
 		Thread& _thread;

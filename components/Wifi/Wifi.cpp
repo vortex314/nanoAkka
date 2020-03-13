@@ -36,6 +36,32 @@ void Wifi::init() {
 	mac = macInt;
 }
 
+void Wifi::ip_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
+	Wifi& wifi = *(Wifi*) event_arg;
+	switch (event_id) {
+
+		case IP_EVENT_STA_GOT_IP: {
+				INFO("IP_EVENT_STA_GOT_IP");
+				ip_event_got_ip_t* got_ip = (ip_event_got_ip_t*)event_data;
+				char my_ip_address[20];
+				ip4addr_ntoa_r((ip4_addr_t*)&got_ip->ip_info.ip, my_ip_address, 20);
+				wifi.ipAddress = my_ip_address;
+				wifi.connected = true;
+				break;
+			}
+
+		case IP_EVENT_STA_LOST_IP: {
+				INFO("IP_STA_LOST_IP");
+				wifi.connected=false;
+				break;
+			}
+		default:
+			WARN("unknown IP event %d ", event_id);
+			break;
+	}
+}
+
+
 
 void Wifi::wifi_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
 	Wifi& wifi = *(Wifi*) event_arg;
@@ -52,7 +78,7 @@ void Wifi::wifi_event_handler(void* event_arg, esp_event_base_t event_base, int3
 			}
 		case WIFI_EVENT_STA_STOP: {
 				INFO("WIFI_EVENT_STA_STOP");
-				esp_wifi_start();
+//				esp_wifi_start();
 //				wifi.wifiInit();
 				break;
 			}
@@ -61,29 +87,19 @@ void Wifi::wifi_event_handler(void* event_arg, esp_event_base_t event_base, int3
 				wifi.startScan();
 				break;
 			}
-		case IP_EVENT_STA_GOT_IP: {
-				INFO("IP_EVENT_STA_GOT_IP");
-				ip_event_got_ip_t* got_ip = (ip_event_got_ip_t*)event_data;
-				char my_ip_address[20];
-				ip4addr_ntoa_r((ip4_addr_t*)&got_ip->ip_info.ip, my_ip_address, 20);
-				wifi.ipAddress = my_ip_address;
-				wifi.connected = true;
-				break;
-			}
+
 		case WIFI_EVENT_STA_CONNECTED: {
 				INFO("WIFI_EVENT_STA_CONNECTED");
-				wifi.connected=true;
 				break;
 			}
 		case WIFI_EVENT_STA_DISCONNECTED: {
 				INFO("WIFI_EVENT_STA_DISCONNECTED");
-				wifi.connected = false;
 				esp_wifi_connect();
 				break;
 			}
 
 		default:
-			INFO("unknown WiFi or IP event %d ", event_id);
+			WARN("unknown WiFi event %d ", event_id);
 			break;
 	}
 
@@ -91,6 +107,7 @@ void Wifi::wifi_event_handler(void* event_arg, esp_event_base_t event_base, int3
 
 void Wifi::connectToAP(const char* ssid) {
 	INFO(" connecting to SSID : %s", ssid);
+
 	wifi_config_t wifi_config;
 	memset(&wifi_config, 0, sizeof(wifi_config)); // needed !!
 	strncpy((char*) wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid)
@@ -123,7 +140,7 @@ bool Wifi::scanDoneHandler() {
 		}
 	}
 	if (strongestAP == -1) {
-		WARN(" no AP found matching pattern '%s', restarting scan.", prefix());
+		WARN(" no AP found matching pattern '%s', restarting scan.", prefix().c_str());
 		return false;
 	}
 	this->ssid = (const char*) apRecords[strongestAP].ssid;
@@ -132,26 +149,37 @@ bool Wifi::scanDoneHandler() {
 }
 
 void Wifi::startScan() {
-	INFO(" starting WiFi scan.");
+	INFO(" starting WiFi scan."); //https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/wifi.html#scan-configuration
 	wifi_scan_config_t scanConfig = {
 		NULL, NULL, 0, false, WIFI_SCAN_TYPE_ACTIVE, { 0, 0 }
 	};
 	CHECK(esp_wifi_scan_start(&scanConfig, false));
+
 }
 
 void Wifi::wifiInit() {
-	CHECK(nvs_flash_init());
+	esp_err_t ret = nvs_flash_init();
+	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+		WARN(" erasing NVS flash ");
+		ESP_ERROR_CHECK(nvs_flash_erase());
+		ret = nvs_flash_init();
+	}
 
 	CHECK(esp_netif_init());
 	CHECK(esp_event_loop_create_default());
+	esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
+	assert(sta_netif);
+
+	_wifiConfig = WIFI_INIT_CONFIG_DEFAULT();
+	CHECK(esp_wifi_init(&_wifiConfig));
+
 	CHECK( esp_event_handler_register(WIFI_EVENT,ESP_EVENT_ANY_ID,wifi_event_handler,this));
-	CHECK( esp_event_handler_register(IP_EVENT,IP_EVENT_STA_GOT_IP,wifi_event_handler,this));
-	wifi_init_config_t wifiInitializationConfig = WIFI_INIT_CONFIG_DEFAULT()
-	        ;
-	CHECK(esp_wifi_init(&wifiInitializationConfig));
-	CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+	CHECK( esp_event_handler_register(IP_EVENT,ESP_EVENT_ANY_ID,ip_event_handler,this));
+
+
+//	CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
 	CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-	CHECK(esp_wifi_set_promiscuous(false));
-	CHECK(esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_11B));
+//	CHECK(esp_wifi_set_promiscuous(false));
+//	CHECK(esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_11B));
 	CHECK(esp_wifi_start());
 }
