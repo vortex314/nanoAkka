@@ -20,10 +20,6 @@ class Pinger : public Actor {
 		ValueSource<int> out;
 		Sink<int,4> in;
 		Pinger(Thread& thr) : Actor(thr) {
-			symbols.add(this,"Pinger");
-			symbols.add(this,&out,"out");
-			symbols.add(this,&in,"in");
-
 			in.async(thread(),[&](const int& i) {
 				out=_counter++;
 			});
@@ -39,10 +35,6 @@ class Echo : public Actor {
 		ValueSource<int> out;
 		Sink<int,4> in;
 		Echo(Thread& thr) : Actor(thr) {
-			symbols.add(this,"Echo");
-			symbols.add(this,&out,"out");
-			symbols.add(this,&in,"in");
-
 			in.async(thread(),[&](const int& i) {
 				if ( i %DELTA == 0 ) {
 					uint64_t endTime=Sys::millis();
@@ -63,8 +55,6 @@ class Echo : public Actor {
 #include <Wifi.h>
 #include <Mqtt.h>
 #endif
-
-#define HOSTNAME tester
 
 class Poller : public Actor,public Sink<TimerMsg,2> {
 		TimerSource _pollInterval;
@@ -96,6 +86,18 @@ Pinger pinger(ledThread);
 Echo echo(ledThread);
 Wifi wifi;
 Mqtt mqtt(ledThread);
+
+#ifdef US
+#include <UltraSonic.h>
+Connector uextUs(US);
+UltraSonic ultrasonic(ledThread,&uextUs);
+#endif
+
+#ifdef GPS
+#include <Neo6m.h>
+Connector uextGps(GPS);
+Neo6m gps(ledThread,&uextGps);
+#endif
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
@@ -139,11 +141,31 @@ extern "C" void app_main(void) {
 	systemBuild >> mqtt.toTopic<std::string>("system/build");
 	poller(systemUptime)(systemHeap)(systemHostname)(systemBuild);
 
+	wifi.macAddress >> mqtt.toTopic<std::string>("wifi/mac");
+	wifi.ipAddress >> mqtt.toTopic<std::string>("wifi/ip");
+	wifi.ssid >> mqtt.toTopic<std::string>("wifi/ssid");
+	wifi.rssi >> mqtt.toTopic<int>("wifi/rssi");
+	poller(wifi.macAddress)(wifi.ipAddress)(wifi.ssid)(wifi.rssi);
+
+	Sink<int,3> intSink([](int i) { INFO("received an int %d",i);});
+	mqtt.fromTopic<int>("os/int") >> intSink;
+
 #ifndef HOSTNAME
 	std::string hn;
 	string_format(hn, "ESP32-%d", wifi.mac() & 0xFFFF);
 	Sys::hostname(hn.c_str());
 	systemHostname = hn;
+#endif
+
+#ifdef US
+	ultrasonic.init();
+	ultrasonic.distance >> mqtt.toTopic<int32_t>("us/distance");
+#endif
+
+#ifdef GPS
+	gps.init(); // no thread , driven from interrupt
+//	gps >>  mqtt.outgoing;
+
 #endif
 
 	pinger.out >> echo.in; // the wiring

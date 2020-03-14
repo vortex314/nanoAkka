@@ -1,6 +1,5 @@
 #include "NanoAkka.h"
 
-Map symbols;
 
 /*
  _____ _                        _

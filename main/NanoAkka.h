@@ -12,54 +12,50 @@ typedef std::string NanoString;
 #define FREERTOS
 #include <FreeRTOS.h>
 
-#include "freertos/task.h"
-#include <freertos/queue.h>
-#include <freertos/semphr.h>
 #include "esp_system.h"
+#include "freertos/task.h"
 #include "nvs.h"
 #include "nvs_flash.h"
+#include <freertos/queue.h>
+#include <freertos/semphr.h>
 #define PRO_CPU 0
 #define APP_CPU 1
 #else
-typedef std::string NanoString;
 
 #endif
 
+#ifdef ARDUINO
+#include <Arduino.h>
+#include <printf.h>
+#include <stdarg.h>
+typedef String NanoString;
+#define INFO(fmt, ...)                                                         \
+	{                                                                            \
+		char line[256];                                                            \
+		int len = snprintf(line, sizeof(line), "I %06lld | %.12s:%.3d | ",         \
+		                   Sys::millis(), __FILE__, __LINE__);                     \
+		snprintf((char *)(line + len), sizeof(line) - len, fmt, ##__VA_ARGS__);    \
+		Serial.println(line);                                                      \
+	}
+#define WARN(fmt, ...)                                                         \
+	{                                                                            \
+		char line[256];                                                            \
+		int len = snprintf(line, sizeof(line), "W %06lld | %.12s:%.3d | ",         \
+		                   Sys::millis(), __FILE__, __LINE__);                     \
+		snprintf((char *)(line + len), sizeof(line) - len, fmt, ##__VA_ARGS__);    \
+		Serial.println(line);                                                      \
+	}
+#else
 #include <Log.h>
+#endif
 #include <Sys.h>
-
-class Map {
-		std::unordered_map<uint32_t, NanoString> _symbols;
-		NanoString fmt;
-
-	public:
-		void add(void *address, const char *name) {
-			_symbols.emplace((uint32_t)address, name);
-		}
-		void add(void *base, void *member, const char *name) {
-			NanoString n = find(base);
-			n += ".";
-			n += name;
-			_symbols.emplace((uint32_t)member, n);
-		}
-		const char *find(void *address) {
-			auto f = _symbols.find((uint32_t)address);
-			if (f == _symbols.end()) {
-				string_format(fmt, "%X", address);
-				return fmt.c_str();
-			}
-			return f->second.c_str();
-		}
-		const char *operator()(void *address) { return find(address); }
-};
-extern Map symbols;
 
 // INTERFACES nanoAkka
 
 template <class T> class AbstractQueue {
 	public:
 		virtual int pop(T &t) = 0;
-		virtual int push(const T &t) = 0; // to be able to do something like
+		virtual int push(const T &t) = 0; // const to be able to do something like
 		// push({"topic","message"});
 };
 
@@ -123,7 +119,6 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			uint32_t expected = _readPtr;
 			uint32_t desired = expected + 1;
 			if (desired > _writePtr) {
-				WARN("EMPTY");
 				return ENOBUFS;
 			}
 			if (expected & BUSY) {
@@ -153,7 +148,7 @@ class Thread {
 #ifdef FREERTOS
 		QueueHandle_t _workQueue = 0;
 #else
-		ArrayQueue<Invoker *,10> _workQueue;
+		ArrayQueue<Invoker *, 10> _workQueue;
 #endif
 		void createQueue();
 		std::vector<TimerSource *> _timers;
@@ -162,13 +157,11 @@ class Thread {
 
 	public:
 		Thread(const char *name) {
-			INFO("Thread '%s' ctor.", name);
 			_name = name;
 			createQueue();
 		}
 		Thread() {
-			string_format(_name, "thread-%d", _id++);
-			INFO("Thread '%s' ctor.", _name.c_str());
+			_name = "thread-%d" + _id++;
 			createQueue();
 		}
 		void start();
@@ -256,7 +249,6 @@ class TimerSource : public Source<TimerMsg> {
 
 	public:
 		TimerSource(Thread &thr, int id, uint32_t interval, bool repeat) {
-			INFO("Timer[%X] %d,%u ", this, id, interval);
 			_id = id;
 			_interval = interval;
 			_repeat = repeat;
@@ -276,8 +268,6 @@ class TimerSource : public Source<TimerMsg> {
 		void interval(uint32_t i) { _interval = i; }
 		void request() {
 			if (Sys::millis() >= _expireTime) {
-				//				INFO("Timer[%X] '%s' %d
-				//triggered.",this,symbols(this),_interval);
 				if (_repeat)
 					_expireTime = Sys::millis() + _interval;
 				else
@@ -300,16 +290,14 @@ template <class T, int S> class Sink : public Subscriber<T>, public Invoker {
 
 	public:
 		Sink() {
-			_func = [&](const T &t) {
-				INFO(" no handler attached to this sink [%X]", this);
-			};
+			_func = [&](const T &t) { INFO(" no handler attached to this sink "); };
 		}
 		Sink(std::function<void(const T &)> handler) : _func(handler) {};
 
 		void on(const T &t) {
 			if (_thread) {
 				if (_t.push(t)) {
-					ERROR(" sink full %s ", symbols(this));
+					WARN(" sink full ");
 				} else {
 					_thread->enqueue(this);
 				}
@@ -355,12 +343,17 @@ template <class IN, class OUT>
 class Flow : public Subscriber<IN>, public Source<OUT> {
 	public:
 		void on(const IN &in) {
-			this->emit(convert(in));
+			OUT out;
+			if ( convert(out,in) ) {
+				WARN(" conversion failed ");
+				return;
+			}
+			this->emit(out);
 			// emit doesn't work as such without this->
 			// https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
 		}
 		void request() {}
-		virtual OUT &convert(const IN &in) = 0;
+		virtual int convert(OUT & out,const IN &in) = 0;
 };
 
 //______________________________________ Actor __________________________
