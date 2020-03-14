@@ -85,12 +85,15 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 		T _array[SIZE];
 		std::atomic<uint32_t> _readPtr;
 		std::atomic<uint32_t> _writePtr;
+		inline uint32_t next(uint32_t idx) {
+			return (idx+1)%SIZE;
+		}
 
 	public:
 		ArrayQueue() { _readPtr = _writePtr = 0; }
 		int push(const T &t) {
 			uint32_t expected = _writePtr;
-			uint32_t desired = expected + 1;
+			uint32_t desired = next(expected);
 			if (desired == _readPtr) {
 				WARN("FULL");
 				return ENOBUFS;
@@ -103,7 +106,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			if (_writePtr.compare_exchange_weak(expected, desired,
 			                                    std::memory_order_relaxed)) {
 				expected = desired;
-				_array[desired & (SIZE - 1)] = std::move(t);
+				_array[desired % SIZE] = std::move(t);
 				desired &= ~BUSY;
 				if (!_writePtr.compare_exchange_weak(expected, desired,
 				                                     std::memory_order_relaxed)) {
@@ -116,9 +119,10 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 		}
 
 		int pop(T &t) {
-			uint32_t expected = _readPtr;
-			uint32_t desired = expected + 1;
-			if (desired > _writePtr) {
+			uint32_t expected = _readPtr.load();
+			uint32_t desired = next(expected);
+			if (expected == _writePtr) {
+				WARN("EMPTY");
 				return ENOBUFS;
 			}
 			if (expected & BUSY) {
@@ -129,7 +133,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			if (_readPtr.compare_exchange_weak(expected, desired,
 			                                   std::memory_order_relaxed)) {
 				expected = desired;
-				t = std::move(_array[desired & (SIZE - 1)]);
+				t = std::move(_array[desired % SIZE]);
 				desired &= ~BUSY;
 				if (!_readPtr.compare_exchange_weak(expected, desired,
 				                                    std::memory_order_relaxed)) {

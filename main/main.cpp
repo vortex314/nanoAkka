@@ -90,13 +90,13 @@ Mqtt mqtt(ledThread);
 #ifdef US
 #include <UltraSonic.h>
 Connector uextUs(US);
-UltraSonic ultrasonic(ledThread,&uextUs);
+UltraSonic ultrasonic(thisThread,&uextUs);
 #endif
 
 #ifdef GPS
 #include <Neo6m.h>
 Connector uextGps(GPS);
-Neo6m gps(ledThread,&uextGps);
+Neo6m gps(thisThread,&uextGps);
 #endif
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
@@ -164,7 +164,7 @@ extern "C" void app_main(void) {
 
 #ifdef GPS
 	gps.init(); // no thread , driven from interrupt
-//	gps >>  mqtt.outgoing;
+	gps >>  mqtt.outgoing;
 
 #endif
 
