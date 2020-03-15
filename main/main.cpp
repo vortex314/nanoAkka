@@ -98,6 +98,13 @@ UltraSonic ultrasonic(thisThread,&uextUs);
 Connector uextGps(GPS);
 Neo6m gps(thisThread,&uextGps);
 #endif
+
+
+#ifdef REMOTE
+#include <Remote.h>
+Remote remote(thisThread);
+#endif
+
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
@@ -165,7 +172,16 @@ extern "C" void app_main(void) {
 #ifdef GPS
 	gps.init(); // no thread , driven from interrupt
 	gps >>  mqtt.outgoing;
+#endif
 
+#ifdef REMOTE
+	remote.init();
+	mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;             // timer driven
+	mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;             // timer driven
+	remote.buttonLeft >> mqtt.toTopic<bool>("remote/buttonLeft");
+	remote.buttonRight >> mqtt.toTopic<bool>("remote/buttonRight");
+	remote.potLeft >> mqtt.toTopic<int>("remote/potLeft");
+	remote.potRight >> mqtt.toTopic<int>("remote/potRight");
 #endif
 
 	pinger.out >> echo.in; // the wiring

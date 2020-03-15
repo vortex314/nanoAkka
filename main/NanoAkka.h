@@ -95,11 +95,11 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			uint32_t expected = _writePtr;
 			uint32_t desired = next(expected);
 			if (desired == _readPtr) {
-				WARN("FULL");
+//				printf(__FILE__ ":%d FULL\n",__LINE__); // aborts in isr
 				return ENOBUFS;
 			}
 			if (expected & BUSY) {
-				WARN("BUSY");
+//				printf(__FILE__ ":%d BUSY\n",__LINE__);
 				return ENODATA;
 			}
 			desired |= BUSY;
@@ -218,15 +218,11 @@ template <class T> class LambdaSource : public Source<T> {
 
 template <class T> class ValueSource : public Source<T> {
 		T _t;
-
 	public:
 		ValueSource() {};
 		ValueSource(T t) { _t = t; }
 		void request() { this->emit(_t); }
-		void operator=(T t) {
-			_t = t;
-			this->emit(_t);
-		}
+		void operator=(T t) {_t = t; this->emit(_t);}
 		T &operator()() { return _t; }
 };
 //__________________________________________________________________________`
@@ -301,7 +297,7 @@ template <class T, int S> class Sink : public Subscriber<T>, public Invoker {
 		void on(const T &t) {
 			if (_thread) {
 				if (_t.push(t)) {
-					WARN(" sink full ");
+//					WARN(" sink full ");
 				} else {
 					_thread->enqueue(this);
 				}
@@ -349,7 +345,7 @@ class Flow : public Subscriber<IN>, public Source<OUT> {
 		void on(const IN &in) {
 			OUT out;
 			if ( convert(out,in) ) {
-				WARN(" conversion failed ");
+//				WARN(" conversion failed ");
 				return;
 			}
 			this->emit(out);

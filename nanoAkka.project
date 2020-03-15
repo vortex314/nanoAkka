@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="nanoAkka" Version="10.0.0" InternalType="Console">
-  <File Name="components/gps/component.mk"/>
-  <File Name="components/gps/Neo6m.h"/>
-  <File Name="components/gps/Neo6m.cpp"/>
-  <File Name="components/ultrasonic/component.mk"/>
-  <File Name="components/ultrasonic/UltraSonic.h"/>
-  <File Name="components/ultrasonic/UltraSonic.cpp"/>
-  <File Name="components/ultrasonic/HCSR04.h"/>
-  <File Name="components/ultrasonic/HCSR04.cpp"/>
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
-  <File Name="components/remote/component.mk"/>
   <VirtualDirectory Name="components">
-    <VirtualDirectory Name="gps"/>
-    <VirtualDirectory Name="ultrasonic"/>
+    <VirtualDirectory Name="remote">
+      <File Name="components/remote/HwStream.h"/>
+      <File Name="components/remote/component.mk"/>
+      <File Name="components/remote/Remote.cpp"/>
+      <File Name="components/remote/Remote.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="gps">
+      <File Name="components/gps/component.mk"/>
+      <File Name="components/gps/Neo6m.h"/>
+      <File Name="components/gps/Neo6m.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="ultrasonic">
+      <File Name="components/ultrasonic/component.mk"/>
+      <File Name="components/ultrasonic/UltraSonic.h"/>
+      <File Name="components/ultrasonic/UltraSonic.cpp"/>
+      <File Name="components/ultrasonic/HCSR04.h"/>
+      <File Name="components/ultrasonic/HCSR04.cpp"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="Wifi">
+      <File Name="components/Wifi/MqttAbstract.h"/>
+      <File Name="components/Wifi/MqttSerial.h"/>
+      <File Name="components/Wifi/MqttSerial.cpp"/>
       <File Name="components/Wifi/component.mk"/>
       <File Name="components/Wifi/Wifi.h"/>
       <File Name="components/Wifi/Wifi.cpp"/>
@@ -86,7 +96,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make GPS</BuildCommand>
+        <BuildCommand>make REMOTE</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
