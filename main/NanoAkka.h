@@ -356,6 +356,21 @@ class Flow : public Subscriber<IN>, public Source<OUT> {
 		virtual int convert(OUT & out,const IN &in) = 0;
 };
 
+template <class T>
+class ValueFlow : public Subscriber<T>, public Source<T> {
+		T _t;
+	public:
+		ValueFlow() {};
+		ValueFlow(T t) { _t = t; }
+		void request() { this->emit(_t); }
+		void operator=(T t) {_t = t; }
+		T &operator()() { return _t; }
+		void on(const T &in) {
+			_t = in;
+		}
+		void operator==(ValueFlow& vf) { vf >> *this; *this >> vf; }
+};
+
 //______________________________________ Actor __________________________
 class Actor {
 		Thread &_thread;

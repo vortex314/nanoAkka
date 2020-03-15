@@ -6,6 +6,20 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="servo">
+      <File Name="components/servo/component.mk"/>
+      <File Name="components/servo/MotorServo.h"/>
+      <File Name="components/servo/MotorServo.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="motor">
+      <File Name="components/motor/component.mk"/>
+      <File Name="components/motor/RotaryEncoder.h"/>
+      <File Name="components/motor/RotaryEncoder.cpp"/>
+      <File Name="components/motor/Motor.h"/>
+      <File Name="components/motor/Motor.cpp"/>
+      <File Name="components/motor/BTS7960.h"/>
+      <File Name="components/motor/BTS7960.cpp"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="remote">
       <File Name="components/remote/HwStream.h"/>
       <File Name="components/remote/component.mk"/>
@@ -25,14 +39,14 @@
       <File Name="components/ultrasonic/HCSR04.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Wifi">
-      <File Name="components/Wifi/MqttAbstract.h"/>
       <File Name="components/Wifi/MqttSerial.h"/>
       <File Name="components/Wifi/MqttSerial.cpp"/>
       <File Name="components/Wifi/component.mk"/>
       <File Name="components/Wifi/Wifi.h"/>
       <File Name="components/Wifi/Wifi.cpp"/>
+      <File Name="components/Wifi/MqttWifi.h"/>
+      <File Name="components/Wifi/MqttWifi.cpp"/>
       <File Name="components/Wifi/Mqtt.h"/>
-      <File Name="components/Wifi/Mqtt.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="main">
@@ -49,8 +63,8 @@
   <Reconciliation>
     <Regexes/>
     <Excludepaths>
-      <Path>Debug/</Path>
       <Path>build/</Path>
+      <Path>Debug/</Path>
     </Excludepaths>
     <Ignorefiles/>
     <Extensions>
@@ -96,7 +110,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make REMOTE</BuildCommand>
+        <BuildCommand>make MOTOR_SERIAL</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

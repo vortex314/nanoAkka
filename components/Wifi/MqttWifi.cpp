@@ -1,5 +1,5 @@
 #include <../Common/Config.h>
-#include <Mqtt.h>
+#include <MqttWifi.h>
 #include <Wifi.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -21,15 +21,15 @@
 #define TIMER_2 2
 //________________________________________________________________________
 //
-Mqtt::Mqtt(Thread& thread):Actor(thread),_reportTimer(thread), _keepAliveTimer(thread) {
+MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread), _keepAliveTimer(thread) {
 	_lwt_message = "false";
 }
 //________________________________________________________________________
 //
-Mqtt::~Mqtt() {}
+MqttWifi::~MqttWifi() {}
 //________________________________________________________________________
 //
-void Mqtt::init() {
+void MqttWifi::init() {
 	string_format(_address, "mqtt://%s:%d", S(MQTT_HOST), MQTT_PORT);
 	string_format(_lwt_topic, "system/alive", Sys::hostname());
 	string_format(_hostPrefix, "src/%s/", Sys::hostname());
@@ -40,7 +40,7 @@ void Mqtt::init() {
 	INFO(" uri : %s ", _address.c_str());
 
 	mqtt_cfg.uri = _address.c_str();
-	mqtt_cfg.event_handle = Mqtt::mqtt_event_handler;
+	mqtt_cfg.event_handle = MqttWifi::mqtt_event_handler;
 	mqtt_cfg.client_id = Sys::hostname();
 	mqtt_cfg.user_context = this;
 	mqtt_cfg.buffer_size = 10240;
@@ -73,7 +73,7 @@ void Mqtt::init() {
 //________________________________________________________________________
 //
 
-void Mqtt::onNext(const MqttMessage& m) {
+void MqttWifi::onNext(const MqttMessage& m) {
 	if(connected()) {
 		std::string topic = _hostPrefix;
 		topic += m.topic;
@@ -82,15 +82,15 @@ void Mqtt::onNext(const MqttMessage& m) {
 }
 //________________________________________________________________________
 //
-void Mqtt::onNext(const TimerMsg& tm) {
+void MqttWifi::onNext(const TimerMsg& tm) {
 	if(tm.id == TIMER_KEEP_ALIVE && connected() ) {
 		onNext({_lwt_topic.c_str(), "true"});
 	}
 }
 //________________________________________________________________________
 //
-int Mqtt::mqtt_event_handler(esp_mqtt_event_t* event) {
-	Mqtt& me = *(Mqtt*)event->user_context;
+int MqttWifi::mqtt_event_handler(esp_mqtt_event_t* event) {
+	MqttWifi& me = *(MqttWifi*)event->user_context;
 	std::string topics;
 //	esp_mqtt_client_handle_t client = event->client;
 //	int msg_id;
@@ -174,7 +174,7 @@ int Mqtt::mqtt_event_handler(esp_mqtt_event_t* event) {
 typedef enum { PING = 0, PUBLISH, PUBACK, SUBSCRIBE, SUBACK } CMD;
 //________________________________________________________________________
 //
-void Mqtt::mqttPublish(const char* topic, const char* message) {
+void MqttWifi::mqttPublish(const char* topic, const char* message) {
 	if(connected() == false) return;
 	INFO("PUB : %s = %s", topic, message);
 	int id = esp_mqtt_client_publish(_mqttClient, topic, message, 0, 0, 0);
@@ -182,7 +182,7 @@ void Mqtt::mqttPublish(const char* topic, const char* message) {
 }
 //________________________________________________________________________
 //
-void Mqtt::mqttSubscribe(const char* topic) {
+void MqttWifi::mqttSubscribe(const char* topic) {
 	INFO("Subscribing to topic %s ", topic);
 	int id = esp_mqtt_client_subscribe(_mqttClient, topic, 0);
 	if(id < 0) WARN("esp_mqtt_client_subscribe() failed.");

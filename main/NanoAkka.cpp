@@ -61,7 +61,7 @@ void Thread::run() {
 		if (expiredTimer && (expTime <= now)) {
 			if (expiredTimer) {
 				uint32_t delta = now -expTime;
-				INFO("Timer[%X] already expired by %u",expiredTimer,delta);
+				if ( delta>100 ) INFO("Timer[%X] on thread %s already expired by %u",expiredTimer,_name.c_str(),delta);
 				expiredTimer->request();
 			}
 		} else {
