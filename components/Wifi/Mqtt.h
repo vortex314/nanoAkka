@@ -9,7 +9,7 @@ typedef struct MqttMessage {
 //____________________________________________________________________________________________________________
 //
 template <class T>
-class ToMqtt : public Flow<T, MqttMessage> {
+class ToMqtt : public LambdaFlow<T, MqttMessage> {
 		std::string _name;
 	public:
 		ToMqtt(std::string name)
@@ -28,7 +28,7 @@ class ToMqtt : public Flow<T, MqttMessage> {
 //_______________________________________________________________________________________________________________
 //
 template <class T>
-class FromMqtt : public Flow<MqttMessage, T> {
+class FromMqtt : public LambdaFlow<MqttMessage, T> {
 		std::string _name;
 	public:
 		FromMqtt(std::string name)
@@ -63,9 +63,17 @@ class FromMqtt : public Flow<MqttMessage, T> {
 //____________________________________________________________________________________________________________
 //
 template <class T>
-class MqttFlow : public ValueFlow<T>,public ToMqtt<T>,public FromMqtt<T> {
+class MqttFlow : public Flow<T,T> {
 	public:
-		MqttFlow(const char* topic) :  ToMqtt<T>(topic),FromMqtt<T>(topic) {};
+		ToMqtt<T> toMqtt;
+		FromMqtt<T> fromMqtt;
+		MqttFlow(const char* topic) :  toMqtt(topic),fromMqtt(topic) {
+			INFO(" created MqttFlow : %s ",topic);
+		};
+		void request() { fromMqtt.request();};
+		void on(const T& t) { toMqtt.on(t);}
+		void subscribe(Subscriber<T>* tl) { fromMqtt.subscribe(tl);};
+
 };
 //____________________________________________________________________________________________________________
 //
@@ -91,11 +99,10 @@ class Mqtt : public Actor {
 			return *newSource;
 		}
 		template <class T>
-		ValueFlow<T>& topic(const char* name) {
+		Flow<T,T>& topic(const char* name) {
 			auto flow = new MqttFlow<T>(name);
-			incoming.subscribe(flow);
-			Publisher<MqttMessage>& mqpub  =  *flow;
-			mqpub.subscribe(((Subscriber<MqttMessage>*)&outgoing));
+			incoming >> flow->fromMqtt;
+			flow->toMqtt >> outgoing;
 			return *flow;
 		}
 };

@@ -28,10 +28,11 @@ class Pinger : public Actor {
 			out=_counter++;
 		}
 };
-#define DELTA 100000
+#define DELTA 50000
 class Echo : public Actor {
 		uint64_t _startTime;
 	public:
+		ValueSource<float> msgPerMsec=0;
 		ValueSource<int> out;
 		Sink<int,4> in;
 		Echo(Thread& thr) : Actor(thr) {
@@ -39,9 +40,10 @@ class Echo : public Actor {
 				if ( i %DELTA == 0 ) {
 					uint64_t endTime=Sys::millis();
 					uint32_t delta = endTime - _startTime;
-					INFO(" handled %d messages in %u msec = %u msg/msec ",DELTA,delta,DELTA/delta);
+					msgPerMsec = DELTA / delta;
+					INFO(" handled %lu messages in %u msec = %f msg/msec ",DELTA,delta,msgPerMsec);
+					vTaskDelay(10);
 					_startTime=Sys::millis();
-					vTaskDelay(1);
 				}
 				out=i;
 			});
@@ -58,7 +60,7 @@ class Poller : public Actor,public Sink<TimerMsg,2> {
 		bool _connected;
 	public:
 		Sink<bool,2> connected;
-		Poller(Thread& t) : Actor(t),_pollInterval(t,1,1000,true) {
+		Poller(Thread& t) : Actor(t),_pollInterval(t,1,100,true) {
 			_pollInterval >> this;
 			connected.async(thread(),[&](const bool& b) {_connected=b;});
 			async(thread(),[&](const TimerMsg tm) {if( _publishers.size() && _connected ) _publishers[_idx++ % _publishers.size()]->request();});
@@ -217,7 +219,8 @@ extern "C" void app_main(void) {
 	motor.rpmMeasured >>  mqtt.toTopic<int>("motor/rpmMeasured");
 	poller(motor.pwm)(rotaryEncoder.rpmMeasured);
 
-	motor.KI == mqtt.topic<float>("motor/KI");
+
+	motor.KI >> mqtt.toTopic<float>("motor/KI");
 	motor.KP == mqtt.topic<float>("motor/KP");
 	motor.KD == mqtt.topic<float>("motor/KD");
 	motor.rpmTarget == mqtt.topic<int>("motor/rpmTarget");
@@ -244,6 +247,7 @@ extern "C" void app_main(void) {
 
 	pinger.out >> echo.in; // the wiring
 	echo.out >> pinger.in;
+	echo.msgPerMsec >> mqtt.toTopic<float>("system/msgPerMSec");
 
 	pinger.start();
 	ledThread.start();

@@ -156,6 +156,13 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			}
 			WARN("readPtr update failed");
 			return -1;
+		}		std::vector<Subscriber<T> *> _listeners;
+	public:
+		void subscribe(Subscriber<T> *listener) { _listeners.push_back(listener); }
+		void emit(const T &t) {
+			for (Subscriber<T> *l : _listeners) {
+				l->on(t);
+			}
 		}
 };
 // STREAMS
@@ -188,20 +195,16 @@ class Thread {
 		void addTimer(TimerSource *ts) { _timers.push_back(ts); }
 };
 
-template <class IN, class OUT> class Flow;
-
+//__________________________________________________________________________`
+//
 template <class T> class Source : public Publisher<T>, public Requestable {
 		std::vector<Subscriber<T> *> _listeners;
-
 	public:
 		void subscribe(Subscriber<T> *listener) { _listeners.push_back(listener); }
-		void emit(const T &t) {
-			for (Subscriber<T> *l : _listeners) {
-				l->on(t);
-			}
-		}
+		void emit(const T &t) {	for (Subscriber<T> *l : _listeners) {	l->on(t);	}	}
 };
-
+//__________________________________________________________________________`
+//
 template <class T> class LambdaSource : public Source<T> {
 		std::function<T()> _handler;
 
@@ -209,7 +212,10 @@ template <class T> class LambdaSource : public Source<T> {
 		LambdaSource(std::function<T()> handler) : _handler(handler) {};
 		void request() { this->emit(_handler()); }
 };
-
+//__________________________________________________________________________
+//
+//__________________________________________________________________________
+//
 template <class T> class ValueSource : public Source<T> {
 		T _t;
 	public:
@@ -228,8 +234,8 @@ template <class T> class ValueSource : public Source<T> {
 //
 // run : sink bool to stop or run timer
 //	start : restart timer from now+interval
-//______________________________________ TimerSource
-//____________________________________
+//_______________________________________________________________ TimerSource
+//
 class TimerMsg {
 	public:
 		uint32_t id;
@@ -333,8 +339,19 @@ class QueueSource : public Sink<T, S>, public Source<T> {
 		}
 };
 //_________________________________________________ Flow ________________
-template <class IN, class OUT>
+//
+template <class IN,class OUT>
 class Flow : public Subscriber<IN>, public Source<OUT> {
+	public :
+		void operator==(Flow<OUT,IN>& flow) {
+			this->subscribe(&flow);
+			flow.subscribe(this);
+		};
+};
+//_________________________________________________________________
+//
+template <class IN, class OUT>
+class LambdaFlow : public Flow<IN,OUT>  {
 	public:
 		void on(const IN &in) {
 			OUT out;
@@ -349,9 +366,10 @@ class Flow : public Subscriber<IN>, public Source<OUT> {
 		void request() {}
 		virtual int convert(OUT & out,const IN &in) = 0;
 };
-
+//________________________________________________________________
+//
 template <class T>
-class ValueFlow : public Subscriber<T>, public Source<T> {
+class ValueFlow : public Flow<T,T> {
 		T _t;
 	public:
 		ValueFlow() {};
@@ -360,10 +378,9 @@ class ValueFlow : public Subscriber<T>, public Source<T> {
 		void operator=(T t) {_t = t; }
 		T &operator()() { return _t; }
 		void on(const T &in) {	_t = in;}
-		void operator==(ValueFlow& vf) { vf >> *this; *this >> vf; }
 };
-
 //______________________________________ Actor __________________________
+//
 class Actor {
 		Thread &_thread;
 
