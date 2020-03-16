@@ -1,4 +1,4 @@
-#include "MotorServo.h"
+#include "Servo.h"
 
 #define MAX_PWM 50
 #define CONTROL_INTERVAL_MS 100
@@ -10,7 +10,7 @@
 
 
 
-MotorServo::MotorServo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
+Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
                        uint32_t pinLeftEnable, uint32_t pinRightEnable,
                        uint32_t pinLeftPwm, uint32_t pinRightPwm) :
 	_bts7960(pinIS, pinIS, pinLeftEnable, pinRightEnable, pinLeftPwm,pinRightPwm),
@@ -21,7 +21,7 @@ MotorServo::MotorServo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
 	_bts7960.setPwmUnit(1);
 }
 
-MotorServo::MotorServo(Thread& thr,Connector* uext) : MotorServo(
+Servo::Servo(Thread& thr,Connector* uext) : Servo(
 	    thr,
 	    uext->toPin(LP_RXD), //only ADC capable pins
 	    uext->toPin(LP_MISO), // "
@@ -34,11 +34,11 @@ MotorServo::MotorServo(Thread& thr,Connector* uext) : MotorServo(
 
 }
 
-MotorServo::~MotorServo() {
+Servo::~Servo() {
 }
 
 
-void MotorServo::init() {
+void Servo::init() {
 
 	Erc rc = _adcPot.init();
 	if ( rc != E_OK ) WARN("Potentiometer initialization failed");
@@ -89,14 +89,14 @@ void MotorServo::init() {
 }
 
 
-float MotorServo::scale(float x,float x1,float x2,float y1,float y2) {
+float Servo::scale(float x,float x1,float x2,float y1,float y2) {
 	if ( x < x1 ) x=x1;
 	if ( x > x2 ) x=x2;
 	float y= y1+(( x-x1)/(x2-x1))*(y2-y1);
 	return y;
 }
 
-bool MotorServo::measureAngle() {
+bool Servo::measureAngle() {
 	int adc = _adcPot.getValue();
 	_potFilter.addSample(adc);
 	if ( _potFilter.isReady()) {
@@ -107,7 +107,7 @@ bool MotorServo::measureAngle() {
 }
 
 
-float MotorServo::PID(float err, float interval) {
+float Servo::PID(float err, float interval) {
 	integral = integral() + (err * interval);
 	derivative = (err - _errorPrior) / interval;
 	float integralPart = KI() * integral();
@@ -118,7 +118,7 @@ float MotorServo::PID(float err, float interval) {
 	return output;
 }
 
-void MotorServo::round(float& f, float resolution) {
+void Servo::round(float& f, float resolution) {
 	int i = f / resolution;
 	f = i;
 	f *= resolution;

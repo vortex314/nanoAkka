@@ -117,7 +117,7 @@ Connector uextMotor(MOTOR);
 #endif
 
 #ifdef SERVO
-#include <MotorServo.h>
+#include <Servo.h>
 Connector uextServo(SERVO);
 #endif
 
@@ -215,21 +215,20 @@ extern "C" void app_main(void) {
 	motor.init();
 	motor.pwm >>  mqtt.toTopic<float>("motor/pwm");
 	motor.rpmMeasured >>  mqtt.toTopic<int>("motor/rpmMeasured");
-	poller(rotaryEncoder.rpmMeasured);
+	poller(motor.pwm)(rotaryEncoder.rpmMeasured);
 
 	motor.KI == mqtt.topic<float>("motor/KI");
 	motor.KP == mqtt.topic<float>("motor/KP");
 	motor.KD == mqtt.topic<float>("motor/KD");
+	motor.rpmTarget == mqtt.topic<int>("motor/rpmTarget");
+	motor.running == mqtt.topic<bool>("motor/running");
 	motor.current >> mqtt.toTopic<float>("motor/current");
-	motor.rpmTarget >> mqtt.toTopic<int>("motor/rpmTarget");
-	motor.running >> mqtt.toTopic<bool>("motor/running");
 	motor.deviceMessage >> mqtt.toTopic<std::string>("motor/message");
 	poller(motor.KI)(motor.KP)(motor.KD)(motor.rpmTarget)(motor.deviceMessage)(motor.running)(rotaryEncoder.isrCounter)(motor.rpmMeasured);
-
 #endif
 
 #ifdef SERVO
-	MotorServo& servo = *new MotorServo(thisThread,&uextServo);
+	Servo& servo = *new Servo(thisThread,&uextServo);
 	servo.init();
 	servo.pwm >> *new Throttle<float>(100) >> mqtt.toTopic<float>("servo/pwm");
 	servo.angleMeasured >> *new Throttle<int>(100) >> mqtt.toTopic<int>("servo/angleMeasured");
@@ -241,8 +240,6 @@ extern "C" void app_main(void) {
 	servo.running == mqtt.topic<bool>("servo/running");
 	servo.deviceMessage >> mqtt.toTopic<std::string>("servo/message");
 	poller(servo.KI)(servo.KP)(servo.KD)(servo.angleTarget)(servo.deviceMessage)(servo.running);
-
-
 #endif
 
 	pinger.out >> echo.in; // the wiring

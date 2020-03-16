@@ -7,9 +7,9 @@
   </Plugins>
   <VirtualDirectory Name="components">
     <VirtualDirectory Name="servo">
+      <File Name="components/servo/Servo.h"/>
+      <File Name="components/servo/Servo.cpp"/>
       <File Name="components/servo/component.mk"/>
-      <File Name="components/servo/MotorServo.h"/>
-      <File Name="components/servo/MotorServo.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="motor">
       <File Name="components/motor/component.mk"/>
@@ -110,7 +110,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make MOTOR_SERIAL</BuildCommand>
+        <BuildCommand>make MOTOR_WIFI</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

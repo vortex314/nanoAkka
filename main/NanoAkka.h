@@ -50,7 +50,8 @@ typedef String NanoString;
 #endif
 #include <Sys.h>
 
-// INTERFACES nanoAkka
+//______________________________________________________________________ INTERFACES nanoAkka
+//
 
 template <class T> class AbstractQueue {
 	public:
@@ -70,17 +71,29 @@ template <class T> class Subscriber {
 		virtual ~Subscriber() {};
 };
 
+template <class T> class SubscriberFunction {
+		std::function<void(const T& t)> _func;
+	public:
+		SubscriberFunction(std::function<void(const T& t)> func) { _func=func; }
+		void on(const T& t ) { _func(t); }
+};
+
 template <class T> class Publisher {
 	public:
 		virtual void subscribe(Subscriber<T> *listener) = 0;
+		void operator>>(Subscriber<T>& listener) { subscribe(&listener);}
+		void operator>>(Subscriber<T>* listener) { subscribe(listener); }
+		void operator>>(std::function<void(const T& t)> func) { subscribe(new SubscriberFunction<T>(func)); }
 };
 
 class Requestable {
 	public:
 		virtual void request() = 0;
 };
-#define BUSY (1 << 31)
-// template <class IN,class OUT>
+//___________________________________________________________________________ lockfree buffer, isr ready
+//
+#define BUSY (1 << 31)				// busy read or write ptr
+
 template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 		T _array[SIZE];
 		std::atomic<uint32_t> _readPtr;
@@ -186,25 +199,6 @@ template <class T> class Source : public Publisher<T>, public Requestable {
 			for (Subscriber<T> *l : _listeners) {
 				l->on(t);
 			}
-		}
-		void operator>>(Subscriber<T> &listener) { subscribe(&listener); }
-		void operator>>(Subscriber<T> *listener) { subscribe(listener); }
-
-		template <class IN, class OUT> Source<OUT> &operator>>(Flow<IN, OUT> &flow) {
-			subscribe(&flow);
-			return flow;
-		}
-
-		/*	template <class IN,class OUT>
-		                Source<OUT>& operator>>(SinkSource<IN,OUT>& ss)
-		                {
-		                        subscribe(&ss);
-		                        return ss;
-		                }*/
-		template <class IN, class OUT>
-		Source<OUT> &operator>>(std::function<OUT &(IN &)> func) {
-			Source<OUT> source = *(new Source<OUT>());
-			return source;
 		}
 };
 
@@ -365,9 +359,7 @@ class ValueFlow : public Subscriber<T>, public Source<T> {
 		void request() { this->emit(_t); }
 		void operator=(T t) {_t = t; }
 		T &operator()() { return _t; }
-		void on(const T &in) {
-			_t = in;
-		}
+		void on(const T &in) {	_t = in;}
 		void operator==(ValueFlow& vf) { vf >> *this; *this >> vf; }
 };
 

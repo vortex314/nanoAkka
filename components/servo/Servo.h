@@ -13,7 +13,7 @@
 
 #define SERVO_MAX_SAMPLES 16
 
-class MotorServo : public Device {
+class Servo : public Device {
 
 // D34 : L_IS
 // D35 : R_IS
@@ -48,12 +48,12 @@ class MotorServo : public Device {
 		ValueFlow<float> pwm=0.0,error=0.0;
 		ValueFlow<float> proportional=0.0,integral=0.0,derivative=0.0;
 		ValueFlow<float> current=0.0;
-		ValueFlow<bool> keepGoing=true;
-		MotorServo(Thread& thr,Connector* connector);
-		MotorServo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
-		           uint32_t pinLeftEnable, uint32_t pinRightEnable,
-		           uint32_t pinLeftPwm, uint32_t pinRightPwm);
-		~MotorServo();
+		ValueFlow<bool> keepGoing;
+		Servo(Thread& thr,Connector* connector);
+		Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
+		      uint32_t pinLeftEnable, uint32_t pinRightEnable,
+		      uint32_t pinLeftPwm, uint32_t pinRightPwm);
+		~Servo();
 		void init();
 		void observeOn(Thread& thread);
 

@@ -8,8 +8,6 @@ typedef struct MqttMessage {
 } MqttMessage;
 //____________________________________________________________________________________________________________
 //
-
-
 template <class T>
 class ToMqtt : public Flow<T, MqttMessage> {
 		std::string _name;
@@ -27,7 +25,6 @@ class ToMqtt : public Flow<T, MqttMessage> {
 		}
 		void request() {};
 };
-
 //_______________________________________________________________________________________________________________
 //
 template <class T>
@@ -68,7 +65,7 @@ class FromMqtt : public Flow<MqttMessage, T> {
 template <class T>
 class MqttFlow : public ValueFlow<T>,public ToMqtt<T>,public FromMqtt<T> {
 	public:
-		MqttFlow(const char* topic) :  ToMqtt(topic),FromMqtt(topic) {};
+		MqttFlow(const char* topic) :  ToMqtt<T>(topic),FromMqtt<T>(topic) {};
 };
 //____________________________________________________________________________________________________________
 //
@@ -96,12 +93,10 @@ class Mqtt : public Actor {
 		template <class T>
 		ValueFlow<T>& topic(const char* name) {
 			auto flow = new MqttFlow<T>(name);
-			incoming >> *flow;
-			*flow >> outgoing;
+			incoming.subscribe(flow);
+			Publisher<MqttMessage>& mqpub  =  *flow;
+			mqpub.subscribe(((Subscriber<MqttMessage>*)&outgoing));
 			return *flow;
 		}
 };
-
-
-
 #endif
