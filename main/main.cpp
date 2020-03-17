@@ -32,7 +32,7 @@ class Pinger : public Actor {
 class Echo : public Actor {
 		uint64_t _startTime;
 	public:
-		ValueSource<float> msgPerMsec=0;
+		ValueSource<int> msgPerMsec=0;
 		ValueSource<int> out;
 		Sink<int,4> in;
 		Echo(Thread& thr) : Actor(thr) {
@@ -41,7 +41,7 @@ class Echo : public Actor {
 					uint64_t endTime=Sys::millis();
 					uint32_t delta = endTime - _startTime;
 					msgPerMsec = DELTA / delta;
-					INFO(" handled %lu messages in %u msec = %f msg/msec ",DELTA,delta,msgPerMsec);
+					INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec);
 					vTaskDelay(10);
 					_startTime=Sys::millis();
 				}
@@ -207,12 +207,13 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef MOTOR
-	RotaryEncoder& rotaryEncoder = *new RotaryEncoder(uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
+	RotaryEncoder& rotaryEncoder = *new RotaryEncoder(thisThread,uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
 	Motor& motor = *new Motor(thisThread,&uextMotor); // cannot init as global var because of NVS
 	INFO(" init motor ");
 	rotaryEncoder.init();
 	rotaryEncoder.rpmMeasured >> motor.rpmMeasured;
 	rotaryEncoder.isrCounter >> mqtt.toTopic<uint32_t>("motor/isrCounter");
+	poller(rotaryEncoder.isrCounter);
 
 	motor.init();
 	motor.pwm >>  mqtt.toTopic<float>("motor/pwm");
@@ -233,8 +234,8 @@ extern "C" void app_main(void) {
 #ifdef SERVO
 	Servo& servo = *new Servo(thisThread,&uextServo);
 	servo.init();
-	servo.pwm >> *new Throttle<float>(100) >> mqtt.toTopic<float>("servo/pwm");
-	servo.angleMeasured >> *new Throttle<int>(100) >> mqtt.toTopic<int>("servo/angleMeasured");
+	servo.pwm >> mqtt.toTopic<float>("servo/pwm");
+	servo.angleMeasured >>  mqtt.toTopic<int>("servo/angleMeasured");
 	servo.KI == mqtt.topic<float>("servo/KI");
 	servo.KP == mqtt.topic<float>("servo/KP");
 	servo.KD == mqtt.topic<float>("servo/KD");
@@ -247,7 +248,7 @@ extern "C" void app_main(void) {
 
 	pinger.out >> echo.in; // the wiring
 	echo.out >> pinger.in;
-	echo.msgPerMsec >> mqtt.toTopic<float>("system/msgPerMSec");
+	echo.msgPerMsec >> mqtt.toTopic<int>("system/msgPerMSec");
 
 	pinger.start();
 	ledThread.start();

@@ -17,6 +17,7 @@
  *
  * */
 
+
 #define CAPTURE_FREQ 80000000
 #define PULSE_PER_ROTATION 400
 #define CAPTURE_DIVIDER 5
@@ -47,11 +48,12 @@ void IRAM_ATTR RotaryEncoder::isrHandler(void* pv) { // ATTENTION !!! no float c
 	MCPWM[re->_mcpwm_num]->int_clr.val = mcpwm_intr_status;
 }
 
-RotaryEncoder::RotaryEncoder(uint32_t pinTachoA, uint32_t pinTachoB)
-	: _pinTachoA(pinTachoA)
+RotaryEncoder::RotaryEncoder(Thread& thr,uint32_t pinTachoA, uint32_t pinTachoB)
+	: Actor(thr),
+	  _pinTachoA(pinTachoA)
 	, _dInTachoB(DigitalIn::create(pinTachoB))
 	,_captures(10)
-	,rpmMeasured(5),
+	,rpmMeasured(0),
 	  isrCounter([&]() {
 	return _isrCounter;
 }) {         // if no rpm measurement, suppose 0 as no capture
@@ -64,27 +66,29 @@ RotaryEncoder::RotaryEncoder(uint32_t pinTachoA, uint32_t pinTachoB)
 	_mcpwm_num = MCPWM_UNIT_0;
 	_timer_num = MCPWM_TIMER_0;
 
-	/*	auto median = new Median<int32_t,5>();
-		auto captureToRpm = new LambdaFlow<int32_t, int32_t>([&](const int32_t& delta) {
-			{
-				int32_t rpm = deltaToRpm(delta);
-				return rpm;
-			}
-		});
-		auto throttle = new Throttle<int32_t>(100);
-		_timeoutFlow =  new TimeoutFlow<int32_t>(200,0);
+	auto median = new Median<int32_t,5>();
+	auto captureToRpm = new LambdaFlow<int32_t,int32_t>([&](int32_t& rpm,const int32_t& capture) {
+		deltaToRpm(rpm,capture);
+		return 0;
+	});
+	auto throttle = new Throttle<int32_t>(100);
+	_timeoutFlow =  new TimeoutFlow<int32_t>(thread(),200,0);
+	auto sink = new Sink<int32_t,10>();
 
-		_rawCapture >> *median 				// get median , reduce noise
-		            >> *captureToRpm		// convert to RPM
-		            >> *throttle			// max 10 samples per sec
-		            >> *_timeoutFlow			// non received eq 0
-		            >> rpmMeasured.fromIsr;	// emit async in another thread
+	sink->async(thread(),[&](const int32_t& cpt) { INFO(" cpt : %d ",cpt);});
 
-		rpmMeasured >> *new LambdaSink<int32_t>([&](const int32_t& v) {
-			{
-				INFO(" value %d ",v);
-			}
-		});*/
+	_rawCapture >> sink;
+	_rawCapture >> *median 				// get median , reduce noise
+	            >> *captureToRpm		// convert to RPM
+//	            >> *throttle			// max 10 samples per sec
+//	            >> *_timeoutFlow			// non received eq 0
+	            >> rpmMeasured;	// emit async in another thread
+
+	rpmMeasured >> ([&](const int32_t& v) {
+		{
+			INFO(" value %d ",v);
+		}
+	});
 }
 
 RotaryEncoder::~RotaryEncoder() {}
@@ -123,12 +127,12 @@ void RotaryEncoder::init() {
 
 const uint32_t weight = 10;
 
-int32_t RotaryEncoder::deltaToRpm(const int32_t delta) {
+int RotaryEncoder::deltaToRpm(int32_t& rpm,const int32_t& delta) {
 	if ( delta == 0 ) return 0;
 	int32_t newDelta= delta / _captureDivider;
 	int32_t microSecPerTooth = (newDelta / 10000) * (10000000000 / _apbClock); // in micro sec
 	int32_t microSecPerRotation = microSecPerTooth * PULSE_PER_ROTATION;
-	if ( microSecPerRotation==0) return 0;
-	int32_t rpm = (60 * 1000000) / microSecPerRotation;
+	if ( microSecPerRotation==0) rpm= 0;
+	else rpm = (60 * 1000000) / microSecPerRotation;
 	return rpm;
 }

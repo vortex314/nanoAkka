@@ -30,7 +30,7 @@ include $(IDF_PATH)/make/project.mk
 
 GPS:
 	touch main/main.cpp
-	make DEFINE=" -DGPS=2 -DUS=1 -DHOSTNAME=gps -DMQTT_HOST=limero.ddns.net -DMQTT_SERIAL" 
+	make DEFINE=" -DGPS=2 -DUS=1 -DHOSTNAME=gps -DMQTT_HOST=limero.ddns.net " 
 
 REMOTE :
 	touch main/main.cpp

@@ -4,6 +4,7 @@
 #include <Hardware.h>
 #include <Log.h>
 #include <NanoAkka.h>
+#include <Filter.h>
 //#include <coroutine.h>
 #include "driver/mcpwm.h"
 #include "driver/pcnt.h"
@@ -24,7 +25,7 @@ class CaptureMsg {
 		}
 };
 
-class RotaryEncoder {
+class RotaryEncoder : public Actor {
 		uint32_t _pinTachoA;
 		DigitalIn& _dInTachoB;
 		uint32_t _pinTachoB;
@@ -49,18 +50,18 @@ class RotaryEncoder {
 		int32_t _samples[MAX_SAMPLES];
 		uint32_t _indexSample = 0;
 		ValueFlow<int32_t> _rawCapture=0;
-//		TimeoutFlow<int32_t> *_timeoutFlow;
+		TimeoutFlow<int32_t> *_timeoutFlow;
 		ValueFlow<int32_t> _captures=0;
 
 	public:
 		ValueFlow<int32_t> rpmMeasured =0;
 		LambdaSource<uint32_t> isrCounter;
 
-		RotaryEncoder(uint32_t pinTachoA, uint32_t pinTachoB);
+		RotaryEncoder(Thread& thr,uint32_t pinTachoA, uint32_t pinTachoB);
 		~RotaryEncoder();
 		void init();
 		static void isrHandler(void*);
-		int32_t deltaToRpm(const int32_t delta);
+		int deltaToRpm(int32_t& rpm,const int32_t& delta);
 
 		void setPwmUnit(uint32_t);
 		void observeOn(Thread& t);

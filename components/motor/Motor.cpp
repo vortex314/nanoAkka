@@ -13,25 +13,15 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 	  _controlTimer(thr,3,CONTROL_INTERVAL_MS,true) // PID per 100 msec
 
 {
-	//_rpmMeasuredFilter = new AverageFilter<float>();
-	rpmTarget = 0;
 	_bts7960.setPwmUnit(0);
 
-	_reportTimer >> *new Sink<TimerMsg,3>([&](const TimerMsg tm) {
-		integral.request();
-		derivative.request();
-		proportional.request();
+	_reportTimer >> ([&](const TimerMsg tm) {
 		current = _bts7960.measureCurrentLeft()+ _bts7960.measureCurrentRight();
 		INFO("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
 		     pwm(),
 		     KP() * error(),
 		     KI() * integral(),
 		     KD() * derivative());
-		/*	if( current() < 0.15 ) {
-		    stop("no base current detected.");
-		};
-		*/
-//       _bts7960.showReg();
 
 		/*	if ( (pwm() > 20 || pwm() < -20)  && rpmMeasured()==0 ) {
 				running=false;
@@ -39,14 +29,14 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 			}*/
 	});
 
-	_pulseTimer >> *new Sink<TimerMsg,3>([&](TimerMsg tm) {
+	_pulseTimer >> ([&](const TimerMsg tm) {
 		pulse();
 	});
 
-	auto pidCalc = new Sink<int,3>([&](int rpm) {
+	_controlTimer >> ([&](const TimerMsg& tm) {
 		if ( isRunning() ) {
 			static float newOutput;
-			error = rpmTarget() - rpm;
+			error = rpmTarget() - rpmMeasured();
 			newOutput = PID(error(), CONTROL_INTERVAL_MS/1000.0);
 			if (rpmTarget() == 0) {
 				newOutput = 0;
@@ -58,11 +48,6 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 		} else {
 			_bts7960.setOutput(0);
 		}
-	});
-
-	rpmMeasured >> *pidCalc ;
-	_controlTimer >> *new Sink<TimerMsg,3>([&](TimerMsg tick) {
-		rpmMeasured.request();
 	});
 }
 

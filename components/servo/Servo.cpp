@@ -11,8 +11,8 @@
 
 
 Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
-                       uint32_t pinLeftEnable, uint32_t pinRightEnable,
-                       uint32_t pinLeftPwm, uint32_t pinRightPwm) :
+             uint32_t pinLeftEnable, uint32_t pinRightEnable,
+             uint32_t pinLeftPwm, uint32_t pinRightPwm) :
 	_bts7960(pinIS, pinIS, pinLeftEnable, pinRightEnable, pinLeftPwm,pinRightPwm),
 	_adcPot(ADC::create(pinPot)),
 	_pulseTimer(thr,1,5000,true),
@@ -44,7 +44,7 @@ void Servo::init() {
 	if ( rc != E_OK ) WARN("Potentiometer initialization failed");
 	if ( _bts7960.initialize() ) WARN("BTS7960 initialization failed");
 
-	_controlTimer >> *new Sink<TimerMsg,3>([&](TimerMsg tm) {
+	_controlTimer >> ([&](TimerMsg tm) {
 		if ( isRunning() ) {
 			if ( angleTarget()< ANGLE_MIN) angleTarget=ANGLE_MIN;
 			if ( angleTarget()> ANGLE_MAX) angleTarget=ANGLE_MAX;
@@ -57,7 +57,7 @@ void Servo::init() {
 			_bts7960.setOutput(0);
 		}
 	});
-	_pulseTimer >> *new Sink<TimerMsg,3>([&](TimerMsg tm) {
+	_pulseTimer >> ([&](TimerMsg tm) {
 
 		static uint32_t pulse=0;
 		static int outputTargets[]= {-30,0,30,0};
@@ -66,11 +66,7 @@ void Servo::init() {
 		pulse %= (sizeof(outputTargets)/sizeof(int));
 		_pulseTimer.start();
 	});
-	_reportTimer >> *new Sink<TimerMsg,3>([&](TimerMsg tm) {
-		integral.request();
-		derivative.request();
-		proportional.request();
-		angleMeasured.request();
+	_reportTimer >> ([&](TimerMsg tm) {
 		current = _bts7960.measureCurrentLeft()+ _bts7960.measureCurrentRight();
 		current.request();
 		INFO("angle %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f %d ",angleMeasured(),angleTarget(),error(),

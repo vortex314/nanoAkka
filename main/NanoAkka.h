@@ -1,6 +1,7 @@
 #ifndef NANOAKKA_H
 #define NANOAKKA_H
 
+#include <errno.h>
 #include <atomic>
 #include <functional>
 #include <string>
@@ -50,6 +51,14 @@ typedef String NanoString;
 #endif
 #include <Sys.h>
 
+typedef struct  {
+	uint32_t bufferOverflow=0;
+	uint32_t bufferPushBusy=0;
+	uint32_t bufferPopBusy=0;
+	uint32_t threadQueueOverflow=0;
+} NanoStats;
+extern NanoStats stats;
+
 //______________________________________________________________________ INTERFACES nanoAkka
 //
 
@@ -71,7 +80,8 @@ template <class T> class Subscriber {
 		virtual ~Subscriber() {};
 };
 
-template <class T> class SubscriberFunction {
+template <class T>
+class SubscriberFunction : public Subscriber<T> {
 		std::function<void(const T& t)> _func;
 	public:
 		SubscriberFunction(std::function<void(const T& t)> func) { _func=func; }
@@ -108,11 +118,10 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			uint32_t expected = _writePtr;
 			uint32_t desired = next(expected);
 			if (desired == _readPtr) {
-//				printf(__FILE__ ":%d FULL\n",__LINE__); // aborts in isr
+				stats.bufferOverflow++;
 				return ENOBUFS;
 			}
 			if (expected & BUSY) {
-//				printf(__FILE__ ":%d BUSY\n",__LINE__);
 				return ENODATA;
 			}
 			desired |= BUSY;
@@ -139,6 +148,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 				return ENOBUFS;
 			}
 			if (expected & BUSY) {
+				stats.bufferPopBusy++;
 				WARN("BUSY");
 				return ENODATA;
 			}
@@ -168,12 +178,14 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 // STREAMS
 class TimerSource;
 
+
 class Thread {
 #ifdef FREERTOS
 		QueueHandle_t _workQueue = 0;
 #else
 		ArrayQueue<Invoker *, 10> _workQueue;
 #endif
+		uint32_t queueOverflow=0;
 		void createQueue();
 		std::vector<TimerSource *> _timers;
 		static int _id;
@@ -342,30 +354,37 @@ class QueueSource : public Sink<T, S>, public Source<T> {
 //
 template <class IN,class OUT>
 class Flow : public Subscriber<IN>, public Source<OUT> {
-	public :
+	public:
 		void operator==(Flow<OUT,IN>& flow) {
 			this->subscribe(&flow);
 			flow.subscribe(this);
 		};
 };
-//_________________________________________________________________
-//
-template <class IN, class OUT>
-class LambdaFlow : public Flow<IN,OUT>  {
+
+template <class IN,class OUT>
+class LambdaFlow : public Flow<IN,OUT> {
+		std::function<int  (OUT&,const IN& )> _func;
 	public:
-		void on(const IN &in) {
+		LambdaFlow() {_func=[](OUT& out,const IN& in) {WARN("no handler for this flow");};};
+		LambdaFlow(std::function<int  (OUT&,const IN& )> func) : _func(func) {};
+		void lambda(std::function<int(OUT&,const IN&)> func) {_func=func;}
+		virtual void on(const IN& in ) {
 			OUT out;
-			if ( convert(out,in) ) {
+			if ( _func(out,in) ) {
 //				WARN(" conversion failed ");
 				return;
 			}
 			this->emit(out);
-			// emit doesn't work as such without this->
-			// https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
 		}
-		void request() {}
-		virtual int convert(OUT & out,const IN &in) = 0;
+		void request() {};
 };
+
+template <class IN,class OUT>
+Source<OUT>& operator>>(Publisher<OUT>& publisher,Flow<IN,OUT>& flow) {
+	publisher.subscribe(&flow);
+	return flow;
+}
+
 //________________________________________________________________
 //
 template <class T>

@@ -13,8 +13,8 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
 		std::string _name;
 	public:
 		ToMqtt(std::string name)
-			: _name(name) {};
-		int  convert(MqttMessage&  msg,const T& event) {
+			:
+			LambdaFlow<T, MqttMessage>([&](MqttMessage&  msg,const T& event) {
 			std::string s;
 			DynamicJsonDocument doc(100);
 			JsonVariant variant = doc.to<JsonVariant>();
@@ -22,7 +22,7 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
 			serializeJson(doc, s);
 			msg = {_name,s};
 			return 0;
-		}
+		}),_name(name) {}
 		void request() {};
 };
 //_______________________________________________________________________________________________________________
@@ -32,8 +32,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
 		std::string _name;
 	public:
 		FromMqtt(std::string name)
-			: _name(name) {};
-		int convert(T& t,const MqttMessage& mqttMessage) {
+			: LambdaFlow<MqttMessage, T>([&](T& t,const MqttMessage& mqttMessage) {
 //			INFO(" '%s' <> '%s'",mqttMessage.topic.c_str(),_name.c_str());
 			if(mqttMessage.topic != _name) {
 				return EINVAL;
@@ -57,7 +56,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
 			return 0;
 			// emit doesn't work as such
 			// https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
-		}
+		}),_name(name) {};
 		void request() {};
 };
 //____________________________________________________________________________________________________________

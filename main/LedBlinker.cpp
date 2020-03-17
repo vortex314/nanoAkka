@@ -2,21 +2,17 @@
 
 
 LedBlinker::LedBlinker(Thread& thr,uint32_t pin, uint32_t delay)
-	: Actor(thr) {
+	: Actor(thr),blinkTimer(thr,BLINK_TIMER_ID,delay,true) {
 
-	blinkTimer = new TimerSource(thr,BLINK_TIMER_ID,delay,true);
-
-	timerHandler.async(thread(),[&](const TimerMsg tm) {
+	blinkTimer >> ([&](const TimerMsg tm) {
 		gpio_set_level((gpio_num_t)_pin, _on  );
 		_on = _on ? 0 : 1 ;
 	});
 
-	*blinkTimer >> timerHandler;
-
 	_pin = pin;
 	blinkSlow.async(thread(),[&](bool flag) {
-		if ( flag ) blinkTimer->interval(500);
-		else blinkTimer->interval(100);
+		if ( flag ) blinkTimer.interval(500);
+		else blinkTimer.interval(100);
 	});
 }
 void LedBlinker::init() {
@@ -30,5 +26,5 @@ void LedBlinker::init() {
 }
 
 void LedBlinker::delay(uint32_t d) {
-	blinkTimer->interval(d);
+	blinkTimer.interval(d);
 }
