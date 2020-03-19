@@ -4,9 +4,9 @@
 #define CONTROL_INTERVAL_MS 100
 #define ANGLE_MIN -45.0
 #define ANGLE_MAX 45.0
-#define ADC_MIN 260
-#define ADC_MAX 551
-#define ADC_ZERO 414
+#define ADC_MIN 385
+#define ADC_MAX 585
+#define ADC_ZERO 485
 
 
 
@@ -56,6 +56,10 @@ void Servo::init() {
 		} else {
 			_bts7960.setOutput(0);
 		}
+		angleMeasured.request(); // use control oop also for mqtt pub.
+		adcPot.request();
+		angleTarget.request();
+		pwm.request();
 	});
 	_pulseTimer >> ([&](TimerMsg tm) {
 
@@ -94,6 +98,7 @@ float Servo::scale(float x,float x1,float x2,float y1,float y2) {
 
 bool Servo::measureAngle() {
 	int adc = _adcPot.getValue();
+	adcPot = adc;
 	_potFilter.addSample(adc);
 	if ( _potFilter.isReady()) {
 		angleMeasured = scale(_potFilter.getMedian(),ADC_MIN,ADC_MAX,ANGLE_MIN,ANGLE_MAX);

@@ -390,13 +390,15 @@ Source<OUT>& operator>>(Publisher<OUT>& publisher,Flow<IN,OUT>& flow) {
 template <class T>
 class ValueFlow : public Flow<T,T> {
 		T _t;
+		bool _pass=false;
 	public:
 		ValueFlow() {};
-		ValueFlow(T t) { _t = t; }
+		ValueFlow(T t) { _t = std::move(t); }
 		void request() { this->emit(_t); }
-		void operator=(T t) {_t = t; }
+		void operator=(T t) {_t = std::move(t); if ( _pass ) this->emit(_t); }
 		T &operator()() { return _t; }
-		void on(const T &in) {	_t = in;}
+		void on(const T &in) {	_t = std::move(in);  this->emit(_t);}
+		void pass(bool p) { _pass=p;}
 };
 //______________________________________ Actor __________________________
 //

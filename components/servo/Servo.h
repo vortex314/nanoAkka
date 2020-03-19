@@ -39,7 +39,8 @@ class Servo : public Device {
 		TimerSource _pulseTimer;
 		TimerSource _reportTimer;
 		TimerSource _controlTimer;
-	public:
+public:
+	ValueFlow <int> adcPot=0;
 		ValueFlow<int> angleTarget=0;
 		ValueFlow<int> angleMeasured=0;
 		ValueFlow<float> KP= 3;

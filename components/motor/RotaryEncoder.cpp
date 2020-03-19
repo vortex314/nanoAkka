@@ -75,20 +75,16 @@ RotaryEncoder::RotaryEncoder(Thread& thr,uint32_t pinTachoA, uint32_t pinTachoB)
 	_timeoutFlow =  new TimeoutFlow<int32_t>(thread(),200,0);
 	auto sink = new Sink<int32_t,10>();
 
-	sink->async(thread(),[&](const int32_t& cpt) { INFO(" cpt : %d ",cpt);});
+//	sink->async(thread(),[&](const int32_t& cpt) { INFO(" cpt : %d ",cpt);});
+//	rpmMeasured >> sink;
 
-	_rawCapture >> sink;
+//	_rawCapture >> sink;
 	_rawCapture >> *median 				// get median , reduce noise
 	            >> *captureToRpm		// convert to RPM
-//	            >> *throttle			// max 10 samples per sec
-//	            >> *_timeoutFlow			// non received eq 0
+	            >> *throttle			// max 10 samples per sec
+	            >> *_timeoutFlow			// non received eq 0
 	            >> rpmMeasured;	// emit async in another thread
 
-	rpmMeasured >> ([&](const int32_t& v) {
-		{
-			INFO(" value %d ",v);
-		}
-	});
 }
 
 RotaryEncoder::~RotaryEncoder() {}

@@ -41,7 +41,7 @@ class Echo : public Actor {
 					uint64_t endTime=Sys::millis();
 					uint32_t delta = endTime - _startTime;
 					msgPerMsec = DELTA / delta;
-					INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec);
+					INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec());
 					vTaskDelay(10);
 					_startTime=Sys::millis();
 				}
@@ -151,7 +151,8 @@ extern "C" void app_main(void) {
 		}
 		uint64_t end = Sys::millis();
 		uint32_t delta = end-start;
-		INFO(" time taken for %d iterations : %u msec  => %u /msec",max,delta,(max)/delta);
+		uint32_t mpms = max / delta;
+		INFO(" time taken for %u iterations : %u msec  = %u msg/msec",max,delta,mpms);
 	}
 	led.init();
 #ifdef MQTT_SERIAL
@@ -178,6 +179,11 @@ extern "C" void app_main(void) {
 
 	Sink<int,3> intSink([](int i) { INFO("received an int %d",i);});
 	mqtt.fromTopic<int>("os/int") >> intSink;
+
+	TimerSource logTimer(thisThread,1,3000,true) ;
+	logTimer >> ([](const TimerMsg& tm) {
+		INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  ",stats.bufferOverflow,stats.bufferPopBusy,stats.bufferPushBusy,stats.threadQueueOverflow);
+	});
 
 #ifndef HOSTNAME
 	std::string hn;
@@ -211,30 +217,32 @@ extern "C" void app_main(void) {
 	Motor& motor = *new Motor(thisThread,&uextMotor); // cannot init as global var because of NVS
 	INFO(" init motor ");
 	rotaryEncoder.init();
-	rotaryEncoder.rpmMeasured >> motor.rpmMeasured;
 	rotaryEncoder.isrCounter >> mqtt.toTopic<uint32_t>("motor/isrCounter");
 	poller(rotaryEncoder.isrCounter);
 
 	motor.init();
-	motor.pwm >>  mqtt.toTopic<float>("motor/pwm");
-	motor.rpmMeasured >>  mqtt.toTopic<int>("motor/rpmMeasured");
-	poller(motor.pwm)(rotaryEncoder.rpmMeasured);
+	rotaryEncoder.rpmMeasured >> motor.rpmMeasured;
 
+	motor.pwm >>  mqtt.toTopic<float>("motor/pwm");
+	motor.rpmMeasured2 >>  mqtt.toTopic<int>("motor/rpmMeasured");
+	motor.rpmTarget == mqtt.topic<int>("motor/rpmTarget");
 
 	motor.KI >> mqtt.toTopic<float>("motor/KI");
 	motor.KP == mqtt.topic<float>("motor/KP");
 	motor.KD == mqtt.topic<float>("motor/KD");
-	motor.rpmTarget == mqtt.topic<int>("motor/rpmTarget");
-	motor.running == mqtt.topic<bool>("motor/running");
 	motor.current >> mqtt.toTopic<float>("motor/current");
+
+	motor.running == mqtt.topic<bool>("motor/running");
 	motor.deviceMessage >> mqtt.toTopic<std::string>("motor/message");
-	poller(motor.KI)(motor.KP)(motor.KD)(motor.rpmTarget)(motor.deviceMessage)(motor.running)(rotaryEncoder.isrCounter)(motor.rpmMeasured);
+	poller(motor.KI)(motor.KP)(motor.KD);
+	poller(motor.deviceMessage)(motor.running)(motor.current);
 #endif
 
 #ifdef SERVO
 	Servo& servo = *new Servo(thisThread,&uextServo);
 	servo.init();
 	servo.pwm >> mqtt.toTopic<float>("servo/pwm");
+	servo.adcPot >> mqtt.toTopic<int>("servo/adcPot");
 	servo.angleMeasured >>  mqtt.toTopic<int>("servo/angleMeasured");
 	servo.KI == mqtt.topic<float>("servo/KI");
 	servo.KP == mqtt.topic<float>("servo/KP");

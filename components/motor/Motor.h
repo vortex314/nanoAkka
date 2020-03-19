@@ -30,13 +30,14 @@ class Motor : public Actor, public Device {
 	public:
 		ValueFlow<int> rpmTarget=0;
 		ValueFlow<float> KP=0.05;
-		ValueFlow<float> KI=0.2;
+		ValueFlow<float> KI=0.4;
 		ValueFlow<float> KD=0;
 		ValueSource<float> pwm=0.0;
 		ValueSource<float> error=0.0;
 		ValueSource<float> proportional=0.0,integral=0.0,derivative=0.0;
 		ValueSource<float> current=0.0;
 		ValueFlow<int> rpmMeasured=0;
+		ValueFlow<int> rpmMeasured2=0;
 		ValueFlow<bool> keepGoing=true;
 
 		Motor(Thread& thr,Connector* connector);

@@ -127,7 +127,7 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t* event) {
 			//			INFO("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
 			break;
 		case MQTT_EVENT_DATA: {
-				INFO("MQTT_EVENT_DATA");
+				//		INFO("MQTT_EVENT_DATA");
 				bool busy = false;
 				if(!busy) {
 					busy = true;
@@ -176,7 +176,7 @@ typedef enum { PING = 0, PUBLISH, PUBACK, SUBSCRIBE, SUBACK } CMD;
 //
 void MqttWifi::mqttPublish(const char* topic, const char* message) {
 	if(connected() == false) return;
-	INFO("PUB : %s = %s", topic, message);
+//	INFO("PUB : %s = %s", topic, message);
 	int id = esp_mqtt_client_publish(_mqttClient, topic, message, 0, 0, 0);
 	if(id < 0) WARN("esp_mqtt_client_publish() failed.");
 }

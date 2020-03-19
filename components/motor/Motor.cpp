@@ -1,6 +1,6 @@
 #include "Motor.h"
 
-#define CONTROL_INTERVAL_MS 100
+#define CONTROL_INTERVAL_MS 200
 
 
 Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
@@ -16,7 +16,6 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 	_bts7960.setPwmUnit(0);
 
 	_reportTimer >> ([&](const TimerMsg tm) {
-		current = _bts7960.measureCurrentLeft()+ _bts7960.measureCurrentRight();
 		INFO("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
 		     pwm(),
 		     KP() * error(),
@@ -30,7 +29,7 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 	});
 
 	_pulseTimer >> ([&](const TimerMsg tm) {
-		pulse();
+//		pulse();
 	});
 
 	_controlTimer >> ([&](const TimerMsg& tm) {
@@ -43,8 +42,11 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 				integral=0;
 			}
 			pwm = newOutput;
+			rpmMeasured2.on( rpmMeasured());
+			rpmTarget.request();
 			_bts7960.setOutput(pwm());
-			pwm.request();
+			current = _bts7960.measureCurrentLeft()+ _bts7960.measureCurrentRight();
+
 		} else {
 			_bts7960.setOutput(0);
 		}
