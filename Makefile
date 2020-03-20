@@ -16,9 +16,9 @@ ESPBAUD = 921600
 IDF_PATH ?= /home/lieven/esp/esp-idf
 WORKSPACE := /home/lieven/workspace
 DEFINES := -DWIFI_SSID=${SSID} -DWIFI_PASS=${PSWD}  -DESP32_IDF=1 $(DEFINE) -DMQTT_HOST=limero.ddns.net -DMQTT_PORT=1883 
-CPPFLAGS +=  $(DEFINES)  -I../Common -I../microAkka 
+CPPFLAGS +=  $(DEFINES)  -I../Common 
 CPPFLAGS +=  -I$(WORKSPACE)/ArduinoJson/src -I $(IDF_PATH)/components/freertos/include/freertos 
-CXXFLAGS +=  $(DEFINES)  -I../Common -I../microAkka 
+CXXFLAGS +=  $(DEFINES)  -I../Common 
 
 CXXFLAGS +=  -I$(WORKSPACE)/ArduinoJson/src -I $(IDF_PATH)/components/freertos/include/freertos 
 CXXFLAGS +=  -fno-rtti -ffunction-sections -fdata-sections 

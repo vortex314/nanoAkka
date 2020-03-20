@@ -275,6 +275,7 @@ class TimerSource : public Source<TimerMsg> {
 		TimerSource() { _expireTime = Sys::now() + _interval; };
 
 		void attach(Thread &thr) { thr.addTimer(this); }
+		void reset() {start();} 
 		void start() { _expireTime = Sys::millis() + _interval; }
 		void stop() { _expireTime = UINT64_MAX; }
 		void interval(uint32_t i) { _interval = i; }

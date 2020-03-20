@@ -50,6 +50,8 @@
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="main">
+  <File Name="main/Device.h"/>
+  <File Name="main/Device.cpp"/>
     <File Name="main/Filter.h"/>
     <File Name="main/NanoAkka.cpp"/>
     <File Name="main/NanoAkka.h"/>

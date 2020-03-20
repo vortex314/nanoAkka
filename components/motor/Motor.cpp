@@ -6,8 +6,9 @@
 Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
              uint32_t pinLeftEnable, uint32_t pinRightEnable,
              uint32_t pinLeftPwm, uint32_t pinRightPwm)
-	: Actor(thr),_bts7960(pinLeftIS, pinRightIS, pinLeftEnable, pinRightEnable, pinLeftPwm,
-	                      pinRightPwm),
+	: Actor(thr),Device(thr),
+	  _bts7960(pinLeftIS, pinRightIS, pinLeftEnable, pinRightEnable, pinLeftPwm,
+	           pinRightPwm),
 	  _pulseTimer(thr,1,5000,true), // change steps each 5 sec
 	  _reportTimer(thr,2,1000,true), // to MQTT and display 1/sec
 	  _controlTimer(thr,3,CONTROL_INTERVAL_MS,true) // PID per 100 msec

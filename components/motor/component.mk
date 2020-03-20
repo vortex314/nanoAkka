@@ -8,5 +8,5 @@
 
 #ESP32 COMPONENT.MK
 COMPONENT_SRCDIRS := .
-COMPONENT_ADD_INCLUDEDIRS := . ../main ../../ArduinoJson ../../Common ../main
+COMPONENT_ADD_INCLUDEDIRS := . ../main ../../ArduinoJson ../../Common
 

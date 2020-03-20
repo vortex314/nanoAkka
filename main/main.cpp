@@ -126,6 +126,7 @@ Connector uextServo(SERVO);
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
+ValueSource<bool> systemAlive=true;
 LambdaSource<uint32_t> systemHeap([]() {return xPortGetFreeHeapSize();});
 LambdaSource<uint64_t> systemUptime([]() {return Sys::millis();});
 Poller poller(mqttThread);
@@ -175,7 +176,8 @@ extern "C" void app_main(void) {
 	systemHeap >> mqtt.toTopic<uint32_t>("system/heap");
 	systemHostname >> mqtt.toTopic<std::string>("system/hostname");
 	systemBuild >> mqtt.toTopic<std::string>("system/build");
-	poller(systemUptime)(systemHeap)(systemHostname)(systemBuild);
+	systemAlive >> mqtt.toTopic<bool>("system/alive");
+	poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive);
 
 	Sink<int,3> intSink([](int i) { INFO("received an int %d",i);});
 	mqtt.fromTopic<int>("os/int") >> intSink;
@@ -216,6 +218,9 @@ extern "C" void app_main(void) {
 	RotaryEncoder& rotaryEncoder = *new RotaryEncoder(thisThread,uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
 	Motor& motor = *new Motor(thisThread,&uextMotor); // cannot init as global var because of NVS
 	INFO(" init motor ");
+	motor.watchdogTimer.interval(3000);
+	mqtt.fromTopic<bool>("motor/watchdogReset") >> motor.watchdogReset;
+
 	rotaryEncoder.init();
 	rotaryEncoder.isrCounter >> mqtt.toTopic<uint32_t>("motor/isrCounter");
 	poller(rotaryEncoder.isrCounter);
@@ -240,7 +245,9 @@ extern "C" void app_main(void) {
 
 #ifdef SERVO
 	Servo& servo = *new Servo(thisThread,&uextServo);
+	servo.watchdogTimer.interval(3000);
 	servo.init();
+	mqtt.fromTopic<bool>("servo/watchdogReset") >> servo.watchdogReset;
 	servo.pwm >> mqtt.toTopic<float>("servo/pwm");
 	servo.adcPot >> mqtt.toTopic<int>("servo/adcPot");
 	servo.angleMeasured >>  mqtt.toTopic<int>("servo/angleMeasured");

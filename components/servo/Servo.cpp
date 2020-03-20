@@ -13,6 +13,7 @@
 Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
              uint32_t pinLeftEnable, uint32_t pinRightEnable,
              uint32_t pinLeftPwm, uint32_t pinRightPwm) :
+	Device(thr),
 	_bts7960(pinIS, pinIS, pinLeftEnable, pinRightEnable, pinLeftPwm,pinRightPwm),
 	_adcPot(ADC::create(pinPot)),
 	_pulseTimer(thr,1,5000,true),
@@ -31,12 +32,10 @@ Servo::Servo(Thread& thr,Connector* uext) : Servo(
 
 	    uext->toPin(LP_TXD),
 	    uext->toPin(LP_SCK)) {
-
 }
 
 Servo::~Servo() {
 }
-
 
 void Servo::init() {
 
@@ -106,7 +105,6 @@ bool Servo::measureAngle() {
 	}
 	return false;
 }
-
 
 float Servo::PID(float err, float interval) {
 	integral = integral() + (err * interval);
