@@ -8,11 +8,18 @@
 #include <unordered_map>
 #include <vector>
 
+#ifdef ESP_OPEN_RTOS
+#define FREERTOS
+#include <FreeRTOS.h>
+#include <task.h>
+#include <queue.h>
+typedef std::string NanoString;
+#endif
+
 #ifdef ESP32_IDF
 typedef std::string NanoString;
 #define FREERTOS
 #include <FreeRTOS.h>
-
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "nvs.h"
@@ -21,8 +28,6 @@ typedef std::string NanoString;
 #include <freertos/semphr.h>
 #define PRO_CPU 0
 #define APP_CPU 1
-#else
-
 #endif
 
 #ifdef ARDUINO
@@ -49,6 +54,8 @@ typedef String NanoString;
 #else
 #include <Log.h>
 #endif
+
+
 #include <Sys.h>
 
 typedef struct  {
@@ -79,6 +86,7 @@ template <class T> class Subscriber {
 		virtual void on(const T &t) = 0;
 		virtual ~Subscriber() {};
 };
+#include <bits/atomic_word.h>
 
 template <class T>
 class SubscriberFunction : public Subscriber<T> {
@@ -103,9 +111,10 @@ class Requestable {
 //___________________________________________________________________________ lockfree buffer, isr ready
 //
 #define BUSY (1 << 31)				// busy read or write ptr
-
 template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 		T _array[SIZE];
+//		std::atomic<uint32_t> _readPtr;
+//		std::atomic<uint32_t> _writePtr;
 		std::atomic<uint32_t> _readPtr;
 		std::atomic<uint32_t> _writePtr;
 		inline uint32_t next(uint32_t idx) {
@@ -166,13 +175,6 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			}
 			WARN("readPtr update failed");
 			return -1;
-		}		std::vector<Subscriber<T> *> _listeners;
-	public:
-		void subscribe(Subscriber<T> *listener) { _listeners.push_back(listener); }
-		void emit(const T &t) {
-			for (Subscriber<T> *l : _listeners) {
-				l->on(t);
-			}
 		}
 };
 // STREAMS
@@ -230,12 +232,14 @@ template <class T> class LambdaSource : public Source<T> {
 //
 template <class T> class ValueSource : public Source<T> {
 		T _t;
+		bool _pass=true;
 	public:
 		ValueSource() {};
 		ValueSource(T t) { _t = t; }
 		void request() { this->emit(_t); }
-		void operator=(T t) {_t = t; this->emit(_t);}
+		void operator=(T t) {_t = t; if ( _pass) this->emit(_t);}
 		T &operator()() { return _t; }
+		void pass(bool p) { _pass=p;}
 };
 //__________________________________________________________________________`
 //
@@ -275,7 +279,7 @@ class TimerSource : public Source<TimerMsg> {
 		TimerSource() { _expireTime = Sys::now() + _interval; };
 
 		void attach(Thread &thr) { thr.addTimer(this); }
-		void reset() {start();} 
+		void reset() {start();}
 		void start() { _expireTime = Sys::millis() + _interval; }
 		void stop() { _expireTime = UINT64_MAX; }
 		void interval(uint32_t i) { _interval = i; }
@@ -366,7 +370,7 @@ template <class IN,class OUT>
 class LambdaFlow : public Flow<IN,OUT> {
 		std::function<int  (OUT&,const IN& )> _func;
 	public:
-		LambdaFlow() {_func=[](OUT& out,const IN& in) {WARN("no handler for this flow");};};
+		LambdaFlow() {_func=[](OUT& out,const IN& in) {WARN("no handler for this flow"); return -1;};};
 		LambdaFlow(std::function<int  (OUT&,const IN& )> func) : _func(func) {};
 		void lambda(std::function<int(OUT&,const IN&)> func) {_func=func;}
 		virtual void on(const IN& in ) {
@@ -405,7 +409,6 @@ class ValueFlow : public Flow<T,T> {
 //
 class Actor {
 		Thread &_thread;
-
 	public:
 		Actor(Thread &thread) : _thread(thread) {}
 		Thread &thread() { return _thread; }

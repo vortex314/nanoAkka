@@ -136,8 +136,20 @@ ArrayQueue<int,16> q;
 extern "C" void app_main(void) {
 	//    ESP_ERROR_CHECK(nvs_flash_erase());
 
+#ifdef HOSTNAME
 	Sys::hostname(S(HOSTNAME));
-	systemHostname = S(HOSTNAME);
+#else
+	std::string hn;
+	union {
+		uint8_t macBytes[6];
+		uint64_t macInt;
+	};
+	macInt=0L;
+	if ( esp_read_mac(macBytes,ESP_MAC_WIFI_STA) != ESP_OK) WARN(" esp_base_mac_addr_get() failed.");;
+	string_format(hn, "ESP32-%d", macInt & 0xFFFF);
+	Sys::hostname(hn.c_str());
+#endif
+	systemHostname = Sys::hostname();;
 	systemBuild = __DATE__ " " __TIME__;
 	INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
 	for( int cnt=0; cnt<5; cnt++) {
@@ -187,12 +199,7 @@ extern "C" void app_main(void) {
 		INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  ",stats.bufferOverflow,stats.bufferPopBusy,stats.bufferPushBusy,stats.threadQueueOverflow);
 	});
 
-#ifndef HOSTNAME
-	std::string hn;
-	string_format(hn, "ESP32-%d", wifi.mac() & 0xFFFF);
-	Sys::hostname(hn.c_str());
-	systemHostname = hn;
-#endif
+
 
 #ifdef US
 	ultrasonic.init();

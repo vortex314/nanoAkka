@@ -36,11 +36,11 @@ class Servo : public Device {
 		uint32_t _indexSample=0;
 		int _watchdogCounter;
 		int _directionTargetLast;
-		TimerSource _pulseTimer;
-		TimerSource _reportTimer;
-		TimerSource _controlTimer;
-public:
-	ValueFlow <int> adcPot=0;
+		TimerSource _pulseTimer; // generate test cycle
+		TimerSource _reportTimer; // report to MQTT
+		TimerSource _controlTimer; // PID loop interval
+	public:
+		ValueFlow <int> adcPot=0;
 		ValueFlow<int> angleTarget=0;
 		ValueFlow<int> angleMeasured=0;
 		ValueFlow<float> KP= 3;

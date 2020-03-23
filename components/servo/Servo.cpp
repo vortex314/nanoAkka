@@ -64,7 +64,7 @@ void Servo::init() {
 
 		static uint32_t pulse=0;
 		static int outputTargets[]= {-30,0,30,0};
-		angleTarget=outputTargets[pulse];
+//		angleTarget=outputTargets[pulse];
 		pulse++;
 		pulse %= (sizeof(outputTargets)/sizeof(int));
 		_pulseTimer.start();
@@ -97,7 +97,7 @@ float Servo::scale(float x,float x1,float x2,float y1,float y2) {
 
 bool Servo::measureAngle() {
 	int adc = _adcPot.getValue();
-	adcPot = adc;
+	adcPot.on(adc);
 	_potFilter.addSample(adc);
 	if ( _potFilter.isReady()) {
 		angleMeasured = scale(_potFilter.getMedian(),ADC_MIN,ADC_MAX,ANGLE_MIN,ANGLE_MAX);

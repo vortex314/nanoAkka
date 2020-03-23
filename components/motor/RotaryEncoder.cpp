@@ -73,7 +73,7 @@ RotaryEncoder::RotaryEncoder(Thread& thr,uint32_t pinTachoA, uint32_t pinTachoB)
 	});
 	auto throttle = new Throttle<int32_t>(100);
 	_timeoutFlow =  new TimeoutFlow<int32_t>(thread(),200,0);
-	auto sink = new Sink<int32_t,10>();
+//	auto sink = new Sink<int32_t,10>();
 
 //	sink->async(thread(),[&](const int32_t& cpt) { INFO(" cpt : %d ",cpt);});
 //	rpmMeasured >> sink;

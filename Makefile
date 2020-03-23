@@ -66,7 +66,7 @@ TAG_WIFI :
 
 TAG :
 	touch main/main.cpp
-	make DEFINE="-DDWM1000_TAG=1 -DMQTT_SERIAL"
+	make DEFINE="-DDWM1000_TAG=1"
 	
 COMPASS :
 	touch main/main.cpp
