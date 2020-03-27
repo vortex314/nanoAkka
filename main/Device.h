@@ -5,10 +5,14 @@
 
 class Device  {
 	public:
+		typedef enum {
+			STOPPED, RUNNING, PAUSED
+		} DeviceState;
+		TimerSource watchdogTimer;
+
 		ValueFlow<bool> running=true;
 		ValueFlow<std::string> deviceMessage;
 		ValueFlow<bool> watchdogReset=true;
-		TimerSource watchdogTimer;
 		Device(Thread& thr);
 		~Device();
 		void run() { deviceMessage="RUNNING"; running=true;};

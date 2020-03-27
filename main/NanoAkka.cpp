@@ -68,14 +68,12 @@ void Thread::run() {
 			}
 		} else {
 			Invoker *prq;
-			uint32_t waitTime = pdMS_TO_TICKS(expTime - now) + 1;
+			int32_t waitTime = pdMS_TO_TICKS(expTime - now) + 1;
 			if (waitTime < 0)
 				waitTime = 0;
-			uint32_t queueCounter = 0;
 			if (xQueueReceive(_workQueue, &prq, (TickType_t)waitTime) == pdTRUE) {
-//				INFO("Thread '%s' <<< '%s'",_name.c_str(),symbols(prq));
 				prq->invoke();
-				waitTime == pdMS_TO_TICKS(expTime - Sys::millis());
+				waitTime = pdMS_TO_TICKS(expTime - Sys::millis());
 				if (waitTime > 0)
 					waitTime = 0;
 			}

@@ -31,7 +31,7 @@ MqttWifi::~MqttWifi() {}
 //
 void MqttWifi::init() {
 	string_format(_address, "mqtt://%s:%d", S(MQTT_HOST), MQTT_PORT);
-	string_format(_lwt_topic, "system/alive", Sys::hostname());
+	string_format(_lwt_topic, "src/%s/system/alive", Sys::hostname());
 	string_format(_hostPrefix, "src/%s/", Sys::hostname());
 	_clientId = Sys::hostname();
 	//	esp_log_level_set("*", ESP_LOG_VERBOSE);

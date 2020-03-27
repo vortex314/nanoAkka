@@ -8,6 +8,9 @@
 #include <unordered_map>
 #include <vector>
 
+#define STRINGIFY(X) #X
+#define S(X) STRINGIFY(X)
+//--------------------------------------------------  ESP8266
 #ifdef ESP_OPEN_RTOS
 #define FREERTOS
 #include <FreeRTOS.h>
@@ -15,7 +18,7 @@
 #include <queue.h>
 typedef std::string NanoString;
 #endif
-
+//-------------------------------------------------- ESP32
 #ifdef ESP32_IDF
 typedef std::string NanoString;
 #define FREERTOS
@@ -29,7 +32,7 @@ typedef std::string NanoString;
 #define PRO_CPU 0
 #define APP_CPU 1
 #endif
-
+//-------------------------------------------------- ARDUINO
 #ifdef ARDUINO
 #include <Arduino.h>
 #include <printf.h>
@@ -54,7 +57,7 @@ typedef String NanoString;
 #else
 #include <Log.h>
 #endif
-
+//------------------------------------------------------------------------------------
 
 #include <Sys.h>
 
@@ -111,21 +114,45 @@ class Requestable {
 //___________________________________________________________________________ lockfree buffer, isr ready
 //
 #define BUSY (1 << 31)				// busy read or write ptr
+#define xt_rsil(level) (__extension__({uint32_t state; __asm__ __volatile__("rsil %0," STRINGIFY(level) : "=a" (state)); state;}))
+#define xt_wsr_ps(state)  __asm__ __volatile__("wsr %0,ps; isync" :: "a" (state) : "memory")
+
+// Set Interrupt Level
+// level (0-15),
+// level 15 will disable ALL interrupts,
+// level 0 will enable ALL interrupts
+//
+
+#define interrupts() xt_rsil(0)
+#define noInterrupts() xt_rsil(15)
 template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 		T _array[SIZE];
-//		std::atomic<uint32_t> _readPtr;
-//		std::atomic<uint32_t> _writePtr;
-		std::atomic<uint32_t> _readPtr;
-		std::atomic<uint32_t> _writePtr;
-		inline uint32_t next(uint32_t idx) {
+		std::atomic<int> _readPtr;
+		std::atomic<int> _writePtr;
+		inline int next(int idx) {
 			return (idx+1)%SIZE;
 		}
 
 	public:
 		ArrayQueue() { _readPtr = _writePtr = 0; }
 		int push(const T &t) {
-			uint32_t expected = _writePtr;
-			uint32_t desired = next(expected);
+
+#ifdef ESP_OPEN_RTOS
+			noInterrupts();
+			int expected = _writePtr;
+			int desired = next(expected);
+			if (desired == _readPtr) {
+				stats.bufferOverflow++;
+				interrupts();
+				return ENOBUFS;
+			}
+			_writePtr = desired;
+			_array[desired]=std::move(t);
+			interrupts();
+			return 0;
+#else
+			int expected = _writePtr;
+			int desired = next(expected);
 			if (desired == _readPtr) {
 				stats.bufferOverflow++;
 				return ENOBUFS;
@@ -137,7 +164,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			if (_writePtr.compare_exchange_weak(expected, desired,
 			                                    std::memory_order_relaxed)) {
 				expected = desired;
-				_array[desired % SIZE] = std::move(t);
+				_array[desired ] = std::move(t);
 				desired &= ~BUSY;
 				if (!_writePtr.compare_exchange_weak(expected, desired,
 				                                     std::memory_order_relaxed)) {
@@ -147,11 +174,26 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			}
 			WARN("writePtr update failed");
 			return -1;
+#endif
 		}
 
 		int pop(T &t) {
-			uint32_t expected = _readPtr.load();
-			uint32_t desired = next(expected);
+
+#ifdef ESP_OPEN_RTOS
+			noInterrupts();
+			int expected = _readPtr;
+			int desired = next(expected);
+			if (expected == _writePtr) {
+				interrupts();
+				return ENOBUFS;
+			}
+			_readPtr = desired;
+			t = std::move(_array[desired ]);
+			interrupts();
+			return 0;
+#else
+			int expected = _readPtr.load();
+			int desired = next(expected);
 			if (expected == _writePtr) {
 				WARN("EMPTY");
 				return ENOBUFS;
@@ -165,7 +207,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			if (_readPtr.compare_exchange_weak(expected, desired,
 			                                   std::memory_order_relaxed)) {
 				expected = desired;
-				t = std::move(_array[desired % SIZE]);
+				t = std::move(_array[desired ]);
 				desired &= ~BUSY;
 				if (!_readPtr.compare_exchange_weak(expected, desired,
 				                                    std::memory_order_relaxed)) {
@@ -175,6 +217,7 @@ template <class T, int SIZE> class ArrayQueue : public AbstractQueue<T> {
 			}
 			WARN("readPtr update failed");
 			return -1;
+#endif
 		}
 };
 // STREAMS
@@ -262,6 +305,11 @@ class TimerSource : public Source<TimerMsg> {
 		bool _repeat = false;
 		uint64_t _expireTime = UINT64_MAX;
 		uint32_t _id = 0;
+		void setNewExpireTime() {
+			uint64_t now=Sys::millis();
+			_expireTime += _interval;
+			if ( _expireTime < now ) _expireTime=now+_interval;
+		}
 
 	public:
 		TimerSource(Thread &thr, int id, uint32_t interval, bool repeat) {
@@ -286,7 +334,7 @@ class TimerSource : public Source<TimerMsg> {
 		void request() {
 			if (Sys::millis() >= _expireTime) {
 				if (_repeat)
-					_expireTime = Sys::millis() + _interval;
+					setNewExpireTime();
 				else
 					_expireTime = Sys::millis() + UINT32_MAX;
 				TimerMsg tm = {_id};

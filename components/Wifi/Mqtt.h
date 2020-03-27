@@ -1,6 +1,8 @@
 #ifndef MQTT_ABSTRACT_H
 #define MQTT_ABSTRACT_H
 #include <NanoAkka.h>
+#define ARDUINOJSON_USE_LONG_LONG 1
+#define ARDUINOJSON_ENABLE_STD_STRING 1
 #include <ArduinoJson.h>
 typedef struct MqttMessage {
 	std::string topic;
