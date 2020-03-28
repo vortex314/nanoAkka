@@ -59,26 +59,26 @@ void Thread::run() {
 				expiredTimer = timer;
 			}
 		}
+		int32_t waitTime = (expTime-now); // ESP_OPEN_RTOS seems to double sleep time ?
 
-		if (expiredTimer && (expTime <= now)) {
-			if (expiredTimer) {
-				uint32_t delta = now -expTime;
-				if ( delta>100 ) INFO("Timer[%X] on thread %s already expired by %u",expiredTimer,_name.c_str(),delta);
-				expiredTimer->request();
+//		INFO(" waitTime : %d ",waitTime);
+
+		if ( waitTime > 0 ) {
+			Invoker *prq;
+			uint32_t queueWait  = pdMS_TO_TICKS(waitTime);
+			if (xQueueReceive(_workQueue, &prq, (TickType_t)queueWait) == pdTRUE) {
+				uint64_t start=Sys::millis();
+				prq->invoke();
+				uint32_t delta=Sys::millis()-start;
+				if ( delta > 10 ) WARN("Invoker [%X] slow %d msec invoker on thread '%s'.",prq,delta,_name.c_str());
 			}
 		} else {
-			Invoker *prq;
-			int32_t waitTime = pdMS_TO_TICKS(expTime - now) + 1;
-			if (waitTime < 0)
-				waitTime = 0;
-			if (xQueueReceive(_workQueue, &prq, (TickType_t)waitTime) == pdTRUE) {
-				prq->invoke();
-				waitTime = pdMS_TO_TICKS(expTime - Sys::millis());
-				if (waitTime > 0)
-					waitTime = 0;
-			}
 			if (expiredTimer) {
+				if ( -waitTime>100 ) INFO("Timer[%X] already expired by %u msec on thread '%s'.",expiredTimer,-waitTime,_name.c_str());
+				uint64_t start=Sys::millis();
 				expiredTimer->request();
+				uint32_t deltaExec=Sys::millis()-start;
+				if ( deltaExec > 10 ) WARN("Timer [%X] request slow %d msec on thread '%s'",expiredTimer,deltaExec,_name.c_str());
 			}
 		}
 	}

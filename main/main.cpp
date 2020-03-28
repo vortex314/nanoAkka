@@ -42,7 +42,6 @@ class Echo : public Actor {
 					uint32_t delta = endTime - _startTime;
 					msgPerMsec = DELTA / delta;
 					INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec());
-					vTaskDelay(10);
 					_startTime=Sys::millis();
 				}
 				out=i;
@@ -71,7 +70,7 @@ class Poller : public Actor,public Sink<TimerMsg,2> {
 
 Log logger(1024);
 // ---------------------------------------------- THREAD
-Thread thisThread("thread-main");
+Thread thisThread("main");
 Thread ledThread("led");
 Thread  mqttThread("mqtt");
 Thread  echoThread("echo");
@@ -88,7 +87,7 @@ MqttSerial mqtt(mqttThread);
 #else
 #include <Wifi.h>
 #include <MqttWifi.h>
-Wifi wifi;
+Wifi wifi(mqttThread);
 MqttWifi mqtt(mqttThread);
 #endif
 

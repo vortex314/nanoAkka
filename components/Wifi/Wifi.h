@@ -24,7 +24,7 @@
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
 
-class Wifi {
+class Wifi : public Actor  {
 		uint8_t _mac[6];
 		wifi_init_config_t _wifiConfig;
 	public:
@@ -37,7 +37,7 @@ class Wifi {
 		ValueSource<std::string> password;
 		ValueSource<std::string> prefix;
 
-		Wifi( );
+		Wifi( Thread& thr);
 		~Wifi();
 		void init();
 		static void wifi_event_handler(void* event_arg, esp_event_base_t event_base, int32_t event_id, void* event_data);

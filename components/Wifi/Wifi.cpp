@@ -15,7 +15,7 @@
 
 
 
-Wifi::Wifi() : password(S(WIFI_PASS)),prefix(S(WIFI_SSID)) {
+Wifi::Wifi(Thread& thr) : Actor(thr),password(S(WIFI_PASS)),prefix(S(WIFI_SSID)) {
 	rssi = 0;
 }
 
