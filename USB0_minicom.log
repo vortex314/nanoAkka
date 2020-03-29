@@ -1,197 +1,822 @@
-ets Jun  8 2016 00:22:57
-
-rst:0x10 (RTCWDT_RTC_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
-configsip: 0, SPIWP:0xee
-clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
-mode:DIO, clock div:2
-load:0x3fff0030,len:4
-load:0x3fff0034,len:7004
-load:0x40078000,len:14412
-ho 0 tail 12 room 4
-load:0x40080400,len:3916
-entry 0x40080678
-I (31) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
-I (31) boot: compile time 18:33:31
-I (31) boot: chip revision: 0
-I (35) boot.esp32: SPI Speed      : 40MHz
-I (40) boot.esp32: SPI Mode       : DIO
-I (44) boot.esp32: SPI Flash Size : 4MB
-I (49) boot: Enabling RNG early entropy source...
-I (54) boot: Partition Table:
-I (58) boot: ## Label            Usage          Type ST Offset   Length
-I (65) boot:  0 nvs              WiFi data        01 02 00009000 00006000
-I (73) boot:  1 phy_init         RF data          01 01 0000f000 00001000
-I (80) boot:  2 factory          factory app      00 00 00010000 00100000
-I (88) boot: End of partition table
-I (92) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x24de0 (151008) map
-I (156) esp_image: segment 1: paddr=0x00034e08 vaddr=0x3ffb0000 size=0x03bd0 ( 15312) load
-I (162) esp_image: segment 2: paddr=0x000389e0 vaddr=0x40080000 size=0x00400 (  1024) load
-I (163) esp_image: segment 3: paddr=0x00038de8 vaddr=0x40080400 size=0x07230 ( 29232) load
-I (184) esp_image: segment 4: paddr=0x00040020 vaddr=0x400d0020 size=0x9fe34 (654900) map
-I (422) esp_image: segment 5: paddr=0x000dfe5c vaddr=0x40087630 size=0x0de9c ( 56988) load
-I (457) boot: Loaded app from partition at offset 0x10000
-I (457) boot: Disabling RNG early entropy source...
-I (458) cpu_start: Pro cpu up.
-I (461) cpu_start: Application information:
-I (466) cpu_start: Project name:     nanoAkka
-I (471) cpu_start: App version:      bfa1354-dirty
-I (477) cpu_start: Compile time:     Mar 29 2020 00:42:05
-I (483) cpu_start: ELF file SHA256:  d9da01d58dd278a8...
-I (489) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
-I (495) cpu_start: Starting app cpu, entry point is 0x400812e0
+th
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (70) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (85) boot: End of partition table
+I (89) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1eaac (125612) map
+I (146) esp_image: segment 1: paddr=0x0002ead4 vaddr=0x3ffb0000 size=0x01544 (  5444) load
+I (148) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x86c7c (552060) map
+I (361) esp_image: segment 3: paddr=0x000b6ca4 vaddr=0x3ffb1544 size=0x02598 (  9624) load
+I (365) esp_image: segment 4: paddr=0x000b9244 vaddr=0x40080000 size=0x00400 (  1024) load
+I (368) esp_image: segment 5: paddr=0x000b964c vaddr=0x40080400 size=0x1523c ( 86588) load
+I (425) boot: Loaded app from partition at offset 0x10000
+I (426) boot: Disabling RNG early entropy source...
+I (426) cpu_start: Pro cpu up.
+I (430) cpu_start: Application information:
+I (434) cpu_start: Project name:     nanoAkka
+I (439) cpu_start: App version:      025e74f-dirty
+I (445) cpu_start: Compile time:     Mar 29 2020 21:33:57
+I (451) cpu_start: ELF file SHA256:  772dcce22f9dbf88...
+I (457) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (463) cpu_start: Starting app cpu, entry point is 0x400812f0
 I (0) cpu_start: App cpu up.
-I (506) heap_init: Initializing. RAM available for dynamic allocation:
-I (513) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
-I (519) heap_init: At 3FFBB358 len 00024CA8 (147 KiB): DRAM
-I (525) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
-I (531) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
-I (538) heap_init: At 400954CC len 0000AB34 (42 KiB): IRAM
-I (544) cpu_start: Pro cpu start user code
-I (563) spi_flash: detected chip: gd
-I (564) spi_flash: flash io: dio
-I (564) cpu_start: Starting scheduler on PRO CPU.
+I (474) heap_init: Initializing. RAM available for dynamic allocation:
+I (481) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (487) heap_init: At 3FFBB010 len 00024FF0 (147 KiB): DRAM
+I (493) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (499) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (506) heap_init: At 4009563C len 0000A9C4 (42 KiB): IRAM
+I (512) cpu_start: Pro cpu start user code
+I (531) spi_flash: detected chip: gd
+I (532) spi_flash: flash io: dio
+I (532) cpu_start: Starting scheduler on PRO CPU.
 I (0) cpu_start: Starting scheduler on APP CPU.
-  3FFBDA44 I |       11 | drive |        main.cpp: 178 | drive : Mar 29 2020 00:44:34 
-  3FFBDA44 I |      129 | drive |        main.cpp: 192 |  time taken for 100000 iterations : 111 msec  = 900 msg/msec
-  3FFBDA44 I |      241 | drive |        main.cpp: 192 |  time taken for 100000 iterations : 111 msec  = 900 msg/msec
-  3FFBDA44 I |      353 | drive |        main.cpp: 192 |  time taken for 100000 iterations : 112 msec  = 892 msg/msec
-  3FFBDA44 I |      465 | drive |        main.cpp: 192 |  time taken for 100000 iterations : 111 msec  = 900 msg/msec
-  3FFBDA44 I |      576 | drive |        main.cpp: 192 |  time taken for 100000 iterations : 111 msec  = 900 msg/msec
-I (1708) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
-I (1758) wifi:wifi driver task: 3ffc37b4, prio:23, stack:3584, core=0
-I (1758) system_api: Base MAC address is not set
-I (1758) system_api: read default base MAC address from EFUSE
-I (1778) wifi:wifi firmware version: 89341b9
-I (1778) wifi:wifi certification version: v7.0
-I (1778) wifi:config NVS flash: enabled
-I (1778) wifi:config nano formating: disabled
-I (1788) wifi:Init dynamic tx buffer num: 32
-I (1788) wifi:Init data frame dynamic rx buffer num: 32
-I (1798) wifi:Init management frame dynamic rx buffer num: 32
-I (1798) wifi:Init management short buffer num: 32
-I (1808) wifi:Init static rx buffer size: 1600
-I (1808) wifi:Init static rx buffer num: 10
-I (1818) wifi:Init dynamic rx buffer num: 32
-I (1918) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
-I (1918) wifi:mode : sta (30:ae:a4:03:ec:98)
-  3FFC1CBC I |      796 | drive |        Wifi.cpp:  92 | WIFI_EVENT_STA_START
-  3FFC1CBC I |      798 | drive |        Wifi.cpp: 161 |  starting WiFi scan.
-  3FFBDA44 I |      807 | drive |    MqttWifi.cpp:  42 |  uri : mqtt://limero.ddns.net:1883 
-  3FFBDA44 I |      816 | drive | Hardware_ESP32.cpp: 429 |  ADC init() pin 39 
-  3FFBDA44 I |      821 | drive | Hardware_ESP32.cpp: 429 |  ADC init() pin 35 
-  3FFBDA44 I |      827 | drive | Hardware_ESP32.cpp: 429 |  ADC init() pin 35 
-  3FFBDA44 I |      834 | drive | Hardware_ESP32.cpp: 148 |  DigitalOut Init 22 
-I (1968) gpio: GPIO[22]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-  3FFBDA44 I |      851 | drive | Hardware_ESP32.cpp: 148 |  DigitalOut Init 33 
-I (1988) gpio: GPIO[33]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-  3FFBDA44 I |      867 | drive |     BTS7960.cpp: 260 |  BTS7960 PWM[1] PWM : GPIO_18,16 enable : GPIO_22,33 
-  3FFBDA44 I |      878 | drive |          Mqtt.h:  72 |  created MqttFlow : servo/KI 
-  3FFBDA44 I |      884 | drive |          Mqtt.h:  72 |  created MqttFlow : servo/KP 
-  3FFBDA44 I |      892 | drive |          Mqtt.h:  72 |  created MqttFlow : servo/KD 
-  3FFBDA44 I |      900 | drive |          Mqtt.h:  72 |  created MqttFlow : servo/current 
-  3FFBDA44 I |      908 | drive |          Mqtt.h:  72 |  created MqttFlow : servo/angleTarget 
-  3FFBE1A8 I |      917 | drive |    NanoAkka.cpp:  50 | Thread 'led' started 
-  3FFBE1A8 I |      923 | drive |    NanoAkka.cpp:  50 | Thread 'mqtt' started 
-  3FFBE1A8 I |      930 | drive |    NanoAkka.cpp:  50 | Thread 'echo' started 
-  3FFBE1A8 I |      937 | drive |    NanoAkka.cpp:  77 | Timer[3FFB58E0] already expired by 624 msec on thread 'led'.
-  3FFBE1A8 I |      947 | drive |    NanoAkka.cpp:  77 | Timer[3FFB4250] already expired by 829 msec on thread 'mqtt'.
-  3FFBDA44 I |      958 | drive |    NanoAkka.cpp:  50 | Thread 'main' started 
-  3FFBDA44 I |     1817 | drive |       Servo.cpp: 105 | angle 7/0 = 0.00 => pwm : -15.40 = 0.00 + -1.40 + 0.00 491 
-  3FFBDA44 I |     2819 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.05 = 0.00 + -3.05 + 0.00 453 
-  3FFC1CBC I |     2861 | drive |        Wifi.cpp:  77 | WIFI_EVENT_SCAN_DONE
-  3FFC1CBC I |     2862 | drive |        Wifi.cpp: 133 |  found 5 AP's , size : 80 
-  3FFC1CBC I |     2866 | drive |        Wifi.cpp: 143 |  Merckx2 : -31 
-  3FFC1CBC I |     2871 | drive |        Wifi.cpp: 143 |  Merckx10 : -42 
-  3FFC1CBC I |     2878 | drive |        Wifi.cpp: 143 |  Merckx3 : -60 
-  3FFC1CBC I |     2884 | drive |        Wifi.cpp: 143 |  ESP_D91EA7 : -81 
-  3FFC1CBC I |     2891 | drive |        Wifi.cpp: 143 |  Merckx2Ext : -88 
-  3FFC1CBC I |     2898 | drive |        Wifi.cpp: 155 |  found strongest AP : 'Merckx2'.
-  3FFC1CBC I |     2905 | drive |        Wifi.cpp: 116 |  connecting to SSID : Merckx2
-I (4168) wifi:new:<4,0>, old:<1,0>, ap:<255,255>, sta:<4,0>, prof:1
-I (4168) wifi:state: init -> auth (b0)
-I (4168) wifi:state: auth -> assoc (0)
-I (4178) wifi:state: assoc -> run (10)
-I (4188) wifi:connected with Merckx2, aid = 7, channel 4, BW20, bssid = 00:23:cd:19:fc:f5
-I (4188) wifi:security type: 4, phy: bgn, rssi: -38
-I (4198) wifi:pm start, type: 1
+  3FFBD6FC I |       11 | gpio |        main.cpp: 184 | gpio : Mar 30 2020 00:45:10 
+  3FFBD6FC I |      137 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD6FC I |      256 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD6FC I |      375 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD6FC I |      494 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD6FC I |      613 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+I (1743) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (1803) wifi:wifi driver task: 3ffc3510, prio:23, stack:3584, core=0
+I (1803) system_api: Base MAC address is not set
+I (1803) system_api: read default base MAC address from EFUSE
+I (1823) wifi:wifi firmware version: 89341b9
+I (1823) wifi:wifi certification version: v7.0
+I (1823) wifi:config NVS flash: enabled
+I (1823) wifi:config nano formating: disabled
+I (1833) wifi:Init dynamic tx buffer num: 32
+I (1833) wifi:Init data frame dynamic rx buffer num: 32
+I (1843) wifi:Init management frame dynamic rx buffer num: 32
+I (1843) wifi:Init management short buffer num: 32
+I (1853) wifi:Init static rx buffer size: 1600
+I (1853) wifi:Init static rx buffer num: 10
+I (1863) wifi:Init dynamic rx buffer num: 32
+I (1963) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (1973) wifi:mode : sta (30:ae:a4:03:11:d0)
+  3FFC1A18 I |      838 | gpio |        Wifi.cpp:  92 | WIFI_EVENT_STA_START
+  3FFC1A18 I |      840 | gpio |        Wifi.cpp: 161 |  starting WiFi scan.
+  3FFBD6FC I |      849 | gpio |    MqttWifi.cpp:  42 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBD6FC I |      858 | gpio | HardwareTester.cpp: 118 |  GPIO tester ======== UEXT1 =============>
+I (1993) gpio: GPIO[19]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2003) gpio: GPIO[36]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2013) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2023) gpio: GPIO[26]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2033) gpio: GPIO[26]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2043) gpio: GPIO[25]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2053) gpio: GPIO[23]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2063) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2073) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2083) gpio: GPIO[32]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2093) gpio: GPIO[32]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2103) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC I |      977 | gpio | HardwareTester.cpp: 125 |  GPIO tester ======== UEXT2 =============>
+I (2123) gpio: GPIO[18]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2123) gpio: GPIO[39]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1004 | gpio | HardwareTester.cpp: 149 |  ======> gpio 18 => 39 for 1 failed.
+I (2143) gpio: GPIO[27]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2153) gpio: GPIO[14]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1031 | gpio | HardwareTester.cpp: 144 |  ======> gpio 27 => 14 for 0 failed.
+I (2173) gpio: GPIO[14]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2183) gpio: GPIO[27]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1058 | gpio | HardwareTester.cpp: 144 |  ======> gpio 14 => 27 for 0 failed.
+I (2203) gpio: GPIO[22]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2213) gpio: GPIO[35]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1086 | gpio | HardwareTester.cpp: 149 |  ======> gpio 22 => 35 for 1 failed.
+I (2223) gpio: GPIO[16]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2233) gpio: GPIO[33]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1113 | gpio | HardwareTester.cpp: 144 |  ======> gpio 16 => 33 for 0 failed.
+I (2253) gpio: GPIO[33]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2263) gpio: GPIO[16]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD6FC W |     1140 | gpio | HardwareTester.cpp: 144 |  ======> gpio 33 => 16 for 0 failed.
+  3FFBD6FC I |     1148 | gpio | HardwareTester.cpp: 132 |  GPIO tester <=====================
+  3FFBDE60 I |     1159 | gpio |    NanoAkka.cpp:  50 | Thread 'led' started 
+  3FFBDE60 I |     1163 | gpio |    NanoAkka.cpp:  50 | Thread 'mqtt' started 
+  3FFBDE60 I |     1170 | gpio |    NanoAkka.cpp:  50 | Thread 'echo' started 
+  3FFBDE60 I |     1177 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB57F0] already expired by 864 msec on thread 'led'.
+  3FFBDE60 I |     1188 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB4198] already expired by 1074 msec on thread 'mqtt'.
+  3FFBD6FC I |     1198 | gpio |    NanoAkka.cpp:  50 | Thread 'main' started 
+  3FFBD6FC I |     1205 | gpio |        main.cpp: 250 | 1591703
+  3FFBD6FC I |     1211 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1229 | gpio |        main.cpp: 250 | 2562560
+  3FFBD6FC I |     1249 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1269 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1289 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1309 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1329 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1350 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1369 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1389 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1409 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1429 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1449 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1470 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1491 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1510 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1530 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1550 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1570 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1590 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1610 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1630 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1650 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1670 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1690 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1710 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1730 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1750 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1770 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1792 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1810 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1830 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1850 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1870 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1890 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1910 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1930 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1950 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1970 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     1990 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2010 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2030 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2050 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2070 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2093 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2110 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2130 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2150 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2170 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2190 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2210 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2230 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2250 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2270 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2290 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2310 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2330 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2350 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2370 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2394 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2410 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2430 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2450 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2470 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2490 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2511 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2531 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2551 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2571 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2591 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2611 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2631 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2651 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2671 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2691 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2711 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2731 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2751 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2771 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2791 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2811 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2831 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2851 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2871 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2891 | gpio |        main.cpp: 250 | 1601600
+  3FFC1A18 I |     2904 | gpio |        Wifi.cpp:  77 | WIFI_EVENT_SCAN_DONE
+  3FFC1A18 I |     2905 | gpio |        Wifi.cpp: 133 |  found 3 AP's , size : 80 
+  3FFC1A18 I |     2908 | gpio |        Wifi.cpp: 143 |  Merckx2 : -34 
+  3FFC1A18 I |     2914 | gpio |        Wifi.cpp: 143 |  Merckx10 : -48 
+  3FFC1A18 I |     2920 | gpio |        Wifi.cpp: 143 |  Merckx3 : -61 
+  3FFC1A18 I |     2927 | gpio |        Wifi.cpp: 155 |  found strongest AP : 'Merckx2'.
+  3FFC1A18 I |     2934 | gpio |        Wifi.cpp: 116 |  connecting to SSID : Merckx2
+  3FFBD6FC I |     2945 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2949 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2953 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2971 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     2991 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3011 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3031 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3051 | gpio |        main.cpp: 250 | 1601600
+I (4203) wifi:new:<2,0>, old:<1,0>, ap:<255,255>, sta:<2,0>, prof:1
+I (4203) wifi:state: init -> auth (b0)
+I (4203) wifi:state: auth -> assoc (0)
+  3FFBD6FC I |     3071 | gpio |        main.cpp: 250 | 1601600
+I (4203) wifi:state: assoc -> run (10)
+  3FFBD6FC I |     3091 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3111 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3131 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3151 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3171 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3191 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3211 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3231 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3271 | gpio |        main.cpp: 250 | 3203200
+  3FFBD6FC I |     3291 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3311 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3331 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3351 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3371 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3391 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3411 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3431 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3451 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3471 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3491 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3512 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3532 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3552 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3572 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3592 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3612 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3632 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3652 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3672 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3692 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3712 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3732 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3752 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3772 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3792 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3812 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3832 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3852 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |     3872 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3892 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3912 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3932 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3952 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3972 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     3992 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4012 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4032 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4052 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4072 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4092 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4112 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4132 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4152 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4172 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4192 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4212 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4232 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4252 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4272 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4292 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4312 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4332 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4352 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4372 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4392 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4412 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4433 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4452 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4472 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4492 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4513 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4533 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4553 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4573 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4593 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4613 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4633 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4653 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4673 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4693 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4713 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4733 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4753 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4773 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4793 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4813 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4833 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4853 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4873 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4893 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4913 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4933 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4953 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4973 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     4993 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5013 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5033 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5053 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5073 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5093 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5113 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5133 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5153 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5173 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5193 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5213 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5233 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5253 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5293 | gpio |        main.cpp: 250 | 3203200
+  3FFBD6FC I |     5313 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5333 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5353 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5373 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5393 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5413 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5433 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5454 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5473 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5493 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5514 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5534 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5554 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5574 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5594 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5614 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5634 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5654 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5674 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5694 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5714 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5734 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5754 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5774 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5794 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5814 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5834 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5854 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5874 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5894 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5914 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5934 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5954 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5974 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     5994 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6014 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6034 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6054 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6074 | gpio |        main.cpp: 250 | 1601600
+I (7213) wifi:state: run -> init (2c0)
+I (7213) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
+I (7213) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
+  3FFC1A18 I |     6085 | gpio |        Wifi.cpp: 102 | WIFI_EVENT_STA_DISCONNECTED
+  3FFBD6FC I |     6095 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6114 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6134 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6154 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6174 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6194 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6215 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6234 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6254 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6274 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6294 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6314 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6334 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6354 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6374 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6394 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6414 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6434 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6454 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6475 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6494 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6515 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6535 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6555 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6575 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6595 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6615 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6635 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6655 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6675 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6695 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6715 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6735 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6755 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6775 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6795 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6815 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6835 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6855 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |     6875 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6895 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6915 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6935 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6955 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6975 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     6995 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7015 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7035 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7055 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7075 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7098 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7115 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7135 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7155 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |     7202 | gpio |        main.cpp: 250 | 3712013
+  3FFBD6FC I |     7202 | gpio |        main.cpp: 250 | 6857
+  3FFC1A18 I |     8147 | gpio |        Wifi.cpp: 102 | WIFI_EVENT_STA_DISCONNECTED
+I (9403) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
+I (9403) wifi:state: init -> auth (b0)
+I (9403) wifi:state: auth -> assoc (0)
+I (9413) wifi:state: assoc -> run (10)
+I (9423) wifi:connected with Merckx2, aid = 3, channel 2, BW20, bssid = 00:23:cd:19:fc:f5
+I (9423) wifi:security type: 4, phy: bgn, rssi: -32
+I (9433) wifi:pm start, type: 1
 
-  3FFC1CBC I |     3071 | drive |        Wifi.cpp:  98 | WIFI_EVENT_STA_CONNECTED
-I (4278) wifi:AP's beacon interval = 102400 us, DTIM period = 1
-  3FFBDA44 I |     3816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |     3820 | drive |       Servo.cpp: 105 | angle 2/0 = 0.00 => pwm : -7.40 = 0.00 + -3.40 + 0.00 465 
-I (5248) esp_netif_handlers: sta ip: 192.168.0.248, mask: 255.255.255.0, gw: 192.168.0.1
-  3FFC1CBC I |     4120 | drive |        Wifi.cpp:  49 | IP_EVENT_STA_GOT_IP
-  3FFBDA44 I |     4125 | drive |    MqttWifi.cpp:  59 | WiFi connected 226 
-  3FFDE83C I |     4131 | drive |    MqttWifi.cpp: 105 | MQTT_EVENT_BEFORE_CONNECT
-I (5308) MQTT_CLIENT: Sending MQTT CONNECT message, type: 1, id: 0000
-  3FFDE83C I |     4203 | drive |    MqttWifi.cpp: 109 | MQTT_EVENT_CONNECTED to mqtt://limero.ddns.net:1883
-  3FFDE83C I |     4204 | drive |    MqttWifi.cpp: 110 |  session : 0 0 
-  3FFC37B4 I |     4212 | drive |    MqttWifi.cpp: 193 | Subscribing to topic dst/drive 
-  3FFDE83C I |     4218 | drive |    MqttWifi.cpp: 193 | Subscribing to topic dst/drive/# 
-  3FFDE83C I |     4241 | drive |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=24908
-  3FFBE1A8 I |     4268 | drive |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=16882
-  3FFBDA44 I |     4827 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 447 
-  3FFBDA44 I |     5830 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 446 
-  3FFBDA44 I |     6816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |     6834 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 447 
-  3FFBDA44 I |     7838 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 448 
-  3FFBDA44 I |     8841 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 448 
-  3FFBDA44 I |     9816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |     9844 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -3.85 = 0.00 + -3.85 + 0.00 447 
-  3FFBDA44 W |    10528 | drive |    NanoAkka.cpp:  81 | Timer [3FFCEB10] request slow 11 msec on thread 'main'
-  3FFBDA44 I |    10848 | drive |       Servo.cpp: 105 | angle 1/0 = 0.00 => pwm : -6.10 = 0.00 + -4.10 + 0.00 452 
-  3FFBDA44 I |    11852 | drive |       Servo.cpp: 105 | angle 1/0 = 0.00 => pwm : -6.25 = 0.00 + -4.25 + 0.00 454 
-  3FFBDA44 I |    12816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    12859 | drive |       Servo.cpp: 105 | angle 0/0 = 0.00 => pwm : -4.45 = 0.00 + -4.45 + 0.00 458 
-  3FFDE83C I |    13310 | drive |    MqttWifi.cpp: 159 | MQTT RXD topic : servo/angleTarget , message  : 40
-  3FFBDA44 I |    13862 | drive |       Servo.cpp: 105 | angle 1/40 = 0.00 => pwm : 20.00 = 0.00 + 7.25 + 0.00 453 
-  3FFBDA44 I |    14865 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 448 
-  3FFBDA44 I |    15816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    15868 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 447 
-  3FFBDA44 I |    16873 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 446 
-  3FFBDA44 I |    17877 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 447 
-  3FFBDA44 I |    18816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    18880 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 460 
-  3FFBDA44 I |    19884 | drive |       Servo.cpp: 105 | angle 1/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 447 
-  3FFBDA44 I |    20889 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 445 
-  3FFBDA44 I |    21816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    21893 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 447 
-  3FFBDA44 I |    22897 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 447 
-  3FFBDA44 I |    23900 | drive |       Servo.cpp: 105 | angle 0/40 = 0.00 => pwm : 20.00 = 0.00 + 20.00 + 0.00 452 
-  3FFDE83C I |    24448 | drive |    MqttWifi.cpp: 159 | MQTT RXD topic : servo/angleTarget , message  : -40
-  3FFBDA44 I |    24816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    24905 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + 11.80 + 0.00 448 
-  3FFBDA44 I |    25910 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -8.20 + 0.00 447 
-  3FFBDA44 I |    26916 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    27816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    27924 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    28927 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    29930 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 451 
-  3FFBDA44 I |    30816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    30934 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    31939 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    32941 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    33816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    33944 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    34947 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 460 
-  3FFBDA44 I |    35961 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 W |    35962 | drive |    NanoAkka.cpp:  81 | Timer [3FFCEAE0] request slow 14 msec on thread 'main'
-  3FFBDA44 I |    36816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    36964 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    37967 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    38970 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    39816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    39973 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 460 
-  3FFBDA44 W |    40829 | drive |    NanoAkka.cpp:  81 | Timer [3FFCEB10] request slow 11 msec on thread 'main'
-  3FFBDA44 I |    40977 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    41982 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    42816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    42985 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    43989 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    44992 | drive |       Servo.cpp: 105 | angle 1/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + -0.00 449 
-  3FFBDA44 I |    45816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    45997 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    47001 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 446 
-  3FFBDA44 I |    48005 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
-  3FFBDA44 I |    48816 | drive |        main.cpp: 225 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBDA44 I |    49010 | drive |       Servo.cpp: 105 | angle 0/-40 = 0.00 => pwm : -20.00 = 0.00 + -20.00 + 0.00 447 
+  3FFC1A18 I |     8299 | gpio |        Wifi.cpp:  98 | WIFI_EVENT_STA_CONNECTED
+I (9433) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (10293) esp_netif_handlers: sta ip: 192.168.0.127, mask: 255.255.255.0, gw: 192.168.0.1
+  3FFC1A18 I |     9160 | gpio |        Wifi.cpp:  49 | IP_EVENT_STA_GOT_IP
+  3FFBD6FC I |     9165 | gpio |    MqttWifi.cpp:  59 | WiFi connected 1 
+  3FFDE8C8 I |     9171 | gpio |    MqttWifi.cpp: 105 | MQTT_EVENT_BEFORE_CONNECT
+I (10363) MQTT_CLIENT: Sending MQTT CONNECT message, type: 1, id: 0000
+  3FFDE8C8 I |     9256 | gpio |    MqttWifi.cpp: 109 | MQTT_EVENT_CONNECTED to mqtt://limero.ddns.net:1883
+  3FFDE8C8 I |     9256 | gpio |    MqttWifi.cpp: 110 |  session : 0 0 
+  3FFDE8C8 I |     9264 | gpio |    MqttWifi.cpp: 193 | Subscribing to topic dst/gpio 
+  3FFDE8C8 I |     9270 | gpio |    MqttWifi.cpp: 193 | Subscribing to topic dst/gpio/# 
+  3FFBD6FC I |     9307 | gpio |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=57631
+  3FFDE8C8 I |     9322 | gpio |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=3584
+  3FFBD6FC I |     9857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |    12857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |    13734 | gpio |        main.cpp: 250 | 522570952
+  3FFBD6FC I |    13738 | gpio |        main.cpp: 250 | 297065
+  3FFBD6FC I |    13738 | gpio |        main.cpp: 250 | 3296
+  3FFBD6FC I |    13741 | gpio |        main.cpp: 250 | 1085
+  3FFBD6FC I |    13746 | gpio |        main.cpp: 250 | 645
+  3FFBD6FC I |    13751 | gpio |        main.cpp: 250 | 2027
+  3FFBD6FC I |    13757 | gpio |        main.cpp: 250 | 1860
+  3FFBD6FC I |    13762 | gpio |        main.cpp: 250 | 10538
+  3FFBD6FC I |    13768 | gpio |        main.cpp: 250 | 2806
+  3FFBD6FC I |    13773 | gpio |        main.cpp: 250 | 814
+  3FFBD6FC I |    13779 | gpio |        main.cpp: 250 | 974579
+  3FFBD6FC I |    13784 | gpio |        main.cpp: 250 | 687245
+  3FFBD6FC I |    13789 | gpio |        main.cpp: 250 | 9630
+  3FFBD6FC I |    13795 | gpio |        main.cpp: 250 | 3225
+  3FFBD6FC I |    13804 | gpio |        main.cpp: 250 | 518
+  3FFBD6FC I |    13805 | gpio |        main.cpp: 250 | 1398
+  3FFBD6FC I |    13811 | gpio |        main.cpp: 250 | 9309
+  3FFBD6FC I |    13817 | gpio |        main.cpp: 250 | 5351
+  3FFBD6FC I |    13822 | gpio |        main.cpp: 250 | 4779
+  3FFBD6FC I |    13827 | gpio |        main.cpp: 250 | 753
+  3FFBD6FC I |    13833 | gpio |        main.cpp: 250 | 2680
+  3FFBD6FC I |    13838 | gpio |        main.cpp: 250 | 716
+  3FFBD6FC I |    13843 | gpio |        main.cpp: 250 | 409
+  3FFBD6FC I |    13848 | gpio |        main.cpp: 250 | 2208
+  3FFBD6FC I |    13854 | gpio |        main.cpp: 250 | 1700
+  3FFBD6FC I |    13859 | gpio |        main.cpp: 250 | 675
+  3FFBD6FC I |    13864 | gpio |        main.cpp: 250 | 849315
+  3FFBD6FC I |    13871 | gpio |        main.cpp: 250 | 160162
+  3FFBD6FC I |    13875 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13881 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13887 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13892 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC W |    13904 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD59C] slow 11 msec invoker on thread 'main'.
+  3FFBD6FC I |    13909 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13914 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13919 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    13931 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13951 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13971 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    13991 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14010 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    14030 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14050 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14070 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14090 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14110 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    14129 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14149 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14169 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14189 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14209 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    14228 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14249 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14268 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14288 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14308 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    14327 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14347 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14367 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14388 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14408 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14427 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14448 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14467 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14488 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14508 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14528 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14548 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14568 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14588 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14608 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14628 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14648 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14668 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14688 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14708 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14728 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14748 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14768 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14788 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14808 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14828 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14848 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14868 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14888 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14908 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14928 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14948 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14968 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    14988 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15008 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15028 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15048 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15068 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15088 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15108 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15128 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15148 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15168 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15188 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15209 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15228 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15248 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15269 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15288 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15309 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15328 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15369 | gpio |        main.cpp: 250 | 3203200
+  3FFBD6FC I |    15389 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15408 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    15427 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15447 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15467 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15488 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15508 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15528 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15548 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15568 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15588 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15608 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15628 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15648 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15668 | gpio |        main.cpp: 250 | 1601599
+  3FFBD6FC I |    15688 | gpio |        main.cpp: 250 | 1601601
+  3FFBD6FC I |    15708 | gpio |        main.cpp: 250 | 1601599
+  3FFBD6FC I |    15728 | gpio |        main.cpp: 250 | 1601601
+  3FFBD6FC I |    15748 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15768 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15788 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15808 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15828 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15848 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15857 | gpio |        main.cpp: 231 |  ovfl : 3 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |    15868 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15888 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15907 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    15927 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15947 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15967 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    15987 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16006 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16026 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16046 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16066 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16085 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16105 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16124 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16144 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16164 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16184 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16204 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16223 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16243 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16263 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16284 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16304 | gpio |        main.cpp: 250 | 1448222
+  3FFBD6FC I |    16321 | gpio |        main.cpp: 250 | 1594818
+  3FFBD6FC I |    16341 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16361 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16382 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16406 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16419 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16439 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16459 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16480 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16504 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16519 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16539 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16559 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16579 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16604 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16618 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16638 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16658 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16678 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16702 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16717 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16737 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16757 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16777 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16802 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16817 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16837 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16857 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16877 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16905 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16916 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    16936 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16956 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    16976 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17003 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17016 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17036 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17056 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17076 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17104 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17115 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    17135 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17155 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17175 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17203 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17214 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    17234 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17254 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17275 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17294 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17314 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    17334 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17373 | gpio |        main.cpp: 250 | 3203200
+  3FFBD6FC I |    17394 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17414 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17434 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17453 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17473 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17494 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17514 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17534 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17554 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17574 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17594 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17614 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17634 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17654 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17674 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17694 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17714 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17734 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17754 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17774 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17794 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17814 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17834 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17854 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17874 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17894 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17913 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    17933 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17953 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17973 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    17993 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18013 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18034 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18053 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18073 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18094 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18112 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18133 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18152 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18172 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18192 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18212 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18231 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18251 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18271 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18291 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18311 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18330 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18351 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18370 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18391 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18410 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18429 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18450 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18469 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18490 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18510 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18530 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18550 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18570 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18590 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18609 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18629 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18649 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18669 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18689 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18708 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    18728 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18748 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18768 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18788 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18808 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18828 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18848 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18857 | gpio |        main.cpp: 231 |  ovfl : 3 busyPop : 0 busyPush : 0 threadQovfl : 0  
+  3FFBD6FC I |    18868 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18888 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18908 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18928 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18948 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18968 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    18988 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19009 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19028 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19048 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19068 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19088 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19108 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19128 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19148 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19168 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19188 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19209 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19228 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19248 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19268 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19288 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19309 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19328 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19348 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19389 | gpio |        main.cpp: 250 | 3203200
+  3FFBD6FC I |    19409 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19428 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19448 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19469 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19489 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19509 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19529 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19549 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19570 | gpio |        main.cpp: 250 | 1601599
+  3FFBD6FC I |    19589 | gpio |        main.cpp: 250 | 1601601
+  3FFBD6FC I |    19609 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19629 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19649 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19669 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19689 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19709 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19729 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19749 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19769 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19789 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19809 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19829 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19849 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19869 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19889 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19909 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19929 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19949 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19969 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    19989 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20008 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20028 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20048 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20068 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20088 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20107 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20127 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20147 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20167 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20187 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20207 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20226 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20246 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20266 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20286 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20306 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20325 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20345 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20365 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20385 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20405 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20424 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20444 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20464 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20485 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20504 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20524 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20544 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20564 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20585 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20604 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20624 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20644 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20664 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20684 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20705 | gpio |        main.cpp: 250 | 1491966
+  3FFBD6FC I |    20722 | gpio |        main.cpp: 250 | 1551074
+  3FFBD6FC I |    20742 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20762 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20782 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20805 | gpio |        main.cpp: 250 | 1521520
+  3FFBD6FC I |    20821 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20841 | gpio |        main.cpp: 250 | 1601600
+  3FFBD6FC I |    20861 | gpio |        m

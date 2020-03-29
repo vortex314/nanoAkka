@@ -4,6 +4,6 @@ COMPONENT_EXTRA_INCLUDES :=   ../../ArduinoJson/src
 
 COMPONENT_ADD_INCLUDEDIRS := . ../../Common .
 
-COMPONENT_ADD_LDFLAGS += -Wl,--gc-sections 
+COMPONENT_ADD_LDFLAGS += -Wl,--gc-sections -fno-rtti
 
 COMMENT := -fno-rtti

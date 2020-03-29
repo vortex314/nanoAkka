@@ -156,6 +156,12 @@ Poller poller(mqttThread);
 
 ArrayQueue<int,16> q;
 
+#ifdef GPIO_TEST
+#include <HardwareTester.h>
+HardwareTester hw;
+#endif
+
+
 extern "C" void app_main(void)
 {
     //    ESP_ERROR_CHECK(nvs_flash_erase());
@@ -225,6 +231,26 @@ extern "C" void app_main(void)
         INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  ",stats.bufferOverflow,stats.bufferPopBusy,stats.bufferPushBusy,stats.threadQueueOverflow);
     });
 
+#ifdef GPIO_TEST
+    hw.gpioTest();
+    hw.mcpwmTest();
+    hw.captureTest(36); // was 36
+
+    TimerSource pulser(thisThread,1,10,true);
+    pulser >> ([](const TimerMsg& tm) {
+        static int i=0;
+        int pwm = i%200;
+        if ( pwm > 100 ) pwm = 200-i;
+        hw.pwm(pwm);
+        if (i++==200) i=0;
+    });
+
+    Sink<uint32_t,20> sinker;
+    sinker.async(thisThread,[](const uint32_t& cpt) {
+        INFO("%u",cpt);
+    });
+    hw.capts >> sinker;
+#endif
 
 
 #ifdef US

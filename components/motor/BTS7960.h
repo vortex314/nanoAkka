@@ -25,9 +25,9 @@ class BTS7960
 
     mcpwm_unit_t _mcpwm_num;
     mcpwm_timer_t _timer_num;
-    pcnt_unit_t pcnt_unit;
-    pcnt_channel_t pcnt_channel;
-    pcnt_config_t pcnt_config;
+//   pcnt_unit_t pcnt_unit;
+//    pcnt_channel_t pcnt_channel;
+//   pcnt_config_t pcnt_config;
     esp_err_t _rc;
 
     float _currentLeft, _currentRight;

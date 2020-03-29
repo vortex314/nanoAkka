@@ -6,6 +6,16 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="wifi">
+      <File Name="components/wifi/component.mk"/>
+      <File Name="components/wifi/Wifi.h"/>
+      <File Name="components/wifi/Wifi.cpp"/>
+      <File Name="components/wifi/MqttWifi.h"/>
+      <File Name="components/wifi/MqttWifi.cpp"/>
+      <File Name="components/wifi/MqttSerial.h"/>
+      <File Name="components/wifi/MqttSerial.cpp"/>
+      <File Name="components/wifi/Mqtt.h"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="servo">
       <File Name="components/servo/Servo.h"/>
       <File Name="components/servo/Servo.cpp"/>
@@ -38,18 +48,11 @@
       <File Name="components/ultrasonic/HCSR04.h"/>
       <File Name="components/ultrasonic/HCSR04.cpp"/>
     </VirtualDirectory>
-    <VirtualDirectory Name="Wifi">
-      <File Name="components/Wifi/MqttSerial.h"/>
-      <File Name="components/Wifi/MqttSerial.cpp"/>
-      <File Name="components/Wifi/component.mk"/>
-      <File Name="components/Wifi/Wifi.h"/>
-      <File Name="components/Wifi/Wifi.cpp"/>
-      <File Name="components/Wifi/MqttWifi.h"/>
-      <File Name="components/Wifi/MqttWifi.cpp"/>
-      <File Name="components/Wifi/Mqtt.h"/>
-    </VirtualDirectory>
+    <VirtualDirectory Name="Wifi"/>
   </VirtualDirectory>
   <VirtualDirectory Name="main">
+    <File Name="main/HardwareTester.cpp"/>
+    <File Name="main/HardwareTester.h"/>
     <File Name="main/Device.h"/>
     <File Name="main/Device.cpp"/>
     <File Name="main/Filter.h"/>
@@ -57,7 +60,6 @@
     <File Name="main/NanoAkka.h"/>
     <File Name="main/LedBlinker.cpp"/>
     <File Name="main/LedBlinker.h"/>
-    <File Name="main/sdkconfig.h"/>
     <File Name="main/component.mk"/>
     <File Name="main/main.cpp"/>
     <File Name="main/Hardware_ESP32.cpp"/>
@@ -71,7 +73,7 @@
     </Excludepaths>
     <Ignorefiles/>
     <Extensions>
-      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp;*.txt;*.mk;*.Makefile]]>
+      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp;*.txt;*.mk;Makefile]]>
     </Extensions>
     <Topleveldir>/home/lieven/workspace/nanoAkka</Topleveldir>
   </Reconciliation>
@@ -113,7 +115,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make SERVO_WIFI</BuildCommand>
+        <BuildCommand>make GPIO</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

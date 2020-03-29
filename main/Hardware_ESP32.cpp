@@ -52,7 +52,7 @@ public:
     Erc init()
     {
         esp_err_t erc;
-        INFO(" DigitalIn Init %d ", _gpio);
+//       INFO(" DigitalIn Init %d ", _gpio);
         erc = gpio_set_direction((gpio_num_t) _gpio, GPIO_MODE_INPUT);
         if (erc)
             ERROR("gpio_set_direction():%d", erc);
@@ -145,7 +145,7 @@ public:
     ;
     Erc init()
     {
-        INFO(" DigitalOut Init %d ", _gpio);
+//        INFO(" DigitalOut Init %d ", _gpio);
         esp_err_t erc = gpio_set_direction((gpio_num_t) _gpio,
                                            GPIO_MODE_OUTPUT);
         if (erc)
@@ -790,7 +790,7 @@ public:
     {
         int rc = uart_driver_delete(_uartNum);
         vTaskDelete(_taskHandle);
-        return E_OK;
+        return rc==ESP_OK ? E_OK : EIO;
     }
 
     Erc setClock(uint32_t clock)
