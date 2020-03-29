@@ -3,22 +3,45 @@
 
 #include <NanoAkka.h>
 
-class Device  {
-	public:
-		typedef enum {
-			STOPPED, RUNNING, PAUSED
-		} DeviceState;
-		TimerSource watchdogTimer;
+class Device
+{
+public:
+    typedef enum {
+        STOPPED, RUNNING, PAUSED
+    } DeviceState;
+    TimerSource watchdogTimer;
 
-		ValueFlow<bool> running=true;
-		ValueFlow<std::string> deviceMessage;
-		ValueFlow<bool> watchdogReset=true;
-		Device(Thread& thr);
-		~Device();
-		void run() { deviceMessage="RUNNING"; running=true;};
-		void stop(const char* reason) { std::string s="STOPPED:"; s+=reason; deviceMessage=s; running=false; }
-		bool isRunning() { return running();}
-		bool isStopped() { return !running(); }
+    ValueSource<int> deviceState=PAUSED;
+    ValueSource<std::string> deviceMessage;
+    ValueFlow<bool> watchdogReset=true;
+    Device(Thread& thr);
+    ~Device();
+    void run()
+    {
+        if ( deviceState() == PAUSED ) {
+            deviceState=RUNNING;
+            deviceMessage="RUNNING";
+
+        }
+    };
+    void stop(const char* reason)
+    {
+        std::string s="STOPPED:";
+        s+=reason;
+        deviceMessage=s;
+        deviceState=STOPPED;
+    }
+    void pause(const char *reason)
+    {
+        std::string s="PAUSED:";
+        s+=reason;
+        deviceMessage=s;
+        deviceState=PAUSED;
+    }
+    bool isRunning()
+    {
+        return deviceState()==RUNNING;
+    }
 };
 
 #endif // DEVICE_H
