@@ -7,7 +7,6 @@ class Bytes;
 
 typedef void (*FunctionPointer)(void*);
 
-typedef unsigned int uint32_t;
 typedef uint32_t Erc;
 typedef unsigned char uint8_t;
 typedef uint32_t PhysicalPin;

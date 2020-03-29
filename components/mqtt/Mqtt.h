@@ -5,19 +5,19 @@
 #define ARDUINOJSON_ENABLE_STD_STRING 1
 #include <ArduinoJson.h>
 typedef struct MqttMessage {
-	std::string topic;
-	std::string message;
+	NanoString topic;
+	NanoString message;
 } MqttMessage;
 //____________________________________________________________________________________________________________
 //
 template <class T>
 class ToMqtt : public LambdaFlow<T, MqttMessage> {
-		std::string _name;
+		NanoString _name;
 	public:
-		ToMqtt(std::string name)
+		ToMqtt(NanoString name)
 			:
 			LambdaFlow<T, MqttMessage>([&](MqttMessage&  msg,const T& event) {
-			std::string s;
+			NanoString s;
 			DynamicJsonDocument doc(100);
 			JsonVariant variant = doc.to<JsonVariant>();
 			variant.set(event);
@@ -31,9 +31,9 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
 //
 template <class T>
 class FromMqtt : public LambdaFlow<MqttMessage, T> {
-		std::string _name;
+		NanoString _name;
 	public:
-		FromMqtt(std::string name)
+		FromMqtt(NanoString name)
 			: LambdaFlow<MqttMessage, T>([&](T& t,const MqttMessage& mqttMessage) {
 //			INFO(" '%s' <> '%s'",mqttMessage.topic.c_str(),_name.c_str());
 			if(mqttMessage.topic != _name) {

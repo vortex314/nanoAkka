@@ -124,17 +124,17 @@ public:
 };
 //___________________________________________________________________________ lockfree buffer, isr ready
 //
-#define BUSY (1 << 31) // busy read or write ptr
-#define xt_rsil(level) (__extension__({uint32_t state; __asm__ __volatile__("rsil %0," STRINGIFY(level) : "=a" (state)); state; }))
-#define xt_wsr_ps(state) __asm__ __volatile__("wsr %0,ps; isync" ::"a"(state) \
-											  : "memory")
+#define BUSY (1 << 15) // busy read or write ptr
 
+#ifdef ESP_OPEN_RTOS
 // Set Interrupt Level
 // level (0-15),
 // level 15 will disable ALL interrupts,
 // level 0 will enable ALL interrupts
 //
-#ifdef ESP_OPEN_RTOS
+#define xt_rsil(level) (__extension__({uint32_t state; __asm__ __volatile__("rsil %0," STRINGIFY(level) : "=a" (state)); state; }))
+#define xt_wsr_ps(state) __asm__ __volatile__("wsr %0,ps; isync" ::"a"(state) \
+											  : "memory")
 #define interrupts() xt_rsil(0)
 #define noInterrupts() xt_rsil(15)
 #endif
@@ -156,7 +156,7 @@ public:
 	int push(const T &t)
 	{
 
-#ifdef ESP_OPEN_RTOS
+#if defined(ESP_OPEN_RTOS) // || defined(ARDUINO)
 		noInterrupts();
 		int expected = _writePtr;
 		int desired = next(expected);
@@ -180,23 +180,26 @@ public:
 		}
 		if (expected & BUSY)
 		{
+			WARN("BUSY");
 			return ENODATA;
 		}
 		desired |= BUSY;
-		if (_writePtr.compare_exchange_weak(expected, desired,
-											std::memory_order_relaxed))
+		if (_writePtr.compare_exchange_strong(expected, desired,
+											std::memory_order_seq_cst,
+											std::memory_order_seq_cst))
 		{
 			expected = desired;
 			desired &= ~BUSY;
 			_array[desired] = std::move(t);
-			if (!_writePtr.compare_exchange_weak(expected, desired,
-												 std::memory_order_relaxed))
+			if (_writePtr.compare_exchange_strong(expected, desired,
+												std::memory_order_seq_cst,
+												std::memory_order_seq_cst))
 			{
-				WARN("remove busy failed");
+				return 0;
 			}
-			return 0;
+			WARN("writePtr remove busy failed %u:%u:%u", expected, _writePtr.load(), desired);
 		}
-		WARN("writePtr update failed");
+		WARN("writePtr update failed %u:%u:%u",expected,_writePtr.load(),desired);
 		return -1;
 #endif
 	}
@@ -204,7 +207,7 @@ public:
 	int pop(T &t)
 	{
 
-#ifdef ESP_OPEN_RTOS
+#if defined(ESP_OPEN_RTOS) //|| defined(ARDUINO)
 		noInterrupts();
 		int expected = _readPtr;
 		int desired = next(expected);
@@ -232,20 +235,22 @@ public:
 			return ENODATA;
 		}
 		desired |= BUSY;
-		if (_readPtr.compare_exchange_weak(expected, desired,
-										   std::memory_order_relaxed))
+		if (_readPtr.compare_exchange_strong(expected, desired,
+										   std::memory_order_seq_cst,
+										   std::memory_order_seq_cst))
 		{
 			expected = desired;
 			desired &= ~BUSY;
 			t = std::move(_array[desired]);
-			if (!_readPtr.compare_exchange_weak(expected, desired,
-												std::memory_order_relaxed))
+			if (_readPtr.compare_exchange_strong(expected, desired,
+												std::memory_order_seq_cst,
+												std::memory_order_seq_cst))
 			{
-				WARN("remove busy failed");
+				return 0;
 			}
-			return 0;
+			WARN("readPtr remove busy failed %u:%u:%u", expected, _readPtr.load(), desired);
 		}
-		WARN("readPtr update failed");
+		WARN("readPtr update failed %u:%u:%u",expected,_readPtr.load(),desired);
 		return -1;
 #endif
 	}
