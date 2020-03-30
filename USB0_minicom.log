@@ -1,822 +1,1134 @@
-th
-I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
-I (70) boot:  1 phy_init         RF data          01 01 0000f000 00001000
-I (78) boot:  2 factory          factory app      00 00 00010000 00100000
-I (85) boot: End of partition table
-I (89) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1eaac (125612) map
-I (146) esp_image: segment 1: paddr=0x0002ead4 vaddr=0x3ffb0000 size=0x01544 (  5444) load
-I (148) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x86c7c (552060) map
-I (361) esp_image: segment 3: paddr=0x000b6ca4 vaddr=0x3ffb1544 size=0x02598 (  9624) load
-I (365) esp_image: segment 4: paddr=0x000b9244 vaddr=0x40080000 size=0x00400 (  1024) load
-I (368) esp_image: segment 5: paddr=0x000b964c vaddr=0x40080400 size=0x1523c ( 86588) load
-I (425) boot: Loaded app from partition at offset 0x10000
-I (426) boot: Disabling RNG early entropy source...
-I (426) cpu_start: Pro cpu up.
-I (430) cpu_start: Application information:
-I (434) cpu_start: Project name:     nanoAkka
-I (439) cpu_start: App version:      025e74f-dirty
-I (445) cpu_start: Compile time:     Mar 29 2020 21:33:57
-I (451) cpu_start: ELF file SHA256:  772dcce22f9dbf88...
-I (457) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
-I (463) cpu_start: Starting app cpu, entry point is 0x400812f0
-I (0) cpu_start: App cpu up.
-I (474) heap_init: Initializing. RAM available for dynamic allocation:
-I (481) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
-I (487) heap_init: At 3FFBB010 len 00024FF0 (147 KiB): DRAM
-I (493) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
-I (499) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
-I (506) heap_init: At 4009563C len 0000A9C4 (42 KiB): IRAM
-I (512) cpu_start: Pro cpu start user code
-I (531) spi_flash: detected chip: gd
-I (532) spi_flash: flash io: dio
-I (532) cpu_start: Starting scheduler on PRO CPU.
-I (0) cpu_start: Starting scheduler on APP CPU.
-  3FFBD6FC I |       11 | gpio |        main.cpp: 184 | gpio : Mar 30 2020 00:45:10 
-  3FFBD6FC I |      137 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
-  3FFBD6FC I |      256 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
-  3FFBD6FC I |      375 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
-  3FFBD6FC I |      494 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
-  3FFBD6FC I |      613 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
-I (1743) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
-I (1803) wifi:wifi driver task: 3ffc3510, prio:23, stack:3584, core=0
-I (1803) system_api: Base MAC address is not set
-I (1803) system_api: read default base MAC address from EFUSE
-I (1823) wifi:wifi firmware version: 89341b9
-I (1823) wifi:wifi certification version: v7.0
-I (1823) wifi:config NVS flash: enabled
-I (1823) wifi:config nano formating: disabled
-I (1833) wifi:Init dynamic tx buffer num: 32
-I (1833) wifi:Init data frame dynamic rx buffer num: 32
-I (1843) wifi:Init management frame dynamic rx buffer num: 32
-I (1843) wifi:Init management short buffer num: 32
-I (1853) wifi:Init static rx buffer size: 1600
-I (1853) wifi:Init static rx buffer num: 10
-I (1863) wifi:Init dynamic rx buffer num: 32
-I (1963) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
-I (1973) wifi:mode : sta (30:ae:a4:03:11:d0)
-  3FFC1A18 I |      838 | gpio |        Wifi.cpp:  92 | WIFI_EVENT_STA_START
-  3FFC1A18 I |      840 | gpio |        Wifi.cpp: 161 |  starting WiFi scan.
-  3FFBD6FC I |      849 | gpio |    MqttWifi.cpp:  42 |  uri : mqtt://limero.ddns.net:1883 
-  3FFBD6FC I |      858 | gpio | HardwareTester.cpp: 118 |  GPIO tester ======== UEXT1 =============>
-I (1993) gpio: GPIO[19]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2003) gpio: GPIO[36]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-I (2013) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2023) gpio: GPIO[26]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-I (2033) gpio: GPIO[26]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2043) gpio: GPIO[25]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-I (2053) gpio: GPIO[23]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2063) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-I (2073) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2083) gpio: GPIO[32]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-I (2093) gpio: GPIO[32]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2103) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC I |      977 | gpio | HardwareTester.cpp: 125 |  GPIO tester ======== UEXT2 =============>
-I (2123) gpio: GPIO[18]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2123) gpio: GPIO[39]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1004 | gpio | HardwareTester.cpp: 149 |  ======> gpio 18 => 39 for 1 failed.
-I (2143) gpio: GPIO[27]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2153) gpio: GPIO[14]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1031 | gpio | HardwareTester.cpp: 144 |  ======> gpio 27 => 14 for 0 failed.
-I (2173) gpio: GPIO[14]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2183) gpio: GPIO[27]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1058 | gpio | HardwareTester.cpp: 144 |  ======> gpio 14 => 27 for 0 failed.
-I (2203) gpio: GPIO[22]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2213) gpio: GPIO[35]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1086 | gpio | HardwareTester.cpp: 149 |  ======> gpio 22 => 35 for 1 failed.
-I (2223) gpio: GPIO[16]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2233) gpio: GPIO[33]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1113 | gpio | HardwareTester.cpp: 144 |  ======> gpio 16 => 33 for 0 failed.
-I (2253) gpio: GPIO[33]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
-I (2263) gpio: GPIO[16]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
-  3FFBD6FC W |     1140 | gpio | HardwareTester.cpp: 144 |  ======> gpio 33 => 16 for 0 failed.
-  3FFBD6FC I |     1148 | gpio | HardwareTester.cpp: 132 |  GPIO tester <=====================
-  3FFBDE60 I |     1159 | gpio |    NanoAkka.cpp:  50 | Thread 'led' started 
-  3FFBDE60 I |     1163 | gpio |    NanoAkka.cpp:  50 | Thread 'mqtt' started 
-  3FFBDE60 I |     1170 | gpio |    NanoAkka.cpp:  50 | Thread 'echo' started 
-  3FFBDE60 I |     1177 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB57F0] already expired by 864 msec on thread 'led'.
-  3FFBDE60 I |     1188 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB4198] already expired by 1074 msec on thread 'mqtt'.
-  3FFBD6FC I |     1198 | gpio |    NanoAkka.cpp:  50 | Thread 'main' started 
-  3FFBD6FC I |     1205 | gpio |        main.cpp: 250 | 1591703
-  3FFBD6FC I |     1211 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1229 | gpio |        main.cpp: 250 | 2562560
-  3FFBD6FC I |     1249 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1269 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1289 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1309 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1329 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1350 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1369 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1389 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1409 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1429 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1449 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1470 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1491 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1510 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1530 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1550 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1570 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1590 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1610 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1630 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1650 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1670 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1690 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1710 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1730 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1750 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1770 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1792 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1810 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1830 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1850 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1870 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1890 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1910 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1930 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1950 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1970 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     1990 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2010 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2030 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2050 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2070 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2093 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2110 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2130 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2150 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2170 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2190 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2210 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2230 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2250 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2270 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2290 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2310 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2330 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2350 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2370 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2394 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2410 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2430 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2450 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2470 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2490 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2511 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2531 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2551 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2571 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2591 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2611 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2631 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2651 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2671 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2691 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2711 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2731 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2751 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2771 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2791 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2811 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2831 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2851 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2871 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2891 | gpio |        main.cpp: 250 | 1601600
-  3FFC1A18 I |     2904 | gpio |        Wifi.cpp:  77 | WIFI_EVENT_SCAN_DONE
-  3FFC1A18 I |     2905 | gpio |        Wifi.cpp: 133 |  found 3 AP's , size : 80 
-  3FFC1A18 I |     2908 | gpio |        Wifi.cpp: 143 |  Merckx2 : -34 
-  3FFC1A18 I |     2914 | gpio |        Wifi.cpp: 143 |  Merckx10 : -48 
-  3FFC1A18 I |     2920 | gpio |        Wifi.cpp: 143 |  Merckx3 : -61 
-  3FFC1A18 I |     2927 | gpio |        Wifi.cpp: 155 |  found strongest AP : 'Merckx2'.
-  3FFC1A18 I |     2934 | gpio |        Wifi.cpp: 116 |  connecting to SSID : Merckx2
-  3FFBD6FC I |     2945 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2949 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2953 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2971 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     2991 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3011 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3031 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3051 | gpio |        main.cpp: 250 | 1601600
-I (4203) wifi:new:<2,0>, old:<1,0>, ap:<255,255>, sta:<2,0>, prof:1
-I (4203) wifi:state: init -> auth (b0)
-I (4203) wifi:state: auth -> assoc (0)
-  3FFBD6FC I |     3071 | gpio |        main.cpp: 250 | 1601600
-I (4203) wifi:state: assoc -> run (10)
-  3FFBD6FC I |     3091 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3111 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3131 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3151 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3171 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3191 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3211 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3231 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3271 | gpio |        main.cpp: 250 | 3203200
-  3FFBD6FC I |     3291 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3311 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3331 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3351 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3371 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3391 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3411 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3431 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3451 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3471 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3491 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3512 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3532 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3552 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3572 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3592 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3612 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3632 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3652 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3672 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3692 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3712 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3732 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3752 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3772 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3792 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3812 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3832 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3852 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |     3872 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3892 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3912 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3932 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3952 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3972 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     3992 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4012 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4032 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4052 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4072 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4092 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4112 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4132 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4152 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4172 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4192 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4212 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4232 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4252 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4272 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4292 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4312 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4332 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4352 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4372 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4392 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4412 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4433 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4452 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4472 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4492 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4513 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4533 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4553 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4573 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4593 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4613 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4633 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4653 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4673 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4693 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4713 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4733 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4753 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4773 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4793 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4813 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4833 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4853 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4873 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4893 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4913 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4933 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4953 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4973 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     4993 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5013 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5033 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5053 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5073 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5093 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5113 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5133 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5153 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5173 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5193 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5213 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5233 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5253 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5293 | gpio |        main.cpp: 250 | 3203200
-  3FFBD6FC I |     5313 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5333 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5353 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5373 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5393 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5413 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5433 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5454 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5473 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5493 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5514 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5534 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5554 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5574 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5594 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5614 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5634 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5654 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5674 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5694 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5714 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5734 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5754 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5774 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5794 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5814 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5834 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5854 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5874 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5894 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5914 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5934 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5954 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5974 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     5994 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6014 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6034 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6054 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6074 | gpio |        main.cpp: 250 | 1601600
-I (7213) wifi:state: run -> init (2c0)
-I (7213) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
-I (7213) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
-  3FFC1A18 I |     6085 | gpio |        Wifi.cpp: 102 | WIFI_EVENT_STA_DISCONNECTED
-  3FFBD6FC I |     6095 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6114 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6134 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6154 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6174 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6194 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6215 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6234 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6254 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6274 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6294 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6314 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6334 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6354 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6374 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6394 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6414 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6434 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6454 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6475 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6494 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6515 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6535 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6555 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6575 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6595 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6615 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6635 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6655 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6675 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6695 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6715 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6735 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6755 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6775 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6795 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6815 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6835 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6855 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |     6875 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6895 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6915 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6935 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6955 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6975 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     6995 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7015 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7035 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7055 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7075 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7098 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7115 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7135 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7155 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |     7202 | gpio |        main.cpp: 250 | 3712013
-  3FFBD6FC I |     7202 | gpio |        main.cpp: 250 | 6857
-  3FFC1A18 I |     8147 | gpio |        Wifi.cpp: 102 | WIFI_EVENT_STA_DISCONNECTED
-I (9403) wifi:new:<2,0>, old:<2,0>, ap:<255,255>, sta:<2,0>, prof:1
-I (9403) wifi:state: init -> auth (b0)
-I (9403) wifi:state: auth -> assoc (0)
-I (9413) wifi:state: assoc -> run (10)
-I (9423) wifi:connected with Merckx2, aid = 3, channel 2, BW20, bssid = 00:23:cd:19:fc:f5
-I (9423) wifi:security type: 4, phy: bgn, rssi: -32
-I (9433) wifi:pm start, type: 1
+ets Jun  8 2016 00:22:57
 
-  3FFC1A18 I |     8299 | gpio |        Wifi.cpp:  98 | WIFI_EVENT_STA_CONNECTED
-I (9433) wifi:AP's beacon interval = 102400 us, DTIM period = 1
-I (10293) esp_netif_handlers: sta ip: 192.168.0.127, mask: 255.255.255.0, gw: 192.168.0.1
-  3FFC1A18 I |     9160 | gpio |        Wifi.cpp:  49 | IP_EVENT_STA_GOT_IP
-  3FFBD6FC I |     9165 | gpio |    MqttWifi.cpp:  59 | WiFi connected 1 
-  3FFDE8C8 I |     9171 | gpio |    MqttWifi.cpp: 105 | MQTT_EVENT_BEFORE_CONNECT
-I (10363) MQTT_CLIENT: Sending MQTT CONNECT message, type: 1, id: 0000
-  3FFDE8C8 I |     9256 | gpio |    MqttWifi.cpp: 109 | MQTT_EVENT_CONNECTED to mqtt://limero.ddns.net:1883
-  3FFDE8C8 I |     9256 | gpio |    MqttWifi.cpp: 110 |  session : 0 0 
-  3FFDE8C8 I |     9264 | gpio |    MqttWifi.cpp: 193 | Subscribing to topic dst/gpio 
-  3FFDE8C8 I |     9270 | gpio |    MqttWifi.cpp: 193 | Subscribing to topic dst/gpio/# 
-  3FFBD6FC I |     9307 | gpio |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=57631
-  3FFDE8C8 I |     9322 | gpio |    MqttWifi.cpp: 126 | MQTT_EVENT_SUBSCRIBED, msg_id=3584
-  3FFBD6FC I |     9857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |    12857 | gpio |        main.cpp: 231 |  ovfl : 0 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |    13734 | gpio |        main.cpp: 250 | 522570952
-  3FFBD6FC I |    13738 | gpio |        main.cpp: 250 | 297065
-  3FFBD6FC I |    13738 | gpio |        main.cpp: 250 | 3296
-  3FFBD6FC I |    13741 | gpio |        main.cpp: 250 | 1085
-  3FFBD6FC I |    13746 | gpio |        main.cpp: 250 | 645
-  3FFBD6FC I |    13751 | gpio |        main.cpp: 250 | 2027
-  3FFBD6FC I |    13757 | gpio |        main.cpp: 250 | 1860
-  3FFBD6FC I |    13762 | gpio |        main.cpp: 250 | 10538
-  3FFBD6FC I |    13768 | gpio |        main.cpp: 250 | 2806
-  3FFBD6FC I |    13773 | gpio |        main.cpp: 250 | 814
-  3FFBD6FC I |    13779 | gpio |        main.cpp: 250 | 974579
-  3FFBD6FC I |    13784 | gpio |        main.cpp: 250 | 687245
-  3FFBD6FC I |    13789 | gpio |        main.cpp: 250 | 9630
-  3FFBD6FC I |    13795 | gpio |        main.cpp: 250 | 3225
-  3FFBD6FC I |    13804 | gpio |        main.cpp: 250 | 518
-  3FFBD6FC I |    13805 | gpio |        main.cpp: 250 | 1398
-  3FFBD6FC I |    13811 | gpio |        main.cpp: 250 | 9309
-  3FFBD6FC I |    13817 | gpio |        main.cpp: 250 | 5351
-  3FFBD6FC I |    13822 | gpio |        main.cpp: 250 | 4779
-  3FFBD6FC I |    13827 | gpio |        main.cpp: 250 | 753
-  3FFBD6FC I |    13833 | gpio |        main.cpp: 250 | 2680
-  3FFBD6FC I |    13838 | gpio |        main.cpp: 250 | 716
-  3FFBD6FC I |    13843 | gpio |        main.cpp: 250 | 409
-  3FFBD6FC I |    13848 | gpio |        main.cpp: 250 | 2208
-  3FFBD6FC I |    13854 | gpio |        main.cpp: 250 | 1700
-  3FFBD6FC I |    13859 | gpio |        main.cpp: 250 | 675
-  3FFBD6FC I |    13864 | gpio |        main.cpp: 250 | 849315
-  3FFBD6FC I |    13871 | gpio |        main.cpp: 250 | 160162
-  3FFBD6FC I |    13875 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13881 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13887 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13892 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC W |    13904 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD59C] slow 11 msec invoker on thread 'main'.
-  3FFBD6FC I |    13909 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13914 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13919 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    13931 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13951 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13971 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    13991 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14010 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    14030 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14050 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14070 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14090 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14110 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    14129 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14149 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14169 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14189 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14209 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    14228 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14249 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14268 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14288 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14308 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    14327 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14347 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14367 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14388 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14408 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14427 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14448 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14467 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14488 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14508 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14528 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14548 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14568 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14588 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14608 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14628 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14648 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14668 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14688 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14708 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14728 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14748 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14768 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14788 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14808 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14828 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14848 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14868 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14888 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14908 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14928 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14948 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14968 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    14988 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15008 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15028 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15048 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15068 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15088 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15108 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15128 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15148 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15168 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15188 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15209 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15228 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15248 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15269 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15288 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15309 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15328 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15369 | gpio |        main.cpp: 250 | 3203200
-  3FFBD6FC I |    15389 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15408 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    15427 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15447 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15467 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15488 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15508 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15528 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15548 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15568 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15588 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15608 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15628 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15648 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15668 | gpio |        main.cpp: 250 | 1601599
-  3FFBD6FC I |    15688 | gpio |        main.cpp: 250 | 1601601
-  3FFBD6FC I |    15708 | gpio |        main.cpp: 250 | 1601599
-  3FFBD6FC I |    15728 | gpio |        main.cpp: 250 | 1601601
-  3FFBD6FC I |    15748 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15768 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15788 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15808 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15828 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15848 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15857 | gpio |        main.cpp: 231 |  ovfl : 3 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |    15868 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15888 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15907 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    15927 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15947 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15967 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    15987 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16006 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16026 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16046 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16066 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16085 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16105 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16124 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16144 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16164 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16184 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16204 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16223 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16243 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16263 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16284 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16304 | gpio |        main.cpp: 250 | 1448222
-  3FFBD6FC I |    16321 | gpio |        main.cpp: 250 | 1594818
-  3FFBD6FC I |    16341 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16361 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16382 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16406 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16419 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16439 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16459 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16480 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16504 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16519 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16539 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16559 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16579 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16604 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16618 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16638 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16658 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16678 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16702 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16717 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16737 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16757 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16777 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16802 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16817 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16837 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16857 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16877 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16905 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16916 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    16936 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16956 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    16976 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17003 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17016 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17036 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17056 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17076 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17104 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17115 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    17135 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17155 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17175 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17203 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17214 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    17234 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17254 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17275 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17294 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17314 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    17334 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17373 | gpio |        main.cpp: 250 | 3203200
-  3FFBD6FC I |    17394 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17414 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17434 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17453 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17473 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17494 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17514 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17534 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17554 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17574 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17594 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17614 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17634 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17654 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17674 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17694 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17714 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17734 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17754 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17774 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17794 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17814 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17834 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17854 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17874 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17894 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17913 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    17933 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17953 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17973 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    17993 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18013 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18034 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18053 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18073 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18094 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18112 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18133 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18152 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18172 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18192 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18212 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18231 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18251 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18271 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18291 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18311 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18330 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18351 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18370 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18391 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18410 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18429 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18450 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18469 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18490 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18510 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18530 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18550 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18570 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18590 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18609 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18629 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18649 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18669 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18689 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18708 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    18728 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18748 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18768 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18788 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18808 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18828 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18848 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18857 | gpio |        main.cpp: 231 |  ovfl : 3 busyPop : 0 busyPush : 0 threadQovfl : 0  
-  3FFBD6FC I |    18868 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18888 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18908 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18928 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18948 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18968 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    18988 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19009 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19028 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19048 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19068 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19088 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19108 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19128 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19148 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19168 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19188 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19209 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19228 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19248 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19268 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19288 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19309 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19328 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19348 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19389 | gpio |        main.cpp: 250 | 3203200
-  3FFBD6FC I |    19409 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19428 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19448 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19469 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19489 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19509 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19529 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19549 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19570 | gpio |        main.cpp: 250 | 1601599
-  3FFBD6FC I |    19589 | gpio |        main.cpp: 250 | 1601601
-  3FFBD6FC I |    19609 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19629 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19649 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19669 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19689 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19709 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19729 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19749 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19769 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19789 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19809 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19829 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19849 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19869 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19889 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19909 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19929 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19949 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19969 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    19989 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20008 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20028 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20048 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20068 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20088 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20107 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20127 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20147 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20167 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20187 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20207 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20226 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20246 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20266 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20286 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20306 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20325 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20345 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20365 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20385 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20405 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20424 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20444 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20464 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20485 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20504 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20524 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20544 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20564 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20585 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20604 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20624 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20644 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20664 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20684 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20705 | gpio |        main.cpp: 250 | 1491966
-  3FFBD6FC I |    20722 | gpio |        main.cpp: 250 | 1551074
-  3FFBD6FC I |    20742 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20762 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20782 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20805 | gpio |        main.cpp: 250 | 1521520
-  3FFBD6FC I |    20821 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20841 | gpio |        main.cpp: 250 | 1601600
-  3FFBD6FC I |    20861 | gpio |        m
+rst:0x10 (RTCWDT_RTC_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (428) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (437) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (0) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+I (534) spi_flash: detected chip: gd
+I (534) spi_flash: flash io: dio
+I (534) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD874 I |       11 | gpio |        main.cpp: 184 | gpio : Mar 30 2020 23:37:51 
+  3FFBD874 I |      137 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      257 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      377 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      497 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 120 msec  = 833 msg/msec
+  3FFBD874 I |      617 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 120 msec  = 833 msg/msec
+I (1759) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (1819) wifi:wifi driver task: 3ffc3668, prio:23, stack:3584, core=0
+I (1819) system_api: Base MAC address is not set
+I (1819) system_api: read default base MAC address from EFUSE
+I (1839) wifi:wifi firmware version: 89341b9
+I (1839) wifi:wifi certification version: v7.0
+I (1839) wifi:config NVS flash: enabled
+I (1839) wifi:config nano formating: disabled
+I (1849) wifi:Init dynamic tx buffer num: 32
+I (1849) wifi:Init data frame dynamic rx buffer num: 32
+I (1859) wifi:Init management frame dynamic rx buffer num: 32
+I (1859) wifi:Init management short buffer num: 32
+I (1869) wifi:Init static rx buffer size: 1600
+I (1869) wifi:Init static rx buffer num: 10
+I (1879) wifi:Init dynamic rx buffer num: 32
+I (1979) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (1979) wifi:mode : sta (30:ae:a4:03:ec:98)
+  3FFC1B70 I |      842 | gpio |        Wifi.cpp:  92 | WIFI_EVENT_STA_START
+  3FFC1B70 I |      844 | gpio |        Wifi.cpp: 161 |  starting WiFi scan.
+  3FFBD874 I |      853 | gpio |    MqttWifi.cpp:  42 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBD874 I |      861 | gpio | HardwareTester.cpp: 184 |  GPIO tester ======== UEXT =============>
+I (2009) gpio: GPIO[19]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2019) gpio: GPIO[36]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2029) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2039) gpio: GPIO[26]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2049) gpio: GPIO[26]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2049) gpio: GPIO[25]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2059) gpio: GPIO[23]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2069) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2079) gpio: GPIO[32]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2089) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD874 I |      962 | gpio | HardwareTester.cpp: 190 |  GPIO tester <=====================
+  3FFBD874 I |      970 | gpio | HardwareTester.cpp: 104 |  APB clock : 80000000 Hz
+  3FFBD874 I |      977 | gpio | HardwareTester.cpp: 105 |  number of pulses : 0 
+  3FFBDFD8 I |      986 | gpio |    NanoAkka.cpp:  50 | Thread 'led' started 
+  3FFBDFD8 I |      991 | gpio |    NanoAkka.cpp:  50 | Thread 'mqtt' started 
+  3FFBDFD8 I |      998 | gpio |    NanoAkka.cpp:  50 | Thread 'echo' started 
+  3FFBDFD8 I |     1005 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB58F8] already expired by 694 msec on thread 'led'.
+  3FFBDFD8 I |     1015 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB42A0] already expired by 899 msec on thread 'mqtt'.
+  3FFBD874 I |     1026 | gpio |    NanoAkka.cpp:  50 | Thread 'main' started 
+  3FFBD874 I |     1034 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1041 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1049 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1058 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1066 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1074 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1082 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1091 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1100 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1107 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1115 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1124 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1132 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1140 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1148 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1157 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1165 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1173 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1181 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1190 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1198 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1206 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1214 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1223 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1231 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1239 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1247 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1256 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1264 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1272 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1280 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1289 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1297 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1305 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1313 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1321 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1330 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1339 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1347 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1355 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1363 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1371 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1379 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1387 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1396 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1404 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1412 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1420 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1429 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1437 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1445 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1453 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1462 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1470 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1478 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1486 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1495 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1503 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1511 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1519 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1528 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1536 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1544 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1552 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1561 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1569 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1577 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1586 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1594 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1602 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1610 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     1622 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 12 msec invoker on thread 'main'.
+  3FFBD874 I |     1628 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1637 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1645 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1653 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1662 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1670 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1678 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1686 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1694 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1704 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1711 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1719 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1727 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1736 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1744 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1752 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1760 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1769 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1777 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1785 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1793 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1802 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1810 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1818 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1827 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1835 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1843 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1851 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1859 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1868 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1876 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1884 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1892 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1901 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1909 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     1923 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 14 msec invoker on thread 'main'.
+  3FFBD874 I |     1927 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1935 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1946 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1952 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1960 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1968 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1976 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1985 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1994 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2001 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2009 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2018 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2026 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2034 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2042 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2051 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2059 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2068 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2075 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2084 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2092 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2100 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2108 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2117 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2125 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2133 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2141 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2150 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2158 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2166 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2174 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2183 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2191 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2199 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2207 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     2224 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 17 msec invoker on thread 'main'.
+  3FFBD874 I |     2226 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2234 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2242 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2250 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2259 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2267 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2275 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2283 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2292 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2300 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2308 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2316 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2324 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2333 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2341 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2349 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2358 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2366 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2374 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2382 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2391 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2399 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2407 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2415 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2424 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2432 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2440 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2448 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2457 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2465 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2473 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2481 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2489 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2498 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2506 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2514 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2522 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2531 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2539 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2548 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2555 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2564 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2572 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2580 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2588 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2597 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2605 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2613 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2621 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2630 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2638 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2646 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2654 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2663 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2671 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2679 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2687 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2696 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2704 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2712 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2720 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2729 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2737 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2745 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2753 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2762 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2770 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2778 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2786 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2795 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2803 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2811 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2819 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2828 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2836 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2844 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2852 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2861 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2869 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2877 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2885 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2894 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2902 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFC1B70 I |     2910 | gpio |        Wifi.cpp:  77 | WIFI_EVENT_SCAN_DONE
+  3FFC1B70 I |     2917 | gpio |        Wifi.cpp: 133 |  found 4 AP's , size : 80 
+  3FFC1B70 I |     2925 | gpio |        Wifi.cpp: 143 |  Merckx10 : -35 
+  3FFC1B70 I |     2931 | gpio |        Wifi.cpp: 143 |  Merckx2 : -36 
+  3FFC1B70 I |     2937 | gpio |        Wifi.cpp: 143 |  Merckx3 : -59 
+  3FFC1B70 I |     2943 | gpio |        Wifi.cpp: 143 |  ESP_D91EA7 : -88 
+  3FFC1B70 I |     2950 | gpio |        Wifi.cpp: 155 |  found strongest AP : 'Merckx10'.
+  3FFC1B70 I |     2958 | gpio |        Wifi.cpp: 116 |  connecting to SSID : Merckx10
+ets Jun  8 2016 00:22:57
+
+rst:0x8 (TG1WDT_SYS_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+ets Jun  8 2016 00:22:57
+
+rst:0x7 (TG0WDT_SYS_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (58) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (58) boot: compile time 21:14:34
+I (58) boot: chip revision: 0
+I (63) boot.esp32: SPI Speed      : 40MHz
+I (67) boot.esp32: SPI Mode       : DIO
+I (72) boot.esp32: SPI Flash Size : 4MB
+W (76) boot.esp32: PRO CPU has been reset by WDT.
+W (82) boot.esp32: WDT reset info: PRO CPU PC=0x40095004
+W (88) boot.esp32: WDT reset info: APP CPU PC=0x4008f955
+I (94) boot: Enabling RNG early entropy source...
+I (99) boot: Partition Table:
+I (103) boot: ## Label            Usage          Type ST Offset   Length
+I (110) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (118) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (125) boot:  2 factory          factory app      00 00 00010000 00100000
+I (133) boot: End of partition table
+I (137) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (194) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (196) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (410) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (415) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (417) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (475) boot: Loaded app from partition at offset 0x10000
+I (475) boot: Disabling RNG early entropy source...
+I (475) cpu_start: Pro cpu up.
+I (479) cpu_start: Application information:
+I (484) cpu_start: Project name:     nanoAkka
+I (489) cpu_start: App version:      53dded8-dirty
+I (494) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (500) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (506) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (513) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (0) cpu_start: App cpu up.
+I (523) heap_init: Initializing. RAM available for dynamic allocation:
+I (530) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (536) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (542) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (549) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (555) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (561) cpu_start: Pro cpu start user code
+I (581) spi_flash: detected chip: gd
+I (581) spi_flash: flash io: dio
+I (582) cpu_start: Starting scheduler on PRO CPU.
+I (0) cpu_start: Starting scheduler on APP CPU.
+  3FFBD874 I |       11 | gpio |        main.cpp: 184 | gpio : Mar 30 2020 23:37:51 
+  3FFBD874 I |      137 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      257 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      377 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 119 msec  = 840 msg/msec
+  3FFBD874 I |      497 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 120 msec  = 833 msg/msec
+  3FFBD874 I |      617 | gpio |        main.cpp: 198 |  time taken for 100000 iterations : 120 msec  = 833 msg/msec
+I (1806) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 1| Pulldown: 1| Intr:0 
+I (1856) wifi:wifi driver task: 3ffc3668, prio:23, stack:3584, core=0
+I (1856) system_api: Base MAC address is not set
+I (1856) system_api: read default base MAC address from EFUSE
+I (1876) wifi:wifi firmware version: 89341b9
+I (1876) wifi:wifi certification version: v7.0
+I (1876) wifi:config NVS flash: enabled
+I (1876) wifi:config nano formating: disabled
+I (1886) wifi:Init dynamic tx buffer num: 32
+I (1886) wifi:Init data frame dynamic rx buffer num: 32
+I (1896) wifi:Init management frame dynamic rx buffer num: 32
+I (1896) wifi:Init management short buffer num: 32
+I (1906) wifi:Init static rx buffer size: 1600
+I (1906) wifi:Init static rx buffer num: 10
+I (1916) wifi:Init dynamic rx buffer num: 32
+I (2016) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0
+I (2016) wifi:mode : sta (30:ae:a4:03:ec:98)
+  3FFC1B70 I |      832 | gpio |        Wifi.cpp:  92 | WIFI_EVENT_STA_START
+  3FFC1B70 I |      835 | gpio |        Wifi.cpp: 161 |  starting WiFi scan.
+  3FFBD874 I |      844 | gpio |    MqttWifi.cpp:  42 |  uri : mqtt://limero.ddns.net:1883 
+  3FFBD874 I |      852 | gpio | HardwareTester.cpp: 184 |  GPIO tester ======== UEXT =============>
+I (2046) gpio: GPIO[19]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2056) gpio: GPIO[36]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2066) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2076) gpio: GPIO[26]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2086) gpio: GPIO[26]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2096) gpio: GPIO[25]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2096) gpio: GPIO[23]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2106) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2116) gpio: GPIO[32]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2126) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+  3FFBD874 I |      952 | gpio | HardwareTester.cpp: 190 |  GPIO tester <=====================
+  3FFBD874 I |      961 | gpio | HardwareTester.cpp: 104 |  APB clock : 80000000 Hz
+  3FFBD874 I |      968 | gpio | HardwareTester.cpp: 105 |  number of pulses : 0 
+  3FFBDFD8 I |      977 | gpio |    NanoAkka.cpp:  50 | Thread 'led' started 
+  3FFBDFD8 I |      982 | gpio |    NanoAkka.cpp:  50 | Thread 'mqtt' started 
+  3FFBDFD8 I |      989 | gpio |    NanoAkka.cpp:  50 | Thread 'echo' started 
+  3FFBDFD8 I |      996 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB58F8] already expired by 682 msec on thread 'led'.
+  3FFBDFD8 I |     1006 | gpio |    NanoAkka.cpp:  77 | Timer[3FFB42A0] already expired by 889 msec on thread 'mqtt'.
+  3FFBD874 I |     1016 | gpio |    NanoAkka.cpp:  50 | Thread 'main' started 
+  3FFBD874 I |     1024 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1032 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1040 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1048 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1056 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1065 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1073 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1081 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1090 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1098 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1106 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1114 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1122 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1131 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1139 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1147 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1156 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1164 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1172 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1181 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1188 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1197 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1205 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1214 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1221 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1230 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1238 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1246 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1254 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1262 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1271 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1279 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1287 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1296 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1304 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1312 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1320 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1330 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1337 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1345 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1353 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1361 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1370 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1378 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1386 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1395 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1403 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1411 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1419 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1428 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1436 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1444 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1453 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1461 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1469 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1477 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1485 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1493 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1502 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1510 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1518 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1526 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1535 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1543 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1551 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1559 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1568 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1576 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1584 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1592 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1601 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     1612 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 12 msec invoker on thread 'main'.
+  3FFBD874 I |     1619 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1627 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1635 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1644 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1652 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1660 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1668 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1677 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1685 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1694 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1701 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1710 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1718 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1726 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1734 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1743 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1751 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1759 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1767 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1776 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1784 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1792 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1800 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1809 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1817 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1825 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1833 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1842 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1850 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1858 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1866 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1875 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1883 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1891 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1899 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     1913 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 14 msec invoker on thread 'main'.
+  3FFBD874 I |     1918 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1926 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1936 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1942 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1951 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1959 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1967 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1975 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1984 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     1992 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2000 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2008 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2017 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2025 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2033 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2041 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2049 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2058 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2066 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2074 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2082 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2091 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2099 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2107 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2116 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2124 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2132 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2140 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2148 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2157 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2165 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2173 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2182 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2190 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2198 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 W |     2214 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 16 msec invoker on thread 'main'.
+  3FFBD874 I |     2216 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2224 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2233 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2241 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2249 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2257 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2266 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2274 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2282 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2290 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2299 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2307 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2315 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2323 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2332 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2340 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2348 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2356 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2364 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2373 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2381 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2389 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2398 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2406 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2414 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2422 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2431 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2439 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2447 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2455 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2464 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2472 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2480 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2488 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2497 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2505 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2513 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2521 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2530 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2539 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2546 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2554 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2562 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2571 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2579 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2587 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2595 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2604 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2612 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2620 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2629 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2637 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2645 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2653 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2662 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2670 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2678 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2686 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2694 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2703 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2711 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2719 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2727 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2736 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2744 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2752 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2760 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2769 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2777 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2785 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2793 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2802 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2810 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2818 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2826 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2835 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2843 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2851 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2859 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2868 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2876 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2884 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2892 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFC1B70 I |     2900 | gpio |        Wifi.cpp:  77 | WIFI_EVENT_SCAN_DONE
+  3FFC1B70 I |     2907 | gpio |        Wifi.cpp: 133 |  found 3 AP's , size : 80 
+  3FFC1B70 I |     2915 | gpio |        Wifi.cpp: 143 |  Merckx2 : -29 
+  3FFC1B70 I |     2921 | gpio |        Wifi.cpp: 143 |  Merckx10 : -34 
+  3FFC1B70 I |     2927 | gpio |        Wifi.cpp: 143 |  Merckx3 : -59 
+  3FFC1B70 I |     2934 | gpio |        Wifi.cpp: 155 |  found strongest AP : 'Merckx2'.
+  3FFC1B70 I |     2941 | gpio |        Wifi.cpp: 116 |  connecting to SSID : Merckx2
+  3FFBD874 W |     2952 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 59 msec invoker on thread 'main'.
+  3FFBD874 I |     2960 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2967 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2976 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2984 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     2992 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3000 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3008 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3017 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3026 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3033 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3042 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3050 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3058 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+  3FFBD874 I |     3066 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+I (4256) wifi:new:<2,0>, old:<1,0>, ap:<255,255>, sta:<2,0>, prof:1
+I (4266) wifi:state: init -> auth (b0)
+  3FFBD874 W |     3085 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 19 msec invoker on thread 'main'.
+I (4276) wifi:state: auth -> assoc (0)
+  3FFBD874 I |     3099 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+I (4286) wifi:state: assoc -> run (10)
+  3FFBD874 W |     3111 | gpio |    NanoAkka.cpp:  73 | Invoker [3FFBD704] slow 13 msec invoker on thread 'main'.
+  3FFBD874 I |     3121 | gpio |        main.cpp: 267 | count : 8080 , freq : 19801.980198 Hz
+I (4306) wifi:connected with Merckx2, aid = 3, channel 2, BW20, bssid = 00:23:cd:19:fc:f5
+I (4316) wifi:security type: 4, phy: bgn, rssi: -33
+Re-enable cpu cache.
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x400828e3  PS      : 0x00050034  A0      : 0x400823ec  A1      : 0x3ffb0ac0  
+A2      : 0x3ffb41a0  A3      : 0xbad00bad  A4      : 0x3ff42000  A5      : 0x400950fc  
+A6      : 0xe0000000  A7      : 0x00000000  A8      : 0x3f405124  A9      : 0x3ffc3670  
+A10     : 0x00000000  A11     : 0x00000039  A12     : 0xfffffff7  A13     : 0x3ffc3130  
+A14     : 0x00000020  A15     : 0x3ffb3bd0  SAR     : 0x0000001c  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0x00000000  
+
+Backtrace:0x400828e0:0x3ffb0ac0 0x400823e9:0x3ffb0ae0 0x40091a00:0x3ffc3160 0x400917a6:0x3ffc3180 0x40090337:0x3ffc31b0 0x40083a5e:0x3ffc31d0 0x40083c1d:0x3ffc3200 0x40145961:0x3ffc3220 0x401444d9:0x3ffc3240 0x40144b3e:0x3ffc3260 0x40143748:0x3ffc32f0 0x40143a78:0x3ffc3360 0x40142f11:0x3ffc33d0 0x40142987:0x3ffc33f0 0x40102f69:0x3ffc3420 0x40101324:0x3ffc3440 0x4010eed4:0x3ffc3460 0x4010a8e3:0x3ffc34e0 0x40146e43:0x3ffc3500 0x4014a1d0:0x3ffc3520 0x4014acb1:0x3ffc3540 0x4014af5d:0x3ffc3560 0x40114103:0x3ffc3580 0x4008ad0d:0x3ffc35b0 0x40094cc9:0x3ffc35e0
+Core  1 register dump:
+PC      : 0x40082ca1  PS      : 0x00060c34  A0      : 0x80081b3c  A1      : 0x3ffbc100  
+A2      : 0x00000001  A3      : 0x00000001  A4      : 0x3ffbbd70  A5      : 0x00000000  
+A6      : 0x00000000  A7      : 0x00000001  A8      : 0x00000000  A9      : 0x00000001  
+A10     : 0x3ffb3ffc  A11     : 0x13000044  A12     : 0x3ffc3670  A13     : 0x0000000a  
+A14     : 0x00800000  A15     : 0x3ff4001c  SAR     : 0x00000000  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x00000000  LEND    : 0x00000000  LCOUNT  : 0x00000000  
+
+Backtrace:0x40082c9e:0x3ffbc100 0x40081b39:0x3ffbc120 0x40094cc9:0x3ffbc140
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load
+I (368) esp_image: segment 4: paddr=0x000ba268 vaddr=0x40080000 size=0x00400 (  1024) load
+I (370) esp_image: segment 5: paddr=0x000ba670 vaddr=0x40080400 size=0x15274 ( 86644) load
+I (427) boot: Loaded app from partition at offset 0x10000
+I (428) boot: Disabling RNG early entropy source...
+I (428) cpu_start: Pro cpu up.
+I (432) cpu_start: Application information:
+I (436) cpu_start: Project name:     nanoAkka
+I (442) cpu_start: App version:      53dded8-dirty
+I (447) cpu_start: Compile time:     Mar 30 2020 00:52:33
+I (453) cpu_start: ELF file SHA256:  815a2fd95fac55b0...
+I (459) cpu_start: ESP-IDF:          v4.2-dev-910-g4fe04f115
+I (465) cpu_start: Starting app cpu, entry point is 0x400812fc
+I (458) cpu_start: App cpu up.
+I (476) heap_init: Initializing. RAM available for dynamic allocation:
+I (483) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+I (489) heap_init: At 3FFBB188 len 00024E78 (147 KiB): DRAM
+I (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (501) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (508) heap_init: At 40095674 len 0000A98C (42 KiB): IRAM
+I (514) cpu_start: Pro cpu start user code
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x4009562d  PS      : 0x00060d34  A0      : 0x800d2364  A1      : 0x3ffe3bc0  
+A2      : 0x0300000c  A3      : 0x0100000c  A4      : 0x00000019  A5      : 0x383fc000  
+A6      : 0x00000016  A7      : 0x00000000  A8      : 0x15122500  A9      : 0x00060d20  
+A10     : 0x3ffb3ffc  A11     : 0x00008000  A12     : 0x00000400  A13     : 0x00000001  
+A14     : 0x00000018  A15     : 0x00000000  SAR     : 0x0000000a  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+Backtrace:0x4009562a:0x3ffe3bc0 0x400d2361:0x3ffe3bd0 0x40081201:0x3ffe3bf0 0x4008150d:0x3ffe3c40 0x400794b2:0x3ffe3c80 |<-CORRUPTED
+
+
+ELF file SHA256: 815a2fd95fac55b0
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:6952
+load:0x40078000,len:14332
+load:0x40080400,len:3964
+entry 0x40080680
+I (29) boot: ESP-IDF v4.2-dev-910-g4fe04f115 2nd stage bootloader
+I (29) boot: compile time 21:14:34
+I (29) boot: chip revision: 0
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (38) boot.esp32: SPI Mode       : DIO
+I (43) boot.esp32: SPI Flash Size : 4MB
+I (47) boot: Enabling RNG early entropy source...
+I (52) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (63) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (71) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (78) boot:  2 factory          factory app      00 00 00010000 00100000
+I (86) boot: End of partition table
+I (90) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x1f2a0 (127648) map
+I (147) esp_image: segment 1: paddr=0x0002f2c8 vaddr=0x3ffb0000 size=0x00d50 (  3408) load
+I (149) esp_image: segment 2: paddr=0x00030020 vaddr=0x400d0020 size=0x873ec (553964) map
+I (363) esp_image: segment 3: paddr=0x000b7414 vaddr=0x3ffb0d50 size=0x02e4c ( 11852) load

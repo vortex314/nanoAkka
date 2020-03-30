@@ -64,7 +64,7 @@ RotaryEncoder::RotaryEncoder(Thread& thr,uint32_t pinTachoA, uint32_t pinTachoB)
 	_apbClock = rtc_clk_apb_freq_get();
 	INFO(" APB clock : %lu Hz",_apbClock);
 	_mcpwm_num = MCPWM_UNIT_0;
-	_timer_num = MCPWM_TIMER_0;
+//	_timer_num = MCPWM_TIMER_0;
 
 	auto median = new Median<int32_t,5>();
 	auto captureToRpm = new LambdaFlow<int32_t,int32_t>([&](int32_t& rpm,const int32_t& capture) {

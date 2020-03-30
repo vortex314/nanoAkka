@@ -233,21 +233,38 @@ extern "C" void app_main(void)
 
 #ifdef GPIO_TEST
     hw.gpioTest();
+    hw.pwmFrequency=10000;
+    hw.captureNumberOfPulse=249;
     hw.mcpwmTest();
-    hw.captureTest(36); // was 36
+    hw.captureTest();
 
     TimerSource pulser(thisThread,1,10,true);
     pulser >> ([](const TimerMsg& tm) {
         static int i=0;
         int pwm = i%200;
         if ( pwm > 100 ) pwm = 200-i;
-        hw.pwm(pwm);
+        hw.pwm(50);
         if (i++==200) i=0;
     });
 
+    TimerSource regTimer(thisThread,1,1000,true);
+    LambdaFlow<TimerMsg,MqttMessage> regFlow;
+    regFlow.lambda([](MqttMessage& mq,const TimerMsg& tm ) {
+        static int cnt=0;
+        cnt++;
+        if (hw.regs[cnt].name==0 ) cnt=0;
+        mq.topic = hw.regs[cnt].name;
+        Register reg(mq.topic.c_str(),hw.regs[cnt].format);
+        reg.value(*hw.regs[cnt].address);
+        reg.format(mq.message);
+        return E_OK;
+    });
+    regTimer >> regFlow ;
+    regFlow >> mqtt.outgoing;
+
     Sink<uint32_t,20> sinker;
     sinker.async(thisThread,[](const uint32_t& cpt) {
-        INFO("%u",cpt);
+        INFO("count : %u , freq : %f Hz",cpt,(160000000.0/cpt)*(hw.captureNumberOfPulse+1));
     });
     hw.capts >> sinker;
 #endif
