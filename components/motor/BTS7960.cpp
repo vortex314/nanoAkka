@@ -160,36 +160,31 @@ BTS7960::BTS7960(Connector* uext)
 void BTS7960::setDirection(float sign)
 {
     if (sign < 0 && _directionTargetLast >= 0) {
-        _rc = mcpwm_set_signal_low(_mcpwm_num, _timer_num, MCPWM_OPR_B);
-        if ( _rc != E_OK ) {
-            WARN("mcpwm_set_signal_low()=%d",_rc);
-        }
-        _rc = mcpwm_set_duty_type(_mcpwm_num, _timer_num, MCPWM_OPR_A,
-                                  MCPWM_DUTY_MODE_0);
-        if ( _rc != E_OK ) {
-            WARN("mcpwm_set_duty_type()=%d",_rc);
-        }
+
         _directionTargetLast = -1;
     } else if (sign > 0 && _directionTargetLast <= 0) {
-        _rc = mcpwm_set_signal_low(_mcpwm_num, _timer_num, MCPWM_OPR_A);
-        if ( _rc != E_OK ) {
-            WARN("mcpwm_set_signal_low()=%d",_rc);
-        }
-        _rc = mcpwm_set_duty_type(_mcpwm_num, _timer_num, MCPWM_OPR_B,
-                                  MCPWM_DUTY_MODE_0);
-        if ( _rc != E_OK ) {
-            WARN("mcpwm_set_duty_type()=%d",_rc);
-        }
+
         _directionTargetLast = +1;
     }
 }
 
 void BTS7960::left(float duty_cycle)
 {
+    INFO("left : %f ",duty_cycle);
+
     if (duty_cycle > MAX_PWM)
         duty_cycle = MAX_PWM;
     if ( duty_cycle < 0 ) duty_cycle=0;
+    _rc = mcpwm_set_signal_low(_mcpwm_num, _timer_num, MCPWM_OPR_B);
+    if ( _rc != E_OK ) {
+        WARN("mcpwm_set_signal_low()=%d",_rc);
+    }
     _rc = mcpwm_set_duty(_mcpwm_num, _timer_num, MCPWM_OPR_A, duty_cycle);
+    if ( _rc != E_OK ) {
+        WARN("mcpwm_set_duty_type()=%d",_rc);
+    }
+    _rc = mcpwm_set_duty_type(_mcpwm_num, _timer_num, MCPWM_OPR_A,
+                              MCPWM_DUTY_MODE_0);
     if ( _rc != E_OK ) {
         WARN("mcpwm_set_duty_type()=%d",_rc);
     }
@@ -197,11 +192,20 @@ void BTS7960::left(float duty_cycle)
 
 void BTS7960::right(float duty_cycle)
 {
+    INFO("right : %f ",duty_cycle);
     if (duty_cycle > MAX_PWM)
         duty_cycle = MAX_PWM;
     if ( duty_cycle < 0 ) duty_cycle=0;
-
+    _rc = mcpwm_set_signal_low(_mcpwm_num, _timer_num, MCPWM_OPR_A);
+    if ( _rc != E_OK ) {
+        WARN("mcpwm_set_signal_low()=%d",_rc);
+    }
     _rc= mcpwm_set_duty(_mcpwm_num, _timer_num, MCPWM_OPR_B, duty_cycle);
+    if ( _rc != E_OK ) {
+        WARN("mcpwm_set_duty_type()=%d",_rc);
+    }
+    _rc = mcpwm_set_duty_type(_mcpwm_num, _timer_num, MCPWM_OPR_B,
+                              MCPWM_DUTY_MODE_0);
     if ( _rc != E_OK ) {
         WARN("mcpwm_set_duty_type()=%d",_rc);
     }
@@ -217,22 +221,14 @@ void BTS7960::setOutput(float dutyCycle)
     setDirection(dutyCycle);
     if ( abs(_lastDutyCycle-dutyCycle)< 0.5) return;
 //   dutyCycle =  lastDutyCycle*(1-weight)+dutyCycle*weight;
-    if ((dutyCycle < 0 && _lastDutyCycle > 0) || (dutyCycle > 0 && _lastDutyCycle < 0)) {
-        _pinLeftEnable.write(1);
-        _pinRightEnable.write(1);
-        left(0);
-        right(0);
-    } else if (dutyCycle < 0) {
-        _pinLeftEnable.write(1);
-        _pinRightEnable.write(1);
+    /*    if ((dutyCycle < 0 && _lastDutyCycle > 0) || (dutyCycle > 0 && _lastDutyCycle < 0)) {
+            left(0);
+            right(0);
+        } else*/ if (dutyCycle < 0) {
         left(-dutyCycle);
     } else if (dutyCycle > 0) {
-        _pinLeftEnable.write(1);
-        _pinRightEnable.write(1);
         right(dutyCycle);
     } else {
-        _pinLeftEnable.write(1);
-        _pinRightEnable.write(1);
         left(0);
         right(0);
     }

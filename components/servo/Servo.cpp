@@ -24,7 +24,7 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
     _reportTimer(thr,2,1000,true),
     _controlTimer(thr,3,CONTROL_INTERVAL_MS,true)
 {
-    _bts7960.setPwmUnit(1);
+    _bts7960.setPwmUnit(0);
 }
 
 Servo::Servo(Thread& thr,Connector* uext) : Servo(
@@ -57,7 +57,8 @@ bool Servo::stopOutOfRange(int adc)
 
 void Servo::init()
 {
-
+    INFO(" servo init().");
+    INFO(" Checking potentiometer....");
     Erc rc = _adcPot.init();
     if ( rc != E_OK ) {
         WARN("Potentiometer initialization failed");
@@ -73,10 +74,17 @@ void Servo::init()
             if ( angleTarget()> ANGLE_MAX) angleTarget=ANGLE_MAX;
             if ( measureAngle() ) {
                 _error = angleTarget() - angleMeasured();
-                pwm = PID(_error, CONTROL_INTERVAL_MS/1000.0);
-
+                error=_error;
+                if ( abs(_error) < 2 )     {
+                    pwm = PID(_error, CONTROL_INTERVAL_MS/1000.0);
+                    pwm=0;
+                } else {
+                    pwm = PID(_error, CONTROL_INTERVAL_MS/1000.0);
+                }
                 _bts7960.setOutput(pwm());
+
             }
+
         } else {
             _bts7960.setOutput(0);
         }
@@ -88,8 +96,8 @@ void Servo::init()
     _pulseTimer >> ([&](TimerMsg tm) {
 
         static uint32_t pulse=0;
-        static int outputTargets[]= {-30,0,30,0};
-//		angleTarget=outputTargets[pulse];
+        static int outputTargets[]= {-20,-40,-20,0,20,40,20,0};
+        angleTarget=outputTargets[pulse];
         pulse++;
         pulse %= (sizeof(outputTargets)/sizeof(int));
         _pulseTimer.start();

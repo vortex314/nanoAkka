@@ -70,7 +70,7 @@ void Thread::run() {
 				uint64_t start=Sys::millis();
 				prq->invoke();
 				uint32_t delta=Sys::millis()-start;
-				if ( delta > 10 ) WARN("Invoker [%X] slow %d msec invoker on thread '%s'.",prq,delta,_name.c_str());
+				if ( delta > 50 ) WARN("Invoker [%X] slow %d msec invoker on thread '%s'.",prq,delta,_name.c_str());
 			}
 		} else {
 			if (expiredTimer) {
@@ -78,7 +78,7 @@ void Thread::run() {
 				uint64_t start=Sys::millis();
 				expiredTimer->request();
 				uint32_t deltaExec=Sys::millis()-start;
-				if ( deltaExec > 10 ) WARN("Timer [%X] request slow %d msec on thread '%s'",expiredTimer,deltaExec,_name.c_str());
+				if ( deltaExec > 50 ) WARN("Timer [%X] request slow %d msec on thread '%s'",expiredTimer,deltaExec,_name.c_str());
 			}
 		}
 	}

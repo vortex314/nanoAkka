@@ -15,7 +15,6 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 
 {
 	_bts7960.setPwmUnit(0);
-
 	_reportTimer >> ([&](const TimerMsg tm) {
 		INFO("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
 		     pwm(),

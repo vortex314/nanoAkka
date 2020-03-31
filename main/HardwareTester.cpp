@@ -64,6 +64,8 @@ Connector uext1(1),uext2(2);
 
 HardwareTester::HardwareTester() : _uext(uext1)
 {
+    mcpwm_num = MCPWM_UNIT_0; // MCPWM_UNIT_1
+    timer_num = MCPWM_TIMER_0;
 }
 
 HardwareTester::~HardwareTester()
@@ -88,7 +90,7 @@ void IRAM_ATTR HardwareTester::isrCaptureHandler(void* pv)
 
     // Check for interrupt on rising edge on CAP0 signal
     if(mcpwm_intr_status & CAP0_INT_EN) {
-       uint32_t capt = mcpwm_capture_signal_get_value(hw->mcpwm_num,MCPWM_SELECT_CAP0);
+        uint32_t capt = mcpwm_capture_signal_get_value(hw->mcpwm_num,MCPWM_SELECT_CAP0);
         hw->capts=capt-prevCapt;
         prevCapt=capt;
     }
@@ -143,7 +145,7 @@ int HardwareTester::mcpwmTest()
     BZERO(pwm_config);
     pwm_config.frequency = pwmFrequency; // frequency = 500Hz,
     pwm_config.cmpr_a = 50;        // duty cycle of PWMxA = 0
-    pwm_config.cmpr_b = 70;        // duty cycle of PWMxb = 0
+    pwm_config.cmpr_b = 50;        // duty cycle of PWMxb = 0
     pwm_config.counter_mode = MCPWM_UP_COUNTER;
     pwm_config.duty_mode = MCPWM_DUTY_MODE_0;
     rc= mcpwm_init(mcpwm_num, timer_num,&pwm_config);

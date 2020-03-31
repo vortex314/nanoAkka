@@ -44,9 +44,9 @@ public:
     ValueFlow <int> adcPot=0;
     ValueFlow<int> angleTarget=0;
     ValueFlow<int> angleMeasured=0;
-    ValueFlow<float> KP= 2;
-    ValueFlow<float> KI=0.5;
-    ValueFlow<float> KD= 0;
+    ValueFlow<float> KP= 1;
+    ValueFlow<float> KI=0.75;
+    ValueFlow<float> KD= 0.0;
     ValueFlow<float> pwm=0.0,error=0.0;
     ValueFlow<float> proportional=0.0,integral=0.0,derivative=0.0;
     ValueFlow<float> current=0.0;
