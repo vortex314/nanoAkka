@@ -186,12 +186,15 @@ class ArrayQueue : public AbstractQueue<T> {
 					expected = desired;
 					desired &= ~BUSY;
 					_array[desired] = std::move(t);
-					if (_writePtr.compare_exchange_strong(expected, desired,
-					                                      std::memory_order_seq_cst,
-					                                      std::memory_order_seq_cst)) {
-						return 0;
+					while (_writePtr.compare_exchange_strong(expected, desired,
+					        std::memory_order_seq_cst,
+					        std::memory_order_seq_cst)==false) {
+						WARN("writePtr<%s,%d> remove busy failed %u:%u:%u",S(T), SIZE,expected, _writePtr.load(), desired);
+						stats.bufferCasRetries++;
+						vTaskDelay(1);
 					}
-					WARN("writePtr<%s,%d> remove busy failed %u:%u:%u",S(T), SIZE,expected, _writePtr.load(), desired);
+					return 0;
+
 				} else {
 					stats.bufferCasRetries++;
 					vTaskDelay(1);
@@ -241,12 +244,18 @@ class ArrayQueue : public AbstractQueue<T> {
 					expected = desired;
 					desired &= ~BUSY;
 					t = std::move(_array[desired]);
-					if (_readPtr.compare_exchange_strong(expected, desired,
-					                                     std::memory_order_seq_cst,
-					                                     std::memory_order_seq_cst)) {
-						return 0;
+					while (_readPtr.compare_exchange_strong(expected, desired,
+					                                        std::memory_order_seq_cst,
+					                                        std::memory_order_seq_cst)==false) {
+						stats.bufferCasRetries++;
+						vTaskDelay(1);
+						WARN("readPtr<%s,%d> remove busy failed %u:%u:%u",S(T),SIZE, expected, _readPtr.load(), desired);
 					}
-					WARN("readPtr<%s,%d> remove busy failed %u:%u:%u",S(T),SIZE, expected, _readPtr.load(), desired);
+					return 0;
+
+				} else {
+					stats.bufferCasRetries++;
+					vTaskDelay(1);
 				}
 			}
 			WARN("readPtr<%s,%d> update failed %u:%u:%u",S(T),SIZE,expected,_readPtr.load(),desired);
