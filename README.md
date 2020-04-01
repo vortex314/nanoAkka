@@ -4,7 +4,7 @@
 - Very lightweight : mostly a 500 lines header
 - multithreading , lock free, streams concept, actors, publisher, subscribers, async processing
 - with or without RTOS support
-- fast : 80000 messages/sec in memory
+- fast : 80000 messages/sec in memory on ESP32 and an old LM4F120H5QR
 #### Publish data on change
 ```C++
 ValueSource<int> x;
@@ -61,7 +61,7 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read and to reason about. Less code, less bugs.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzYyODkyNjk1LC0xNDA0MzM2NzAwLDE2Mj
-kyNzM1NTIsMTgyMjU1Nzc1NSwzNjU1MzcyNzIsMjYzMTczMjc5
-XX0=
+eyJoaXN0b3J5IjpbLTEwODA2NDI2NTgsNzYyODkyNjk1LC0xND
+A0MzM2NzAwLDE2MjkyNzM1NTIsMTgyMjU1Nzc1NSwzNjU1Mzcy
+NzIsMjYzMTczMjc5XX0=
 -->
