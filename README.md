@@ -1,5 +1,5 @@
 # nanoAkka
-## TL;DR
+## TL;DR Features
 - Running on ESP32, ESP8266, LM4F120 and probably on any Arduino
 - Very lightweight : mostly a 500 lines header
 - multithreading , lock free, streams concept, actors, publisher, subscribers, async processing
@@ -50,5 +50,5 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNTAwMjAwNjUsMjYzMTczMjc5XX0=
+eyJoaXN0b3J5IjpbMzY1NTM3MjcyLDI2MzE3MzI3OV19
 -->
