@@ -49,7 +49,8 @@ logTimer >> ([](const TimerMsg& tm) {
 
 ## This repository
 This repository contains all components for ESP32 IOT developments : Motor, Servo, GPS, Ultrasonic distance measure, rotation sensor, magnetic field, remote control. 
-The Makefile g
+The Makefile guides the different build. This was easier to maintain than splitting in different repo's. 
+NanoAkka.h , Mqtt.h are independent of the port and used in other projects. 
 
 ## History
 In microAkka I tried to implement the LightBend Akka framework almost literately , with the same verbs and concepts of : Actor , ActorRef, Dispatcher, .. But using messagetype detection in C++ required too much overhead in code and slowness. 
@@ -58,6 +59,6 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwMDc1MDEyOSwxODIyNTU3NzU1LDM2NT
+eyJoaXN0b3J5IjpbLTY3NDc5Nzc3NiwxODIyNTU3NzU1LDM2NT
 UzNzI3MiwyNjMxNzMyNzldfQ==
 -->
