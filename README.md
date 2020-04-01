@@ -12,6 +12,8 @@ x=1; // This emits a MQTT message topic:src/x, message=1
 ```C++
 servo.KI == mqtt.topic<float>("servo/KI");
 //publishing on MQTT will change the value, changing the value will publish
+// topic : src/host/servo/KI : reports the changes
+// publish to topic dst/
 ```
 #### Activate MQTT when Wifi is connected and blink a LED slow, report signal strength of WiFi
 ```C++
@@ -38,5 +40,5 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzgzMjExMDM1XX0=
+eyJoaXN0b3J5IjpbLTEyMDc5MjA1MTBdfQ==
 -->
