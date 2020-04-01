@@ -59,8 +59,9 @@ In microAkka I tried to implement the LightBend Akka framework almost literately
 
 Later on I worked with Akka streams and reactive programming concepts, which led to the project esp32-streams. There I still struggled with the combination of streams and threads. 
 
-So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
+So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read and to reason about. Less code, less bugs.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MDQzMzY3MDAsMTYyOTI3MzU1MiwxOD
-IyNTU3NzU1LDM2NTUzNzI3MiwyNjMxNzMyNzldfQ==
+eyJoaXN0b3J5IjpbNzYyODkyNjk1LC0xNDA0MzM2NzAwLDE2Mj
+kyNzM1NTIsMTgyMjU1Nzc1NSwzNjU1MzcyNzIsMjYzMTczMjc5
+XX0=
 -->
