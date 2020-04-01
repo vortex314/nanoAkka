@@ -2,6 +2,8 @@
 ## TL;DR
 Some code 
 ````
+ValueSource<int> x;
+x >> mqtt.toTopic<int>("src/x");
 
 ````
 ## History
@@ -11,5 +13,5 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI2ODQyNjkxMl19
+eyJoaXN0b3J5IjpbLTE0OTg2ODM4MzBdfQ==
 -->
