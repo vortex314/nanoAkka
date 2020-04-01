@@ -1,12 +1,14 @@
 # nanoAkka
 ## TL;DR
+- Running on ESP32, ESP8266, LM4F120 and probably on any Arduino
+- Very lightweight : mostly a 500 lines header
 #### Publish data on change
 ```C++
 ValueSource<int> x;
 x >> mqtt.toTopic<int>("src/x");
 x=1; // This emits a MQTT message topic:src/x, message=1
 ```
-#### Activate MQTT when Wifi 
+#### Activate MQTT when Wifi is connected and blink a LED slow
 ```C++
 ValueSource<int> x;
 x >> mqtt.toTopic<int>("src/x");
@@ -20,5 +22,5 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTczMTIwNTUyNV19
+eyJoaXN0b3J5IjpbMTkzMzI0OTA4MF19
 -->
