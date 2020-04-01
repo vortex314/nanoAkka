@@ -23,6 +23,16 @@ mqtt.init();
 wifi.connected >> mqtt.wifiConnected;
 mqtt.connected >> led.blinkSlow;
 ```
+#### Report current boot time to MQTT
+```C++
+Thread mqttThread("mqtt");
+Wifi wifi(mqttThread);
+MqttWifi mqtt(mqttThread);
+wifi.init();
+mqtt.init();
+wifi.connected >> mqtt.wifiConnected;
+mqtt.connected >> led.blinkSlow;
+```
 
 ## History
 In microAkka I tried to implement the LightBend Akka framework almost literately , with the same verbs and concepts of : Actor , ActorRef, Dispatcher, .. But using messagetype detection in C++ required too much overhead in code and slowness. 
@@ -31,5 +41,5 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read to reason about. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwODAwNzQ2MjddfQ==
+eyJoaXN0b3J5IjpbLTExMTU0OTU4MTJdfQ==
 -->
