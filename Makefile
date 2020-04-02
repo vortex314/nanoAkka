@@ -30,6 +30,10 @@ EXTRA_COMPONENT_DIRS = mqtt esp-mqtt
 
 include $(IDF_PATH)/make/project.mk
 
+STEPPER :
+	touch main.cpp
+	make DEFINE=" -DSTEPPER=1 -DHOSTNAME=stepper"
+
 GPIO :
 	touch main.cpp
 	make DEFINE=" -DGPIO_TEST -DHOSTNAME=gpio"

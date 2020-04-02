@@ -4,11 +4,11 @@
 #define MAX_INTEGRAL 20
 
 #define CONTROL_INTERVAL_MS 100
-#define ANGLE_MIN -45.0
-#define ANGLE_MAX 45.0
+#define ANGLE_MIN -90.0
+#define ANGLE_MAX 90.0
 
-#define ADC_MIN 200
-#define ADC_MAX 800
+#define ADC_MIN 375
+#define ADC_MAX 625
 #define ADC_ZERO 500
 
 #define ADC_MIN_POT 50
@@ -21,7 +21,7 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
     _bts7960(pinIS, pinIS, pinLeftEnable, pinRightEnable, pinLeftPwm,pinRightPwm),
     _adcPot(ADC::create(pinPot)),
     _pulseTimer(thr,1,5000,true),
-    _reportTimer(thr,2,1000,true),
+    _reportTimer(thr,2,100,true),
     _controlTimer(thr,3,CONTROL_INTERVAL_MS,true)
 {
     _bts7960.setPwmUnit(0);
@@ -96,7 +96,7 @@ void Servo::init()
     _pulseTimer >> ([&](TimerMsg tm) {
 
         static uint32_t pulse=0;
-        static int outputTargets[]= {-20,-40,-20,0,20,40,20,0};
+        static int outputTargets[]= {-90,+90};
         angleTarget=outputTargets[pulse];
         pulse++;
         pulse %= (sizeof(outputTargets)/sizeof(int));
@@ -119,8 +119,8 @@ void Servo::init()
 
 float Servo::scale(float x,float x1,float x2,float y1,float y2)
 {
-    if ( x < x1 ) x=x1;
-    if ( x > x2 ) x=x2;
+//    if ( x < x1 ) x=x1;
+//    if ( x > x2 ) x=x2;
     float y= y1+(( x-x1)/(x2-x1))*(y2-y1);
     return y;
 }

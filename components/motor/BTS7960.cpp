@@ -270,7 +270,7 @@ Erc BTS7960::initialize()
     };
     mcpwm_config_t pwm_config;
     BZERO(pwm_config);
-    pwm_config.frequency = 1000; // frequency = 1000Hz,
+    pwm_config.frequency = 10000; // frequency = 1000Hz,
     pwm_config.cmpr_a = 0;        // duty cycle of PWMxA = 0
     pwm_config.cmpr_b = 0;        // duty cycle of PWMxb = 0
     pwm_config.counter_mode = MCPWM_UP_COUNTER;

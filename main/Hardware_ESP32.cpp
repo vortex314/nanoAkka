@@ -133,6 +133,7 @@ DigitalIn& DigitalIn::create(PhysicalPin pin)
 class DigitalOut_ESP32: public DigitalOut
 {
     PhysicalPin _gpio;
+    Mode _mode = DOUT_NONE;
 
 public:
     DigitalOut_ESP32(uint32_t gpio) :
@@ -142,7 +143,11 @@ public:
     virtual ~DigitalOut_ESP32()
     {
     }
-    ;
+    Erc setMode(DigitalOut::Mode m)
+    {
+        _mode = m;
+        return E_OK;
+    }
     Erc init()
     {
 //        INFO(" DigitalOut Init %d ", _gpio);
@@ -158,9 +163,9 @@ public:
         // bit mask of the pins that you want to set,e.g.GPIO18/19
         io_conf.pin_bit_mask = (uint64_t) 1 << _gpio;
         // disable pull-down mode
-        io_conf.pull_down_en = (gpio_pulldown_t) 0;
+        io_conf.pull_down_en = (gpio_pulldown_t) (( _mode == DOUT_PULL_DOWN )?1:0);
         // disable pull-up mode
-        io_conf.pull_up_en = (gpio_pullup_t) 0;
+        io_conf.pull_up_en = (gpio_pullup_t) (( _mode == DOUT_PULL_UP )?1:0);
         // configure GPIO with the given settings
         return gpio_config(&io_conf);
     }

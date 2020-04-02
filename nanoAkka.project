@@ -6,6 +6,10 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="stepper">
+      <File Name="components/stepper/Stepper.cpp"/>
+      <File Name="components/stepper/Stepper.h"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="wifi">
       <File Name="components/wifi/component.mk"/>
       <File Name="components/wifi/Wifi.h"/>
@@ -115,7 +119,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make SERVO_WIFI</BuildCommand>
+        <BuildCommand>make STEPPER</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
