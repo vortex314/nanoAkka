@@ -96,6 +96,8 @@ void Servo::init()
         adcPot.request();
         angleTarget.request();
         pwm.request();
+        current = _bts7960.measureCurrentLeft();
+        current.request();
     });
     _pulseTimer >> ([&](TimerMsg tm) {
 
