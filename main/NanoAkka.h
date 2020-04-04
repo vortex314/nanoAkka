@@ -2,63 +2,73 @@
 #define NANOAKKA_H
 
 #include <errno.h>
-#include <atomic>
-#include <functional>
-#include <string>
-#include <unordered_map>
-#include <vector>
+
 
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
 //--------------------------------------------------  ESP8266
 #ifdef ESP_OPEN_RTOS
 #define FREERTOS
+#define NO_ATOMIC
 #include <FreeRTOS.h>
-#include <task.h>
 #include <queue.h>
+#include <task.h>
+#include <string>
 typedef std::string NanoString;
 #endif
 //-------------------------------------------------- ESP32
 #ifdef ESP32_IDF
+#include <string>
 typedef std::string NanoString;
 #define FREERTOS
 #include <FreeRTOS.h>
+#include <freertos/queue.h>
+#include <freertos/semphr.h>
+
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "nvs.h"
 #include "nvs_flash.h"
-#include <freertos/queue.h>
-#include <freertos/semphr.h>
 #define PRO_CPU 0
 #define APP_CPU 1
 #endif
 //-------------------------------------------------- ARDUINO
 #ifdef ARDUINO
+#define NO_ATOMIC
 #include <Arduino.h>
 #include <printf.h>
 #include <stdarg.h>
 typedef String NanoString;
-#define INFO(fmt, ...)                                                          \
-    {                                                                           \
+#define INFO(fmt, ...)                                                      \
+    {                                                                         \
         char line[256];                                                         \
-        int len = snprintf(line, sizeof(line), "I %06lld | %.12s:%.3d | ",      \
+        int len = snprintf(line, sizeof(line), "I %06llu | %.12s:%.3d | ",      \
                            Sys::millis(), __FILE__, __LINE__);                  \
         snprintf((char *)(line + len), sizeof(line) - len, fmt, ##__VA_ARGS__); \
         Serial.println(line);                                                   \
+        Serial.flush();                                                         \
     }
-#define WARN(fmt, ...)                                                          \
-    {                                                                           \
+#define WARN(fmt, ...)                                                      \
+    {                                                                         \
         char line[256];                                                         \
-        int len = snprintf(line, sizeof(line), "W %06lld | %.12s:%.3d | ",      \
+        int len = snprintf(line, sizeof(line), "W %06llu | %.12s:%.3d | ",      \
                            Sys::millis(), __FILE__, __LINE__);                  \
         snprintf((char *)(line + len), sizeof(line) - len, fmt, ##__VA_ARGS__); \
         Serial.println(line);                                                   \
+        Serial.flush();                                                         \
     }
 #else
 #include <Log.h>
 #endif
 //------------------------------------------------------------------------------------
-
+#ifndef NO_ATOMIC
+#include <atomic>
+#endif
+#undef min
+#undef max
+#include <functional>
+#include <unordered_map>
+#include <vector>
 #include <Sys.h>
 
 typedef struct {
@@ -66,13 +76,14 @@ typedef struct {
     uint32_t bufferPushBusy = 0;
     uint32_t bufferPopBusy = 0;
     uint32_t threadQueueOverflow = 0;
-    uint32_t bufferPushCasFailed=0;
-    uint32_t bufferPopCasFailed=0;
-    uint32_t bufferCasRetries=0;
+    uint32_t bufferPushCasFailed = 0;
+    uint32_t bufferPopCasFailed = 0;
+    uint32_t bufferCasRetries = 0;
 } NanoStats;
 extern NanoStats stats;
 
-//______________________________________________________________________ INTERFACES nanoAkka
+//______________________________________________________________________
+// INTERFACES nanoAkka
 //
 
 template <class T>
@@ -80,7 +91,7 @@ class AbstractQueue
 {
 public:
     virtual int pop(T &t) = 0;
-    virtual int push(const T &t) = 0; // const to be able to do something like
+    virtual int push(const T &t) = 0;  // const to be able to do something like
     // push({"topic","message"});
 };
 
@@ -139,9 +150,10 @@ class Requestable
 public:
     virtual void request() = 0;
 };
-//___________________________________________________________________________ lockfree buffer, isr ready
+//___________________________________________________________________________
+// lockfree buffer, isr ready
 //
-#define BUSY (1 << 15) // busy read or write ptr
+#define BUSY (1 << 15)  // busy read or write ptr
 
 #ifdef ESP_OPEN_RTOS
 // Set Interrupt Level
@@ -149,14 +161,68 @@ public:
 // level 15 will disable ALL interrupts,
 // level 0 will enable ALL interrupts
 //
-#define xt_rsil(level) (__extension__({uint32_t state; __asm__ __volatile__("rsil %0," STRINGIFY(level) : "=a" (state)); state; }))
-#define xt_wsr_ps(state) __asm__ __volatile__("wsr %0,ps; isync" ::"a"(state) \
-        : "memory")
+#define xt_rsil(level)                                               \
+    (__extension__({                                                   \
+        uint32_t state;                                                  \
+        __asm__ __volatile__("rsil %0," STRINGIFY(level) : "=a"(state)); \
+        state;                                                           \
+    }))
+#define xt_wsr_ps(state) \
+    __asm__ __volatile__("wsr %0,ps; isync" ::"a"(state) : "memory")
 #define interrupts() xt_rsil(0)
 #define noInterrupts() xt_rsil(15)
 #endif
 //#pragma GCC diagnostic ignored "-Warray-bounds"
 
+#ifdef NO_ATOMIC
+template <class T, int SIZE>
+class ArrayQueue : public AbstractQueue<T>
+{
+    T _array[SIZE];
+    int _readPtr;
+    int _writePtr;
+    inline int next(int idx)
+    {
+        return (idx + 1) % SIZE;
+    }
+
+public:
+    ArrayQueue()
+    {
+        _readPtr = _writePtr = 0;
+    }
+    int push(const T &t)
+    {
+        noInterrupts();
+        int expected = _writePtr;
+        int desired = next(expected);
+        if (desired == _readPtr) {
+            stats.bufferOverflow++;
+            interrupts();
+            return ENOBUFS;
+        }
+        _writePtr = desired;
+        _array[desired] = std::move(t);
+        interrupts();
+        return 0;
+    }
+
+    int pop(T &t)
+    {
+        noInterrupts();
+        int expected = _readPtr;
+        int desired = next(expected);
+        if (expected == _writePtr) {
+            interrupts();
+            return ENOBUFS;
+        }
+        _readPtr = desired;
+        t = std::move(_array[desired]);
+        interrupts();
+        return 0;
+    }
+};
+#else
 template <class T, int SIZE>
 class ArrayQueue : public AbstractQueue<T>
 {
@@ -175,26 +241,10 @@ public:
     }
     int push(const T &t)
     {
-
-#if defined(ESP_OPEN_RTOS) // || defined(ARDUINO)
-        noInterrupts();
-        int expected = _writePtr;
-        int desired = next(expected);
-        if (desired == _readPtr) {
-            stats.bufferOverflow++;
-            interrupts();
-            return ENOBUFS;
-        }
-        _writePtr = desired;
-        _array[desired] = std::move(t);
-        interrupts();
-        return 0;
-#else
-
-        int cnt=0;
-        int expected=0;
-        int desired=0;
-        while(cnt++<5) {
+        int cnt = 0;
+        int expected = 0;
+        int desired = 0;
+        while (cnt++ < 5) {
             expected = _writePtr;
             if (expected & BUSY) {
                 stats.bufferPushBusy++;
@@ -202,7 +252,7 @@ public:
                 return ENODATA;
             }
             desired = next(expected);
-            if (desired == _readPtr % SIZE ) {
+            if (desired == _readPtr % SIZE) {
                 stats.bufferOverflow++;
                 return ENOBUFS;
             }
@@ -213,46 +263,37 @@ public:
                 expected = desired;
                 desired &= ~BUSY;
                 _array[desired] = std::move(t);
-                while (_writePtr.compare_exchange_strong(expected, desired,
-                        std::memory_order_seq_cst,
-                        std::memory_order_seq_cst)==false) {
-                    WARN("writePtr<%s,%d> remove busy failed %u:%u:%u",S(T), SIZE,expected, _writePtr.load(), desired);
+                while (_writePtr.compare_exchange_strong(
+                           expected, desired, std::memory_order_seq_cst,
+                           std::memory_order_seq_cst) == false) {
+                    WARN("writePtr<%s,%d> remove busy failed %u:%u:%u", S(T), SIZE,
+                         expected, _writePtr.load(), desired);
                     stats.bufferCasRetries++;
+#ifdef FREERTOS
                     vTaskDelay(1);
+#endif
                 }
                 return 0;
 
             } else {
                 stats.bufferCasRetries++;
+#ifdef FREERTOS
                 vTaskDelay(1);
+#endif
             }
         }
-        WARN("writePtr<%s,%d> update failed %u:%u:%u",S(T),SIZE,expected,_writePtr.load(),desired);
+        WARN("writePtr<%s,%d> update failed %u:%u:%u", S(T), SIZE, expected,
+             _writePtr.load(), desired);
         stats.bufferPushCasFailed++;
         return -1;
-#endif
     }
 
     int pop(T &t)
     {
-
-#if defined(ESP_OPEN_RTOS) //|| defined(ARDUINO)
-        noInterrupts();
-        int expected = _readPtr;
-        int desired = next(expected);
-        if (expected == _writePtr) {
-            interrupts();
-            return ENOBUFS;
-        }
-        _readPtr = desired;
-        t = std::move(_array[desired]);
-        interrupts();
-        return 0;
-#else
-        int cnt=0;
-        int expected=0;
-        int desired=0;
-        while(cnt++<5) {
+        int cnt = 0;
+        int expected = 0;
+        int desired = 0;
+        while (cnt++ < 5) {
             expected = _readPtr.load();
             if (expected & BUSY) {
                 stats.bufferPopBusy++;
@@ -260,7 +301,7 @@ public:
                 return ENODATA;
             }
             int desired = next(expected);
-            if (expected == _writePtr%SIZE) {
+            if (expected == _writePtr % SIZE) {
                 //				WARN("EMPTY");
                 return ENOBUFS;
             }
@@ -272,26 +313,33 @@ public:
                 expected = desired;
                 desired &= ~BUSY;
                 t = std::move(_array[desired]);
-                while (_readPtr.compare_exchange_strong(expected, desired,
-                                                        std::memory_order_seq_cst,
-                                                        std::memory_order_seq_cst)==false) {
+                while (_readPtr.compare_exchange_strong(
+                           expected, desired, std::memory_order_seq_cst,
+                           std::memory_order_seq_cst) == false) {
                     stats.bufferCasRetries++;
+#ifdef FREERTOS
                     vTaskDelay(1);
-                    WARN("readPtr<%s,%d> remove busy failed %u:%u:%u",S(T),SIZE, expected, _readPtr.load(), desired);
+#endif
+                    WARN("readPtr<%s,%d> remove busy failed %u:%u:%u", S(T), SIZE,
+                         expected, _readPtr.load(), desired);
                 }
                 return 0;
 
             } else {
                 stats.bufferCasRetries++;
+#ifdef FREERTOS
                 vTaskDelay(1);
+#endif
             }
         }
-        WARN("readPtr<%s,%d> update failed %u:%u:%u",S(T),SIZE,expected,_readPtr.load(),desired);
+        WARN("readPtr<%s,%d> update failed %u:%u:%u", S(T), SIZE, expected,
+             _readPtr.load(), desired);
         stats.bufferPopCasFailed++;
         return -1;
-#endif
     }
 };
+#endif
+
 // STREAMS
 class TimerSource;
 
@@ -386,8 +434,7 @@ public:
     void operator=(T t)
     {
         _t = t;
-        if (_pass)
-            this->emit(_t);
+        if (_pass) this->emit(_t);
     }
     T &operator()()
     {
@@ -425,8 +472,7 @@ class TimerSource : public Source<TimerMsg>
     {
         uint64_t now = Sys::millis();
         _expireTime += _interval;
-        if (_expireTime < now)
-            _expireTime = now + _interval;
+        if (_expireTime < now) _expireTime = now + _interval;
     }
 
 public:
@@ -435,8 +481,7 @@ public:
         _id = id;
         _interval = interval;
         _repeat = repeat;
-        if (repeat)
-            start();
+        if (repeat) start();
         thr.addTimer(this);
     }
     TimerSource(Thread &thr) : TimerSource(thr, 0, UINT32_MAX, false)
@@ -482,7 +527,7 @@ public:
     }
     void repeat(bool r)
     {
-        _repeat =r;
+        _repeat = r;
     };
     uint64_t expireTime()
     {
@@ -571,8 +616,7 @@ public:
     void request()
     {
         T t;
-        if (_queue.pop(t) == 0)
-            this->emit(t);
+        if (_queue.pop(t) == 0) this->emit(t);
     }
 };
 //_________________________________________________ Flow ________________
@@ -646,8 +690,7 @@ public:
     void operator=(T t)
     {
         _t = std::move(t);
-        if (_pass)
-            this->emit(_t);
+        if (_pass) this->emit(_t);
     }
     T &operator()()
     {
@@ -677,4 +720,4 @@ public:
     }
 };
 
-#endif // NANOAKKA_H
+#endif  // NANOAKKA_H
