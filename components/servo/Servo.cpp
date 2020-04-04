@@ -1,15 +1,14 @@
 #include "Servo.h"
 
 #define MAX_PWM 20
-#define MAX_INTEGRAL 20
+#define MAX_INTEGRAL 10
 
 #define CONTROL_INTERVAL_MS 100
-#define ANGLE_MIN -90.0
-#define ANGLE_MAX 90.0
+#define ANGLE_MIN -75.0
+#define ANGLE_MAX 75.0
 
-#define ADC_MIN 375
-#define ADC_MAX 625
-#define ADC_ZERO 500
+#define ADC_MIN 200
+#define ADC_MAX 850
 
 #define ADC_MIN_POT 50
 #define ADC_MAX_POT 1000
@@ -22,7 +21,8 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
     _adcPot(ADC::create(pinPot)),
     _pulseTimer(thr,1,5000,true),
     _reportTimer(thr,2,100,true),
-    _controlTimer(thr,3,CONTROL_INTERVAL_MS,true)
+    _controlTimer(thr,3,CONTROL_INTERVAL_MS,true),
+    _measureTimer(thr,4,10,true)
 {
     _bts7960.setPwmUnit(0);
 }
@@ -67,6 +67,10 @@ void Servo::init()
     stopOutOfRange(_adcPot.getValue()) ;
     if ( _bts7960.initialize() ) WARN("BTS7960 initialization failed");
 
+    _measureTimer >> ([&](TimerMsg tm) {
+        measureAngle();
+    });
+
     _controlTimer >> ([&](TimerMsg tm) {
         measureAngle();
         if ( isRunning() ) {
@@ -96,7 +100,7 @@ void Servo::init()
     _pulseTimer >> ([&](TimerMsg tm) {
 
         static uint32_t pulse=0;
-        static int outputTargets[]= {-90,+90};
+        static int outputTargets[]= {-45,0,+45,0};
         angleTarget=outputTargets[pulse];
         pulse++;
         pulse %= (sizeof(outputTargets)/sizeof(int));

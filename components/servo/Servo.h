@@ -24,7 +24,7 @@ class Servo : public Device
 // D32 : ADC POT
     BTS7960 _bts7960;
     ADC& _adcPot;
-    MedianFilter<int,11> _potFilter;
+    MedianFilter<int,5> _potFilter;
 
     mcpwm_unit_t _mcpwm_num;
     mcpwm_timer_t _timer_num;
@@ -40,12 +40,13 @@ class Servo : public Device
     TimerSource _pulseTimer; // generate test cycle
     TimerSource _reportTimer; // report to MQTT
     TimerSource _controlTimer; // PID loop interval
+    TimerSource _measureTimer;
 public:
     ValueFlow <int> adcPot=0;
     ValueFlow<int> angleTarget=0;
     ValueFlow<int> angleMeasured=0;
     ValueFlow<float> KP= 1;
-    ValueFlow<float> KI=0.75;
+    ValueFlow<float> KI=0.1;
     ValueFlow<float> KD= 0.0;
     ValueFlow<float> pwm=0.0,error=0.0;
     ValueFlow<float> proportional=0.0,integral=0.0,derivative=0.0;
