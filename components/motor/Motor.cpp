@@ -14,7 +14,7 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 	  _controlTimer(thr,3,CONTROL_INTERVAL_MS,true) // PID per 100 msec
 
 {
-	_bts7960.setPwmUnit(0);
+	_bts7960.setPwmUnit(1);
 	_reportTimer >> ([&](const TimerMsg tm) {
 		INFO("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
 		     pwm(),
@@ -76,7 +76,7 @@ void Motor::pulse() {
 	/*    static int rpmTargets[] = {0,  30, 50,  100, 150, 100, 80,
 	                               40, 0,  -40, -80,-120,-80 -30
 	                              };*/
-	rpmTarget = rpmTargets[pulse];
+//	rpmTarget = rpmTargets[pulse];
 	pulse++;
 	pulse %= (sizeof(rpmTargets) / sizeof(int));
 
