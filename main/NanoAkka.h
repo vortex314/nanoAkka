@@ -396,6 +396,10 @@ public:
             l->on(t);
         }
     }
+    ~Source()
+    {
+        WARN(" Source destructor. Really ? ");
+    }
 };
 //__________________________________________________________________________`
 //
@@ -413,6 +417,18 @@ public:
 };
 //__________________________________________________________________________
 //
+template <class T>
+class RefSource : public Source<T>
+{
+    T& _t;
+
+public:
+    RefSource(T& t) : _t(t) {};
+    void request()
+    {
+        this->emit(_t);
+    }
+};
 //__________________________________________________________________________
 //
 template <class T>
@@ -493,6 +509,10 @@ public:
     {
         _expireTime = Sys::now() + _interval;
     };
+    ~TimerSource()
+    {
+        WARN(" timer destructor. Really ? ");
+    }
 
     void attach(Thread &thr)
     {
@@ -556,8 +576,12 @@ public:
     Sink()
     {
         _func = [&](const T &t) {
-            INFO(" no handler attached to this sink ");
+            WARN(" no handler attached to this sink ");
         };
+    }
+    ~Sink()
+    {
+        WARN(" Sink destructor. Really ? ");
     }
     Sink(std::function<void(const T &)> handler) : _func(handler) {};
 
