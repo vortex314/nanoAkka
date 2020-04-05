@@ -6,6 +6,10 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="config">
+      <File Name="components/config/ConfigFlow.cpp"/>
+      <File Name="components/config/ConfigFlow.h"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="stepper">
       <File Name="components/stepper/Stepper.cpp"/>
       <File Name="components/stepper/Stepper.h"/>
@@ -119,7 +123,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make DRIVE_SERIAL</BuildCommand>
+        <BuildCommand>make GPS_WIFI</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

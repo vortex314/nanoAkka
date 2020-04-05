@@ -421,12 +421,26 @@ template <class T>
 class RefSource : public Source<T>
 {
     T& _t;
+    bool _pass = true;
 
 public:
     RefSource(T& t) : _t(t) {};
     void request()
     {
         this->emit(_t);
+    }
+    void operator=(T t)
+    {
+        _t = t;
+        if (_pass) this->emit(_t);
+    }
+    void pass(bool p)
+    {
+        _pass = p;
+    }
+    T &operator()()
+    {
+        return _t;
     }
 };
 //__________________________________________________________________________

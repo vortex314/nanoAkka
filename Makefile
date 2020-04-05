@@ -24,7 +24,7 @@ CXXFLAGS +=  $(DEFINES)  -I../Common
 CXXFLAGS +=  -I$(WORKSPACE)/ArduinoJson/src -I $(IDF_PATH)/components/freertos/include/freertos 
 CXXFLAGS +=  -fno-rtti -ffunction-sections -fdata-sections -std=c++11 -fno-exceptions -lstdc++
 
-EXTRA_COMPONENT_DIRS = mqtt esp-mqtt
+EXTRA_COMPONENT_DIRS = mqtt esp-mqtt 
 # LDFLAGS += -Wl,-latomic 
 # -Wl,--gc-sections
 
@@ -38,9 +38,14 @@ GPIO :
 	touch main.cpp
 	make DEFINE=" -DGPIO_TEST -DHOSTNAME=gpio"
 
-GPS:
+GPS_WIFI:
 	touch main/main.cpp
 	make DEFINE=" -DGPS=2 -DUS=1 -DHOSTNAME=gps -DMQTT_HOST=limero.ddns.net " 
+	
+GPS_SERIAL:
+	touch main/main.cpp
+	make DEFINE=" -DGPS=2 -DUS=1 -DHOSTNAME=gps -DMQTT_SERIAL " 
+
 
 REMOTE :
 	touch main/main.cpp
