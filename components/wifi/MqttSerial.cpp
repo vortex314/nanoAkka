@@ -75,7 +75,7 @@ void MqttSerial::onRxd(void* me) {
 void MqttSerial::handleSerialByte(uint8_t b) {
 	if ( b=='\r' || b=='\n') {
 		if ( _rxdString.length()>0)  {
-			INFO(" RXD : %s ",_rxdString.c_str());
+			DEBUG(" RXD : %s ",_rxdString.c_str());
 			rxdSerial(_rxdString);
 		}
 		_rxdString.clear();

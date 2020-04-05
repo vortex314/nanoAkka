@@ -119,7 +119,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make DRIVE_WIFI</BuildCommand>
+        <BuildCommand>make DRIVE_SERIAL</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

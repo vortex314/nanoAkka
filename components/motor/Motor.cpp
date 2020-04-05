@@ -15,8 +15,9 @@ Motor::Motor(Thread& thr,uint32_t pinLeftIS, uint32_t pinRightIS,
 
 {
 	_bts7960.setPwmUnit(1);
+	_bts7960.setMaxPwm(70);
 	_reportTimer >> ([&](const TimerMsg tm) {
-		INFO("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
+		DEBUG("rpm %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f ",  rpmMeasured(),rpmTarget(),error(),
 		     pwm(),
 		     KP() * error(),
 		     KI() * integral(),
@@ -61,7 +62,7 @@ Motor::Motor(Thread& thr,Connector* uext)
 Motor::~Motor() {}
 
 void Motor::init() {
-	rpmTarget=60;
+	rpmTarget=0;
 	if (_bts7960.initialize()) {
 		stop("STOPPED : BTS7960 init failed ");
 	} else

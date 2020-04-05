@@ -1,6 +1,6 @@
 #include "Servo.h"
 
-#define MAX_PWM 20
+#define MAX_PWM 40
 #define MAX_INTEGRAL 10
 
 #define CONTROL_INTERVAL_MS 100
@@ -24,6 +24,7 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
 	_controlTimer(thr,3,CONTROL_INTERVAL_MS,true),
 	_measureTimer(thr,4,10,true) {
 	_bts7960.setPwmUnit(0);
+	_bts7960.setMaxPwm(50);
 }
 
 Servo::Servo(Thread& thr,Connector* uext) : Servo(
@@ -106,7 +107,7 @@ void Servo::init() {
 	_reportTimer >> ([&](TimerMsg tm) {
 		current = _bts7960.measureCurrentLeft()+ _bts7960.measureCurrentRight();
 		current.request();
-		INFO("angle %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f %d ",angleMeasured(),angleTarget(),error(),
+		DEBUG("angle %d/%d = %.2f => pwm : %.2f = %.2f + %.2f + %.2f %d ",angleMeasured(),angleTarget(),error(),
 		     pwm(),
 		     KP() * error(),
 		     KI() * integral(),
