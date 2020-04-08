@@ -24,6 +24,7 @@
 MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread), _keepAliveTimer(thread)
 {
     _lwt_message = "false";
+    incoming.async(thread);
 }
 //________________________________________________________________________
 //
@@ -157,7 +158,7 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t* event)
             }
             if(ready) {
                 INFO("MQTT RXD topic : %s , message  : %s", topic.c_str(), data.c_str());
-                me.incoming.emit({topic, data});
+                me.incoming.on({topic, data});
             }
             busy = false;
         } else {

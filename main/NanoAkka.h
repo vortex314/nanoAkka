@@ -580,10 +580,10 @@ class Sink : public Subscriber<T>, public Invoker
     ArrayQueue<T, S> _t;
     std::function<void(const T &)> _func;
     Thread *_thread = 0;
-    int next(int index)
-    {
-        return ++index % S;
-    }
+    /*   int next(int index)
+       {
+           return ++index % S;
+       }*/
     T _lastValue;
 
 public:
@@ -641,22 +641,7 @@ public:
     }
 };
 
-template <class T, int S>
-class QueueSource : public Sink<T, S>, public Source<T>
-{
-    ArrayQueue<T, S> _queue;
 
-public:
-    void on(const T &in)
-    {
-        _queue.push(in);
-    }
-    void request()
-    {
-        T t;
-        if (_queue.pop(t) == 0) this->emit(t);
-    }
-};
 //_________________________________________________ Flow ________________
 //
 template <class IN, class OUT>
@@ -669,6 +654,55 @@ public:
         flow.subscribe(this);
     };
 };
+//_____________________________________________________________________________
+//
+template <class T,int S>
+class QueueFlow : public Flow<T,T>,public Invoker
+{
+    ArrayQueue<T, S> _queue;
+    std::function<void(const T &)> _func;
+    Thread *_thread = 0;
+public:
+    void on(const T &t)
+    {
+        if (_thread) {
+            if (_queue.push(t)) {
+                //					WARN(" sink full ");
+            } else {
+                _thread->enqueue(this);
+            }
+        } else {
+            this->emit(t);
+        }
+    }
+    virtual void request()
+    {
+        invoke();
+    }
+    void invoke()
+    {
+        T value;
+        if (_queue.pop(value)) {
+            WARN(" no data ");
+        } else {
+            this->emit(value);
+        }
+    }
+
+    void async(Thread &thread)
+    {
+        _thread = &thread;
+    }
+    void sync(std::function<void(const T &)> func)
+    {
+        _thread = 0;
+    }
+};
+
+
+
+//________________________________________________________________
+//
 
 template <class IN, class OUT>
 class LambdaFlow : public Flow<IN, OUT>
@@ -700,6 +734,8 @@ public:
     void request() {};
 };
 
+//________________________________________________________________
+//
 template <class IN, class OUT>
 Source<OUT> &operator>>(Publisher<OUT> &publisher, Flow<IN, OUT> &flow)
 {

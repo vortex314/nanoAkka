@@ -49,7 +49,7 @@ public:
                 INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec());
                 _startTime=Sys::millis();
             }
-            out=i;
+            out=i+1;
         });
     }
 };
@@ -362,10 +362,14 @@ extern "C" void app_main(void)
 #endif
 
 //   pinger.out >> echo.in; // the wiring
-    echo.out >> pinger.in;
-    echo.msgPerMsec >> mqtt.toTopic<int>("system/msgPerMSec");
-
-    pinger.start();
+//    echo.out >> pinger.in;
+//    echo.msgPerMsec >> mqtt.toTopic<int>("system/msgPerMSec");
+    echo.out >> mqtt.toTopic<int>("system/echo");
+    mqtt.fromTopic<int>("system/echo") >> echo.in;
+    /*    mqtt.incoming >> ([](const MqttMessage mm) {
+            INFO(" %s = %s",mm.topic.c_str(),mm.message.c_str());
+        });*/
+    //  pinger.start();
     ledThread.start();
     mqttThread.start();
     workerThread.start();
