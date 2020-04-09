@@ -1,6 +1,7 @@
 # nanoAkka
 ## TL;DR Features
-- Running on ESP32, ESP8266, LM4F120 and probably on any Arduino. Examples can be found [here](https://github.com/vortex314/mqtt2serial).
+- Running on ESP32, ESP8266, LM4F120 and probably on any Arduino in single thread mode. Examples can be found [here](https://github.com/vortex314/mqtt2serial).
+- It runs with ESP32 ESP-IDF and ESP8266 ESP-OPEN-RTOS in multithreading mode
 - Very lightweight : mostly a 500 lines header
 - multithreading , lock free, streams concept, actors, publisher, subscribers, async processing
 - with or without RTOS support
@@ -61,7 +62,8 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read and to reason about. Less code, less bugs.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3ODMwODEzMjQsLTEwODA2NDI2NTgsNz
-YyODkyNjk1LC0xNDA0MzM2NzAwLDE2MjkyNzM1NTIsMTgyMjU1
-Nzc1NSwzNjU1MzcyNzIsMjYzMTczMjc5XX0=
+eyJoaXN0b3J5IjpbLTc5Njk5NDI3NSwtMTc4MzA4MTMyNCwtMT
+A4MDY0MjY1OCw3NjI4OTI2OTUsLTE0MDQzMzY3MDAsMTYyOTI3
+MzU1MiwxODIyNTU3NzU1LDM2NTUzNzI3MiwyNjMxNzMyNzldfQ
+==
 -->
