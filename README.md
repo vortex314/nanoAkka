@@ -48,7 +48,7 @@ logTimer >> ([](const TimerMsg& tm) {
 - Actors : Exchange immutable messages with other actors
 - No Actor knows something about the other ones, they just source events and sink events.
 - Lambda's : it uses extensively std::function and lambda to bring asynchronous code together.
-- Wiring : all actors are wired together in the main.cpp code and powered by threads. Really feels like wiring a PCB electronic board.A thread has become the power line of the chip/object, t
+- Wiring : all actors are wired together in the main.cpp code and powered by threads. Really feels like wiring a PCB electronic board.A thread has become the power line of the chip/object, the input/output pins are sinks/sources of the object. 
 
 ## This repository
 This repository contains all components for ESP32 IOT developments : Motor, Servo, GPS, Ultrasonic distance measure, rotation sensor, magnetic field, remote control. 
@@ -62,8 +62,8 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read and to reason about. Less code, less bugs.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5MTI5NzQ0MywtMTg0MTIyODE0NywtMT
-c4MzA4MTMyNCwtMTA4MDY0MjY1OCw3NjI4OTI2OTUsLTE0MDQz
-MzY3MDAsMTYyOTI3MzU1MiwxODIyNTU3NzU1LDM2NTUzNzI3Mi
-wyNjMxNzMyNzldfQ==
+eyJoaXN0b3J5IjpbNDA1MTcyNzI4LC0xODQxMjI4MTQ3LC0xNz
+gzMDgxMzI0LC0xMDgwNjQyNjU4LDc2Mjg5MjY5NSwtMTQwNDMz
+NjcwMCwxNjI5MjczNTUyLDE4MjI1NTc3NTUsMzY1NTM3MjcyLD
+I2MzE3MzI3OV19
 -->
