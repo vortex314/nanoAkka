@@ -6,7 +6,7 @@
 - multithreading , lock free, streams concept, actors, publisher, subscribers, async processing
 - with or without RTOS support
 - fast : 80000 messages/sec in memory on ESP32 and an old LM4F120H5QR
-#### Publish data on change
+#### Publish MQTT data on change
 ```C++
 ValueSource<int> x;
 x >> mqtt.toTopic<int>("src/x");
@@ -62,8 +62,8 @@ Later on I worked with Akka streams and reactive programming concepts, which led
 
 So here is nanoAkka ! I called it nano because it's way smaller than microAkka or esp32-streams. It combines concepts of Akka, Akka Streams and sometimes feels like I'm wiring chips together to build a system. The code becomes very condense, much easier to read and to reason about. Less code, less bugs.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc5Njk5NDI3NSwtMTc4MzA4MTMyNCwtMT
-A4MDY0MjY1OCw3NjI4OTI2OTUsLTE0MDQzMzY3MDAsMTYyOTI3
-MzU1MiwxODIyNTU3NzU1LDM2NTUzNzI3MiwyNjMxNzMyNzldfQ
-==
+eyJoaXN0b3J5IjpbLTE4NDEyMjgxNDcsLTE3ODMwODEzMjQsLT
+EwODA2NDI2NTgsNzYyODkyNjk1LC0xNDA0MzM2NzAwLDE2Mjky
+NzM1NTIsMTgyMjU1Nzc1NSwzNjU1MzcyNzIsMjYzMTczMjc5XX
+0=
 -->
