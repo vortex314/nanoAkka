@@ -75,7 +75,7 @@ public:
     FromMqtt<T> fromMqtt;
     MqttFlow(const char* topic) :  toMqtt(topic),fromMqtt(topic)
     {
-        INFO(" created MqttFlow : %s ",topic);
+ //       INFO(" created MqttFlow : %s ",topic);
     };
     void request()
     {

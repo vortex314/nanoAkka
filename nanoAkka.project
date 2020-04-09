@@ -6,6 +6,13 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="hmc5883">
+      <File Name="components/hmc5883/component.mk"/>
+      <File Name="components/hmc5883/HMC5883L.h"/>
+      <File Name="components/hmc5883/HMC5883L.cpp"/>
+      <File Name="components/hmc5883/Compass.h"/>
+      <File Name="components/hmc5883/Compass.cpp"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="config">
       <File Name="components/config/ConfigFlow.cpp"/>
       <File Name="components/config/ConfigFlow.h"/>
@@ -76,12 +83,12 @@
   <Reconciliation>
     <Regexes/>
     <Excludepaths>
-      <Path>Debug/</Path>
       <Path>build/</Path>
+      <Path>Debug/</Path>
     </Excludepaths>
     <Ignorefiles/>
     <Extensions>
-      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp;*.txt;*.mk;Makefile]]>
+      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp;*.txt;*.mk;*.Makefile]]>
     </Extensions>
     <Topleveldir>/home/lieven/workspace/nanoAkka</Topleveldir>
   </Reconciliation>
@@ -123,7 +130,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make GPS_WIFI</BuildCommand>
+        <BuildCommand>make COMPASS</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

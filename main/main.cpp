@@ -143,6 +143,7 @@ Connector uextServo(SERVO);
 
 #include <ConfigFlow.h>
 ConfigFlow<std::string> configHost("system/host","unknown");
+ConfigFlow<float> configFloat("system/float",3.141592653);
 
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
@@ -169,6 +170,12 @@ HardwareTester hw;
 #include <Stepper.h>
 Connector uextStepper(STEPPER);
 Stepper stepper(workerThread,uextStepper);
+#endif
+
+#ifdef COMPASS
+#include <Compass.h>
+Connector uextCompass(COMPASS);
+Compass compass(workerThread,uextCompass);
 #endif
 
 
@@ -225,12 +232,13 @@ extern "C" void app_main(void)
     mqtt.connected >> poller.connected;
 //-----------------------------------------------------------------  SYS props
     configHost == mqtt.topic<std::string>("system/host");
+    configFloat == mqtt.topic<float>("system/float");
     systemUptime >> mqtt.toTopic<uint64_t>("system/upTime");
     systemHeap >> mqtt.toTopic<uint32_t>("system/heap");
     systemHostname >> mqtt.toTopic<std::string>("system/hostname");
     systemBuild >> mqtt.toTopic<std::string>("system/build");
     systemAlive >> mqtt.toTopic<bool>("system/alive");
-    poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive)(configHost);
+    poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive)(configHost)(configFloat);
 
     Sink<int,3> intSink([](int i) {
         INFO("received an int %d",i);
@@ -291,6 +299,14 @@ extern "C" void app_main(void)
 #ifdef STEPPER
     stepper.init();
     mqtt.fromTopic<int>("stepper/steps") >> stepper.steps;
+#endif
+
+#ifdef COMPASS
+    compass.init();
+    compass.x >> mqtt.toTopic<int32_t>("compass/x");
+    compass.y >> mqtt.toTopic<int32_t>("compass/y");
+    compass.z >> mqtt.toTopic<int32_t>("compass/z");
+    compass.status >> mqtt.toTopic<int32_t>("compass/status");
 #endif
 
 #ifdef US

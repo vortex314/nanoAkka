@@ -30,6 +30,10 @@ EXTRA_COMPONENT_DIRS = mqtt esp-mqtt
 
 include $(IDF_PATH)/make/project.mk
 
+COMPASS :
+	touch main.cpp
+	make DEFINE=" -DCOMPASS=2 -DHOSTNAME=compass"
+
 STEPPER :
 	touch main.cpp
 	make DEFINE=" -DSTEPPER=1 -DHOSTNAME=stepper"
@@ -83,7 +87,7 @@ TAG :
 	touch main/main.cpp
 	make DEFINE="-DDWM1000_TAG=1"
 	
-COMPASS :
+DIGITAL_COMPASS :
 	touch main/main.cpp
 	make DEFINE="-DDIGITAL_COMPASS=1"
 	
