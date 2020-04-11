@@ -56,6 +56,7 @@ The Makefile guides the different build. This was easier to maintain than splitt
 NanoAkka.h , Mqtt.h are independent of the port and used in other projects. 
 
 ## Directory structure 
+```
 ├── components
 │   ├── Common -> ../../Common/
 │   ├── config -> store data in non-volatile storage
@@ -68,7 +69,7 @@ NanoAkka.h , Mqtt.h are independent of the port and used in other projects.
 │   ├── ultrasonic	-> ultrasonic driver
 │   └── wifi		-> wifi and mqtt + mqtt through serial
 └── main     -> main NanoAkka code
-
+``` 
 ## History
 In microAkka I tried to implement the LightBend Akka framework almost literately , with the same verbs and concepts of : Actor , ActorRef, Dispatcher, .. But using messagetype detection in C++ required too much overhead in code and slowness. 
 
