@@ -55,6 +55,20 @@ This repository contains all components for ESP32 IOT developments : Motor, Serv
 The Makefile guides the different build. This was easier to maintain than splitting in different repo's. 
 NanoAkka.h , Mqtt.h are independent of the port and used in other projects. 
 
+## Directory structure 
+├── components
+│   ├── Common -> ../../Common/
+│   ├── config -> store data in non-volatile storage
+│   ├── gps		-> drive NEO6M
+│   ├── hmc5883	-> magnetic sensor
+│   ├── motor		-> BTS7960 motor speed drive
+│   ├── remote	-> remote control
+│   ├── servo		-> BTS7960 motor positioning
+│   ├── stepper	-> BT6600 stepper motor driver
+│   ├── ultrasonic	-> ultrasonic driver
+│   └── wifi		-> wifi and mqtt + mqtt through serial
+└── main     -> main NanoAkka code
+
 ## History
 In microAkka I tried to implement the LightBend Akka framework almost literately , with the same verbs and concepts of : Actor , ActorRef, Dispatcher, .. But using messagetype detection in C++ required too much overhead in code and slowness. 
 
@@ -66,4 +80,7 @@ eyJoaXN0b3J5IjpbNDA1MTcyNzI4LC0xODQxMjI4MTQ3LC0xNz
 gzMDgxMzI0LC0xMDgwNjQyNjU4LDc2Mjg5MjY5NSwtMTQwNDMz
 NjcwMCwxNjI5MjczNTUyLDE4MjI1NTc3NTUsMzY1NTM3MjcyLD
 I2MzE3MzI3OV19
--->
+-->.
+
+
+12 directories
