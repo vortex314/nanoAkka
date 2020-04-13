@@ -5,7 +5,36 @@
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
+  <File Name="main.cpp"/>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="DWM1000">
+      <File Name="components/DWM1000/spi_register.h"/>
+      <File Name="components/DWM1000/deca_version.h"/>
+      <File Name="components/DWM1000/deca_types.h"/>
+      <File Name="components/DWM1000/deca_spi.h"/>
+      <File Name="components/DWM1000/deca_spi.c"/>
+      <File Name="components/DWM1000/deca_sleep.h"/>
+      <File Name="components/DWM1000/deca_sleep.c"/>
+      <File Name="components/DWM1000/deca_regs.h"/>
+      <File Name="components/DWM1000/deca_range_tables.c"/>
+      <File Name="components/DWM1000/deca_params_init.c"/>
+      <File Name="components/DWM1000/deca_param_types.h"/>
+      <File Name="components/DWM1000/deca_mutex.c"/>
+      <File Name="components/DWM1000/deca_device_api.h"/>
+      <File Name="components/DWM1000/deca_device.c"/>
+      <File Name="components/DWM1000/decaSpi.h"/>
+      <File Name="components/DWM1000/decaSpi.cpp"/>
+      <File Name="components/DWM1000/component.mk"/>
+      <File Name="components/DWM1000/LogIsr.h"/>
+      <File Name="components/DWM1000/LogIsr.cpp"/>
+      <File Name="components/DWM1000/DWM1000_Tag.h"/>
+      <File Name="components/DWM1000/DWM1000_Tag.cpp"/>
+      <File Name="components/DWM1000/DWM1000_Message.h"/>
+      <File Name="components/DWM1000/DWM1000_Anchor.h"/>
+      <File Name="components/DWM1000/DWM1000_Anchor.cpp"/>
+      <File Name="components/DWM1000/DWM1000.h"/>
+      <File Name="components/DWM1000/DWM1000.cpp"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="hmc5883">
       <File Name="components/hmc5883/component.mk"/>
       <File Name="components/hmc5883/HMC5883L.h"/>
@@ -14,10 +43,12 @@
       <File Name="components/hmc5883/Compass.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="config">
+      <File Name="components/config/component.mk"/>
       <File Name="components/config/ConfigFlow.cpp"/>
       <File Name="components/config/ConfigFlow.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="stepper">
+      <File Name="components/stepper/component.mk"/>
       <File Name="components/stepper/Stepper.cpp"/>
       <File Name="components/stepper/Stepper.h"/>
     </VirtualDirectory>
@@ -83,8 +114,8 @@
   <Reconciliation>
     <Regexes/>
     <Excludepaths>
-      <Path>build/</Path>
       <Path>Debug/</Path>
+      <Path>build/</Path>
     </Excludepaths>
     <Ignorefiles/>
     <Extensions>
@@ -130,7 +161,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make COMPASS</BuildCommand>
+        <BuildCommand>make TAG</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

@@ -123,6 +123,9 @@ Connector uextGps(GPS);
 Neo6m gps(thisThread,&uextGps);
 #endif
 
+#ifdef DWM1000_TAG
+#include <DWM1000_Tag.h>
+#endif
 
 #ifdef REMOTE
 #include <Remote.h>
@@ -130,7 +133,6 @@ Remote remote(thisThread);
 #endif
 
 #ifdef MOTOR
-
 #include <RotaryEncoder.h>
 #include <Motor.h>
 Connector uextMotor(MOTOR);
@@ -375,6 +377,23 @@ extern "C" void app_main(void)
     servo.deviceMessage >> mqtt.toTopic<std::string>("servo/message");
     poller(servo.KI)(servo.KP)(servo.KD)(servo.angleTarget);
     poller(servo.deviceMessage)(servo.deviceState);
+#endif
+
+#ifdef DWM1000_TAG
+    DWM1000_Tag& tag=*(new DWM1000_Tag(workerThread,new Connector(DWM1000_TAG)));
+    tag.preStart();
+    tag.mqttMsg >> mqtt.outgoing;
+//    tag.blink >> ledBlue.pulse;
+    tag.blinks >> mqtt.toTopic<uint32_t>("tag/blinks");
+    tag.polls >> mqtt.toTopic<uint32_t>("tag/polls");
+    tag.resps >> mqtt.toTopic<uint32_t>("tag/resps");
+    tag.finals >> mqtt.toTopic<uint32_t>("tag/finals");
+    tag.interruptCount >> mqtt.toTopic<uint32_t>("tag/interrupts");
+    tag.errs >> mqtt.toTopic<uint32_t>("tag/errs");
+    tag.timeouts >> mqtt.toTopic<uint32_t>("tag/timeouts");
+    poller(tag.blinks)(tag.polls)(tag.resps)(tag.finals)(tag.interruptCount)(tag.errs)(tag.timeouts);
+
+
 #endif
 
 //   pinger.out >> echo.in; // the wiring
