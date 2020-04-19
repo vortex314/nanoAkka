@@ -170,7 +170,7 @@ void BTS7960::setDirection(float sign)
 
 void BTS7960::left(float duty_cycle)
 {
-    INFO("left : %f ",duty_cycle);
+ //   INFO("left : %f ",duty_cycle);
 
     if (duty_cycle > MAX_PWM)
         duty_cycle = MAX_PWM;
@@ -192,7 +192,7 @@ void BTS7960::left(float duty_cycle)
 
 void BTS7960::right(float duty_cycle)
 {
-    INFO("right : %f ",duty_cycle);
+ //   INFO("right : %f ",duty_cycle);
     if (duty_cycle > MAX_PWM)
         duty_cycle = MAX_PWM;
     if ( duty_cycle < 0 ) duty_cycle=0;

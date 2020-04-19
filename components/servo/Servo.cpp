@@ -1,7 +1,7 @@
 #include "Servo.h"
 
-#define MAX_PWM 40
-#define MAX_INTEGRAL 10
+#define MAX_PWM 50
+#define MAX_INTEGRAL 30
 
 #define CONTROL_INTERVAL_MS 100
 #define ANGLE_MIN -75.0
@@ -24,7 +24,7 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
 	_controlTimer(thr,3,CONTROL_INTERVAL_MS,true),
 	_measureTimer(thr,4,10,true) {
 	_bts7960.setPwmUnit(0);
-	_bts7960.setMaxPwm(50);
+	_bts7960.setMaxPwm(MAX_PWM);
 }
 
 Servo::Servo(Thread& thr,Connector* uext) : Servo(
@@ -98,8 +98,8 @@ void Servo::init() {
 	_pulseTimer >> ([&](TimerMsg tm) {
 
 		static uint32_t pulse=0;
-		static int outputTargets[]= {-45,0,+45,0};
-//		angleTarget=outputTargets[pulse];
+		static int outputTargets[]= {-45,-90,-45,0,+45,90,45,0};
+		angleTarget=outputTargets[pulse];
 		pulse++;
 		pulse %= (sizeof(outputTargets)/sizeof(int));
 		_pulseTimer.start();
@@ -146,8 +146,6 @@ float Servo::PID(float err, float interval) {
 	if ( integralPart < -MAX_INTEGRAL ) integral =-MAX_INTEGRAL / KI();
 	float output = KP() * err + KI()*integral() + KD() * derivative() ;
 	_errorPrior = err;
-	if ( output < -MAX_PWM ) output = -MAX_PWM;
-	if ( output >  MAX_PWM ) output = MAX_PWM;
 	return output;
 }
 
