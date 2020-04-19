@@ -161,11 +161,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-<<<<<<< HEAD
         <BuildCommand>make REMOTE</BuildCommand>
-=======
-        <BuildCommand>make SERVO_WIFI</BuildCommand>
->>>>>>> 6ce15b20a37a263f92fae6ae730e2bcbf73a68ab
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
