@@ -300,7 +300,10 @@ extern "C" void app_main(void)
 
 #ifdef STEPPER
     stepper.init();
-    mqtt.fromTopic<int>("stepper/steps") >> stepper.steps;
+    mqtt.fromTopic<int>("stepper/angleTarget") >> stepper.angleTarget;
+    stepper.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
+    stepper.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+    poller(stepper.stepMeasured);
 #endif
 
 #ifdef COMPASS
@@ -309,6 +312,7 @@ extern "C" void app_main(void)
     compass.y >> mqtt.toTopic<int32_t>("compass/y");
     compass.z >> mqtt.toTopic<int32_t>("compass/z");
     compass.status >> mqtt.toTopic<int32_t>("compass/status");
+//    poller(compass.x)(compass.y)(compass.z);
 #endif
 
 #ifdef US
@@ -325,7 +329,7 @@ extern "C" void app_main(void)
     remote.init();
     mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;             // timer driven
     mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;             // timer driven
-    remote.buttonLeft >> mqtt.toTopic<bool>("remote/buttonLeft");
+    remote.buttonLeft >> mqtt.toTopic<bool>("remote/buttonLeft");           // change and timer driven
     remote.buttonRight >> mqtt.toTopic<bool>("remote/buttonRight");
     remote.potLeft >> mqtt.toTopic<int>("remote/potLeft");
     remote.potRight >> mqtt.toTopic<int>("remote/potRight");

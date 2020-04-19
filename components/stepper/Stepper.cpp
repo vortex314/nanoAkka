@@ -7,26 +7,42 @@ Stepper::Stepper(Thread& thr,Connector& uext) : Actor(thr),
     _pinEnable(uext.getDigitalOut(LP_SDA)),
     _stepTimer(thr,1,2,true)
 {
-    steps >> ([&](const int& st) {
-        _stepTimer.start();
+    angleTarget >> ([&](const int& i ) {
+        stepTarget = (i * 200) / 90;
+    });
+
+    stepTarget >> ([&](const int& st) {
         _pinEnable.write(0);
-        if ( st < 0 ) {
-            _pinDir.write(1);
-            _stepCounter = -st;
-        } else {
-            _pinDir.write(0);
-            _stepCounter=st;
+        if ( _stepCounter==0 ) { // previous stepped stopped
+            int delta = st-stepMeasured();
+            if ( delta < 0 ) {
+                _direction = -1;
+                _pinDir.write(1);
+                _stepCounter=-delta;
+            } else {
+                _direction = 1;
+                _pinDir.write(0);
+                _stepCounter=delta;
+            }
+            INFO(" target:%d measured:%d ctr:%d dir:%d",stepTarget(),stepMeasured(),_stepCounter,_direction);
+            _stepTimer.start();
         }
     });
     _stepTimer >> ([&](const TimerMsg& tm ) {
-        if ( _stepCounter==0) {
+        if ( _stepCounter<=0) {
+            _stepCounter=0;
             return;
         }
-        INFO("%d:%d",_stepCounter,_stepUp);
+//        INFO("%d:%d",_stepCounter,_stepUp);
         _pinStep.write(_stepUp);
         _stepUp = _stepUp ? 0 : 1;
-        if (_stepUp) _stepCounter--;
+        if (_stepUp) {
+            _stepCounter--;
+            stepMeasured = stepMeasured() + _direction;
+        }
     });
+    angleTarget.pass(true);
+    stepTarget.pass(true);
 }
 
 Stepper::~Stepper()

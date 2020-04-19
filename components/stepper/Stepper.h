@@ -13,8 +13,11 @@ class Stepper : public Actor
     TimerSource _stepTimer;
     int _stepCounter=0;
     int _stepUp=0;
+    int _direction=0;
 public:
-    ValueFlow<int> steps;
+    ValueFlow<int> angleTarget=0;
+    ValueFlow<int> stepTarget=0;
+    ValueFlow<int> stepMeasured=0;
     Stepper(Thread& thr,Connector& uext);
     ~Stepper();
     void init();
