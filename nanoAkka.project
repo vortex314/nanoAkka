@@ -7,6 +7,11 @@
   </Plugins>
   <File Name="main.cpp"/>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="stepperServo">
+      <File Name="components/stepperServo/StepperServo.h"/>
+      <File Name="components/stepperServo/StepperServo.cpp"/>
+      <File Name="components/stepperServo/component.mk"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="DWM1000">
       <File Name="components/DWM1000/spi_register.h"/>
       <File Name="components/DWM1000/deca_version.h"/>
@@ -114,8 +119,8 @@
   <Reconciliation>
     <Regexes/>
     <Excludepaths>
-      <Path>Debug/</Path>
       <Path>build/</Path>
+      <Path>Debug/</Path>
     </Excludepaths>
     <Ignorefiles/>
     <Extensions>
@@ -161,7 +166,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make REMOTE</BuildCommand>
+        <BuildCommand>make STEPPER_SERVO</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

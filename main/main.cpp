@@ -143,10 +143,6 @@ Connector uextMotor(MOTOR);
 Connector uextServo(SERVO);
 #endif
 
-#include <ConfigFlow.h>
-ConfigFlow<std::string> configHost("system/host","unknown");
-ConfigFlow<float> configFloat("system/float",3.141592653);
-
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
@@ -172,6 +168,12 @@ HardwareTester hw;
 #include <Stepper.h>
 Connector uextStepper(STEPPER);
 Stepper stepper(workerThread,uextStepper);
+#endif
+
+#ifdef STEPPER_SERVO
+#include <StepperServo.h>
+Connector uextStepperServo(STEPPER_SERVO);
+StepperServo stepperServo(workerThread,uextStepperServo);
 #endif
 
 #ifdef COMPASS
@@ -233,14 +235,12 @@ extern "C" void app_main(void)
     mqtt.connected >> led.blinkSlow;
     mqtt.connected >> poller.connected;
 //-----------------------------------------------------------------  SYS props
-    configHost == mqtt.topic<std::string>("system/host");
-    configFloat == mqtt.topic<float>("system/float");
     systemUptime >> mqtt.toTopic<uint64_t>("system/upTime");
     systemHeap >> mqtt.toTopic<uint32_t>("system/heap");
     systemHostname >> mqtt.toTopic<std::string>("system/hostname");
     systemBuild >> mqtt.toTopic<std::string>("system/build");
     systemAlive >> mqtt.toTopic<bool>("system/alive");
-    poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive)(configHost)(configFloat);
+    poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive);
 
     Sink<int,3> intSink([](int i) {
         INFO("received an int %d",i);
@@ -298,13 +298,7 @@ extern "C" void app_main(void)
     hw.capts >> sinker;
 #endif
 
-#ifdef STEPPER
-    stepper.init();
-    mqtt.fromTopic<int>("stepper/angleTarget") >> stepper.angleTarget;
-    stepper.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
-    stepper.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-    poller(stepper.stepMeasured);
-#endif
+
 
 #ifdef COMPASS
     compass.init();
@@ -381,6 +375,29 @@ extern "C" void app_main(void)
     servo.deviceMessage >> mqtt.toTopic<std::string>("servo/message");
     poller(servo.KI)(servo.KP)(servo.KD)(servo.angleTarget);
     poller(servo.deviceMessage)(servo.deviceState);
+#endif
+
+#ifdef STEPPER
+    servo.watchdogTimer.interval(3000);
+    mqtt.fromTopic<int>("stepper/angleTarget") >> stepper.angleTarget;
+    stepper.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
+    stepper.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+    poller(stepper.stepMeasured);
+#endif
+
+#ifdef STEPPER_SERVO
+    stepperServo.init();
+    stepperServo.watchdogTimer.interval(3000);
+    mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
+    mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
+    stepperServo.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
+    stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+    stepperServo.adcPot >> mqtt.toTopic<int>("stepper/adcPot");
+    stepperServo.angleMeasured >>  mqtt.toTopic<int>("stepper/angleMeasured");
+    stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
+    stepperServo.deviceState >> mqtt.toTopic<int>("stepper/state");
+    stepperServo.deviceMessage >> mqtt.toTopic<std::string>("stepper/message");
+    poller(stepperServo.stepMeasured);
 #endif
 
 #ifdef DWM1000_TAG
