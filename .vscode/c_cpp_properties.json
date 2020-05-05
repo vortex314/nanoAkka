@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "ESP32",
+            "includePath": [
+                "${workspaceFolder}/main",
+                "${workspaceFolder}/components/**",
+                "${HOME}/esp/esp-idf/**",
+                "${workspaceFolder}/../Common/",
+                "${workspaceFolder}/../ArduinoJson/src/",
+                "${IDF_PATH}/components/**",
+                "${HOME}/esp/xtensa-esp32-elf/**"
+
+            ],
+            "defines": ["FREERTOS","ESP32_IDF"],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "forcedInclude": []
+        }
+    ],
+    "version": 4
+}
