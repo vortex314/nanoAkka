@@ -12,7 +12,7 @@
                 "${HOME}/esp/xtensa-esp32-elf/**"
 
             ],
-            "defines": ["FREERTOS","ESP32_IDF"],
+            "defines": ["FREERTOS","ESP32_IDF","STEPPER_SERVO"],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17",
