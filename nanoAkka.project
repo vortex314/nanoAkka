@@ -7,7 +7,10 @@
   </Plugins>
   <File Name="main.cpp"/>
   <VirtualDirectory Name="components">
+    <VirtualDirectory Name="timer"/>
     <VirtualDirectory Name="stepperServo">
+      <File Name="components/stepperServo/Pulser.cpp"/>
+      <File Name="components/stepperServo/Pulser.h"/>
       <File Name="components/stepperServo/StepperServo.h"/>
       <File Name="components/stepperServo/StepperServo.cpp"/>
       <File Name="components/stepperServo/component.mk"/>

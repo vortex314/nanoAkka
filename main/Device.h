@@ -21,7 +21,7 @@ public:
         if ( deviceState() == PAUSED ) {
             deviceState=RUNNING;
             deviceMessage="RUNNING";
-
+            INFO(deviceMessage().c_str());
         }
     };
     void stop(const char* reason)
@@ -30,6 +30,7 @@ public:
         s+=reason;
         deviceMessage=s;
         deviceState=STOPPED;
+        WARN(s.c_str());
     }
     void pause(const char *reason)
     {
@@ -37,6 +38,7 @@ public:
         s+=reason;
         deviceMessage=s;
         deviceState=PAUSED;
+        WARN(s.c_str());
     }
     bool isRunning()
     {

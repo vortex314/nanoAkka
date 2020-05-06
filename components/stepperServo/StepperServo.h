@@ -4,17 +4,16 @@
 #include <Hardware.h>
 #include <Device.h>
 #include <MedianFilter.h>
-
+#include <ConfigFlow.h>
+#include <Pulser.h>
 
 class StepperServo : public Actor,public Device
 {
     Connector& _uext;
-    DigitalOut& _pinStep;
+    Pulser _pulser;
     DigitalOut& _pinDir;
     DigitalOut& _pinEnable;
     ADC& _adcPot;
-    TimerSource _stepTimer;
-    int _stepCounter=0;
     int _stepUp=0;
     int _direction=0;
     TimerSource _measureTimer; // ADC multi sample and median
@@ -25,6 +24,7 @@ class StepperServo : public Actor,public Device
     float _errorPrior=0;
 
 public:
+    ConfigFlow<int> stepsPerRotation;
     ValueFlow <int> adcPot=0;
     ValueFlow<int> angleTarget=0;
     ValueFlow<int> angleMeasured=0;

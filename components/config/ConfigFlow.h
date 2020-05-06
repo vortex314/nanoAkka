@@ -24,6 +24,11 @@ public:
         _value = defaultValue;
     }
 
+    void operator=(T t)
+    {
+        on(t);
+    }
+
     void lazyLoad()
     {
         if ( ready ) return;
@@ -51,10 +56,7 @@ public:
         lazyLoad();
         this->emit(_value);
     }
-    inline void operator=(T value)
-    {
-        onNext(value);
-    };
+
     inline T operator()()
     {
         lazyLoad();

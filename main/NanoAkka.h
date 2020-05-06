@@ -384,7 +384,7 @@ template <class T>
 class Source : public Publisher<T>, public Requestable
 {
     std::vector<Subscriber<T> *> _listeners;
-
+    T _last;
 public:
     void subscribe(Subscriber<T> *listener)
     {
@@ -392,6 +392,7 @@ public:
     }
     void emit(const T &t)
     {
+        _last=t;
         for (Subscriber<T> *l : _listeners) {
             l->on(t);
         }
@@ -400,6 +401,10 @@ public:
     {
         WARN(" Source destructor. Really ? ");
     }
+    void last(T& last){
+        last=_last;
+    }
+    
 };
 //__________________________________________________________________________`
 //

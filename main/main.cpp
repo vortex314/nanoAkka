@@ -1,6 +1,6 @@
 
-#include <Hardware.h>
-#include <LedBlinker.h>
+#include "Hardware.h"
+#include "LedBlinker.h"
 #include "freertos/task.h"
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
@@ -16,72 +16,105 @@
 //
 class Pinger : public Actor
 {
-    int _counter=0;
+    int _counter = 0;
+
 public:
     ValueSource<int> out;
-    Sink<int,4> in;
+    Sink<int, 4> in;
     Pinger(Thread& thr) : Actor(thr)
     {
-        in.async(thread(),[&](const int& i) {
-            out=_counter++;
+        in.async(thread(), [&](const int& i) {
+            out = _counter++;
         });
     }
     void start()
     {
-        out=_counter++;
+        out = _counter++;
     }
 };
 #define DELTA 50000
 class Echo : public Actor
 {
     uint64_t _startTime;
+
 public:
-    ValueSource<int> msgPerMsec=0;
+    ValueSource<int> msgPerMsec = 0;
     ValueSource<int> out;
-    Sink<int,4> in;
+    Sink<int, 4> in;
     Echo(Thread& thr) : Actor(thr)
     {
-        in.async(thread(),[&](const int& i) {
-            if ( i %DELTA == 0 ) {
-                uint64_t endTime=Sys::millis();
+        in.async(thread(), [&](const int& i) {
+            if (i % DELTA == 0) {
+                uint64_t endTime = Sys::millis();
                 uint32_t delta = endTime - _startTime;
                 msgPerMsec = DELTA / delta;
-                INFO(" handled %lu messages in %u msec = %d msg/msec ",DELTA,delta,msgPerMsec());
-                _startTime=Sys::millis();
+                INFO(" handled %lu messages in %u msec = %d msg/msec ", DELTA, delta,
+                     msgPerMsec());
+                _startTime = Sys::millis();
             }
-            out=i+1;
+            out = i + 1;
         });
+    }
+};
+
+template <class T>
+class Cache : public Source<T>
+{
+    T _t[2];
+    int _idx = 0;
+    Source<T>& _src;
+public:
+    Cache(Source<T>& src) : _src(src)
+    {
+        //  _t[0] = std::move(t);
+    }
+    void request()
+    {
+        _src.request();
+        this->emit(_t[_idx & 1]);
+    }
+
+    void on(const T& in)
+    {
+        _t[(_idx + 1) & 1] = std::move(in);
+        _idx++;
     }
 };
 
 
 
-
-class Poller : public Actor,public Sink<TimerMsg,2>
+class Poller : public Actor
 {
     TimerSource _pollInterval;
-    std::vector<Requestable*> _publishers;
-    uint32_t _idx=0;
-    bool _connected;
+    std::vector<Requestable*> _requestables;
+    uint32_t _idx = 0;
+
 public:
-    Sink<bool,2> connected;
-    Poller(Thread& t) : Actor(t),_pollInterval(t,1,100,true)
+    ValueFlow<bool> connected;
+    ValueFlow<uint32_t> interval = 500;
+    Poller(Thread& t) : Actor(t), _pollInterval(t, 1, 500, true)
     {
-        _pollInterval >> this;
-        connected.async(thread(),[&](const bool& b) {
-            _connected=b;
-        });
-        async(thread(),[&](const TimerMsg tm) {
-            if( _publishers.size() && _connected ) _publishers[_idx++ % _publishers.size()]->request();
-        });
+        _pollInterval >> [&](const TimerMsg tm) {
+            if (_requestables.size() && connected())
+                _requestables[_idx++ % _requestables.size()]->request();
+        };
+        interval >> [&](const uint32_t iv) {
+            _pollInterval.interval(iv);
+        };
     };
-    void setInterval(uint32_t t)
+
+    template <class T>
+    Source<T>& operator()(Source<T>& source)
     {
-        _pollInterval.interval(t);
+        Cache<T>* cache = new Cache<T>(source);
+        source.subscribe(cache);
+        _requestables.push_back(cache);
+        return *cache;
     }
-    Poller& operator()(Requestable& rq )
+
+    Poller& poll(Requestable& rq)
     {
-        _publishers.push_back(&rq);
+        _requestables.push_back(&rq);
         return *this;
     }
 };
@@ -90,13 +123,13 @@ Log logger(1024);
 // ---------------------------------------------- THREAD
 Thread thisThread("main");
 Thread ledThread("led");
-Thread  mqttThread("mqtt");
-Thread  workerThread("worker");
+Thread mqttThread("mqtt");
+Thread workerThread("worker");
 
 //  --------------------------------------------- ACTOR
 #define PIN_LED 2
 
-LedBlinker led(ledThread,PIN_LED, 301);
+LedBlinker led(ledThread, PIN_LED, 301);
 Pinger pinger(workerThread);
 Echo echo(workerThread);
 
@@ -104,23 +137,22 @@ Echo echo(workerThread);
 #include <MqttSerial.h>
 MqttSerial mqtt(mqttThread);
 #else
-#include <Wifi.h>
 #include <MqttWifi.h>
+#include <Wifi.h>
 Wifi wifi(mqttThread);
 MqttWifi mqtt(mqttThread);
 #endif
 
-
 #ifdef US
 #include <UltraSonic.h>
 Connector uextUs(US);
-UltraSonic ultrasonic(thisThread,&uextUs);
+UltraSonic ultrasonic(thisThread, &uextUs);
 #endif
 
 #ifdef GPS
 #include <Neo6m.h>
 Connector uextGps(GPS);
-Neo6m gps(thisThread,&uextGps);
+Neo6m gps(thisThread, &uextGps);
 #endif
 
 #ifdef DWM1000_TAG
@@ -133,8 +165,8 @@ Remote remote(thisThread);
 #endif
 
 #ifdef MOTOR
-#include <RotaryEncoder.h>
 #include <Motor.h>
+#include <RotaryEncoder.h>
 Connector uextMotor(MOTOR);
 #endif
 
@@ -146,7 +178,7 @@ Connector uextServo(SERVO);
 // ---------------------------------------------- system properties
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
-ValueSource<bool> systemAlive=true;
+ValueSource<bool> systemAlive = true;
 LambdaSource<uint32_t> systemHeap([]()
 {
     return xPortGetFreeHeapSize();
@@ -157,7 +189,7 @@ LambdaSource<uint64_t> systemUptime([]()
 });
 Poller poller(mqttThread);
 
-ArrayQueue<int,16> q;
+ArrayQueue<int, 16> q;
 
 #ifdef GPIO_TEST
 #include <HardwareTester.h>
@@ -167,21 +199,25 @@ HardwareTester hw;
 #ifdef STEPPER
 #include <Stepper.h>
 Connector uextStepper(STEPPER);
-Stepper stepper(workerThread,uextStepper);
+Stepper stepper(workerThread, uextStepper);
 #endif
 
 #ifdef STEPPER_SERVO
 #include <StepperServo.h>
 Connector uextStepperServo(STEPPER_SERVO);
-StepperServo stepperServo(workerThread,uextStepperServo);
+StepperServo stepperServo(workerThread, uextStepperServo);
+#endif
+
+#ifdef HWTIMER
+#include <HwTimer.h>
+HwTimer hwTimer(32);
 #endif
 
 #ifdef COMPASS
 #include <Compass.h>
 Connector uextCompass(COMPASS);
-Compass compass(workerThread,uextCompass);
+Compass compass(workerThread, uextCompass);
 #endif
-
 
 extern "C" void app_main(void)
 {
@@ -195,28 +231,32 @@ extern "C" void app_main(void)
         uint8_t macBytes[6];
         uint64_t macInt;
     };
-    macInt=0L;
-    if ( esp_read_mac(macBytes,ESP_MAC_WIFI_STA) != ESP_OK) WARN(" esp_base_mac_addr_get() failed.");;
+    macInt = 0L;
+    if (esp_read_mac(macBytes, ESP_MAC_WIFI_STA) != ESP_OK)
+        WARN(" esp_base_mac_addr_get() failed.");
+    ;
     string_format(hn, "ESP32-%d", macInt & 0xFFFF);
     Sys::hostname(hn.c_str());
 #endif
-    systemHostname = Sys::hostname();;
+    systemHostname = Sys::hostname();
+    ;
     systemBuild = __DATE__ " " __TIME__;
-    INFO("%s : %s ",Sys::hostname(),systemBuild().c_str());
-    for( int cnt=0; cnt<5; cnt++) {
-        uint32_t max=100000;
+    INFO("%s : %s ", Sys::hostname(), systemBuild().c_str());
+    for (int cnt = 0; cnt < 5; cnt++) {
+        uint32_t max = 100000;
         int x;
-        uint64_t start=Sys::millis();
-        for(int i=0; i<max; i++) {
-            x=i;
-            if ( q.push(x) ) ERROR("write failed");
-            if ( q.pop(x) ) ERROR("read failed");
-            if ( x!=i ) ERROR(" x!=i ");
+        uint64_t start = Sys::millis();
+        for (int i = 0; i < max; i++) {
+            x = i;
+            if (q.push(x)) ERROR("write failed");
+            if (q.pop(x)) ERROR("read failed");
+            if (x != i) ERROR(" x!=i ");
         }
         uint64_t end = Sys::millis();
-        uint32_t delta = end-start;
+        uint32_t delta = end - start;
         uint32_t mpms = max / delta;
-        INFO(" time taken for %u iterations : %u msec  = %u msg/msec",max,delta,mpms);
+        INFO(" time taken for %u iterations : %u msec  = %u msg/msec", max, delta,
+             mpms);
     }
     led.init();
 #ifdef MQTT_SERIAL
@@ -225,80 +265,85 @@ extern "C" void app_main(void)
     wifi.init();
     mqtt.init();
     wifi.connected >> mqtt.wifiConnected;
-//-----------------------------------------------------------------  WIFI props
+    //-----------------------------------------------------------------  WIFI
+    // props
     wifi.macAddress >> mqtt.toTopic<std::string>("wifi/mac");
     wifi.ipAddress >> mqtt.toTopic<std::string>("wifi/ip");
     wifi.ssid >> mqtt.toTopic<std::string>("wifi/ssid");
     wifi.rssi >> mqtt.toTopic<int>("wifi/rssi");
-    poller(wifi.macAddress)(wifi.ipAddress)(wifi.ssid)(wifi.rssi);
+    poller.poll(wifi.macAddress).poll(wifi.ipAddress).poll(wifi.ssid).poll(wifi.rssi);
 #endif
     mqtt.connected >> led.blinkSlow;
     mqtt.connected >> poller.connected;
-//-----------------------------------------------------------------  SYS props
+    //-----------------------------------------------------------------  SYS props
     systemUptime >> mqtt.toTopic<uint64_t>("system/upTime");
     systemHeap >> mqtt.toTopic<uint32_t>("system/heap");
     systemHostname >> mqtt.toTopic<std::string>("system/hostname");
     systemBuild >> mqtt.toTopic<std::string>("system/build");
     systemAlive >> mqtt.toTopic<bool>("system/alive");
-    poller(systemUptime)(systemHeap)(systemHostname)(systemBuild)(systemAlive);
+    poller.poll(systemUptime).poll(systemHeap).poll(systemHostname).poll(systemBuild).poll(systemAlive);
 
-    Sink<int,3> intSink([](int i) {
-        INFO("received an int %d",i);
+    Sink<int, 3> intSink([](int i) {
+        INFO("received an int %d", i);
     });
     mqtt.fromTopic<int>("os/int") >> intSink;
 
-    TimerSource logTimer(thisThread,1,20000,true) ;
+    TimerSource logTimer(thisThread, 1, 20000, true);
     logTimer >> ([](const TimerMsg& tm) {
-        INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  Cas : %u / %u , retries : %u",
-             stats.bufferOverflow,
-             stats.bufferPopBusy,
-             stats.bufferPushBusy,
-             stats.threadQueueOverflow,
-             stats.bufferPushCasFailed,
-             stats.bufferPopCasFailed,
-             stats.bufferCasRetries
-            );
+        INFO(
+            " ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  Cas : %u / %u "
+            ", retries : %u",
+            stats.bufferOverflow, stats.bufferPopBusy, stats.bufferPushBusy,
+            stats.threadQueueOverflow, stats.bufferPushCasFailed,
+            stats.bufferPopCasFailed, stats.bufferCasRetries);
     });
 
 #ifdef GPIO_TEST
     hw.gpioTest();
-    hw.pwmFrequency=10000;
-    hw.captureNumberOfPulse=249;
+    hw.pwmFrequency = 10000;
+    hw.captureNumberOfPulse = 249;
     hw.mcpwmTest();
     hw.captureTest();
 
-    TimerSource pulser(thisThread,1,10,true);
+    TimerSource pulser(thisThread, 1, 10, true);
     pulser >> ([](const TimerMsg& tm) {
-        static int i=0;
-        int pwm = i%200;
-        if ( pwm > 100 ) pwm = 200-i;
+        static int i = 0;
+        int pwm = i % 200;
+        if (pwm > 100) pwm = 200 - i;
         hw.pwm(50);
-        if (i++==200) i=0;
+        if (i++ == 200) i = 0;
     });
 
-    TimerSource regTimer(thisThread,1,1000,true);
-    LambdaFlow<TimerMsg,MqttMessage> regFlow;
-    regFlow.lambda([](MqttMessage& mq,const TimerMsg& tm ) {
-        static int cnt=0;
+    TimerSource regTimer(thisThread, 1, 1000, true);
+    LambdaFlow<TimerMsg, MqttMessage> regFlow;
+    regFlow.lambda([](MqttMessage& mq, const TimerMsg& tm) {
+        static int cnt = 0;
         cnt++;
-        if (hw.regs[cnt].name==0 ) cnt=0;
+        if (hw.regs[cnt].name == 0) cnt = 0;
         mq.topic = hw.regs[cnt].name;
-        Register reg(mq.topic.c_str(),hw.regs[cnt].format);
+        Register reg(mq.topic.c_str(), hw.regs[cnt].format);
         reg.value(*hw.regs[cnt].address);
         reg.format(mq.message);
         return E_OK;
     });
-    regTimer >> regFlow ;
+    regTimer >> regFlow;
     regFlow >> mqtt.outgoing;
 
-    Sink<uint32_t,20> sinker;
-    sinker.async(thisThread,[](const uint32_t& cpt) {
-        INFO("count : %u , freq : %f Hz",cpt,(160000000.0/cpt)*(hw.captureNumberOfPulse+1));
+    Sink<uint32_t, 20> sinker;
+    sinker.async(thisThread, [](const uint32_t& cpt) {
+        INFO("count : %u , freq : %f Hz", cpt,
+             (160000000.0 / cpt) * (hw.captureNumberOfPulse + 1));
     });
     hw.capts >> sinker;
 #endif
 
-
+#ifdef HWTIMER
+    hwTimer.init();
+    hwTimer.divider == mqtt.topic<uint32_t>("hwtimer/divider");
+    hwTimer.ticks == mqtt.topic<uint32_t>("hwtimer/ticks");
+    hwTimer.intervalSec == mqtt.topic<double>("hwtimer/intervalSec");
+    hwTimer.autoReload == mqtt.topic<bool>("hwtimer/autoReload");
+#endif
 
 #ifdef COMPASS
     compass.init();
@@ -315,23 +360,26 @@ extern "C" void app_main(void)
 #endif
 
 #ifdef GPS
-    gps.init(); // no thread , driven from interrupt
-    gps >>  mqtt.outgoing;
+    gps.init();  // no thread , driven from interrupt
+    gps >> mqtt.outgoing;
 #endif
 
 #ifdef REMOTE
     remote.init();
-    mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;             // timer driven
-    mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;             // timer driven
-    remote.buttonLeft >> mqtt.toTopic<bool>("remote/buttonLeft");           // change and timer driven
+    mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;    // timer driven
+    mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;  // timer driven
+    remote.buttonLeft >>
+                      mqtt.toTopic<bool>("remote/buttonLeft");  // change and timer driven
     remote.buttonRight >> mqtt.toTopic<bool>("remote/buttonRight");
     remote.potLeft >> mqtt.toTopic<int>("remote/potLeft");
     remote.potRight >> mqtt.toTopic<int>("remote/potRight");
 #endif
 
 #ifdef MOTOR
-    RotaryEncoder& rotaryEncoder = *new RotaryEncoder(thisThread,uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
-    Motor& motor = *new Motor(thisThread,&uextMotor); // cannot init as global var because of NVS
+    RotaryEncoder& rotaryEncoder = *new RotaryEncoder(
+                                       thisThread, uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
+    Motor& motor = *new Motor(
+                       thisThread, &uextMotor);  // cannot init as global var because of NVS
     INFO(" init motor ");
     motor.watchdogTimer.interval(3000);
     mqtt.fromTopic<bool>("motor/watchdogReset") >> motor.watchdogReset;
@@ -343,8 +391,8 @@ extern "C" void app_main(void)
     motor.init();
     rotaryEncoder.rpmMeasured >> motor.rpmMeasured;
 
-    motor.pwm >>  mqtt.toTopic<float>("motor/pwm");
-    motor.rpmMeasured2 >>  mqtt.toTopic<int>("motor/rpmMeasured");
+    motor.pwm >> mqtt.toTopic<float>("motor/pwm");
+    motor.rpmMeasured2 >> mqtt.toTopic<int>("motor/rpmMeasured");
     motor.rpmTarget == mqtt.topic<int>("motor/rpmTarget");
 
     motor.KI >> mqtt.toTopic<float>("motor/KI");
@@ -359,13 +407,13 @@ extern "C" void app_main(void)
 #endif
 
 #ifdef SERVO
-    Servo& servo = *new Servo(thisThread,&uextServo);
+    Servo& servo = *new Servo(thisThread, &uextServo);
     servo.watchdogTimer.interval(3000);
     servo.init();
     mqtt.fromTopic<bool>("servo/watchdogReset") >> servo.watchdogReset;
     servo.pwm >> mqtt.toTopic<float>("servo/pwm");
     servo.adcPot >> mqtt.toTopic<int>("servo/adcPot");
-    servo.angleMeasured >>  mqtt.toTopic<int>("servo/angleMeasured");
+    servo.angleMeasured >> mqtt.toTopic<int>("servo/angleMeasured");
     servo.KI == mqtt.topic<float>("servo/KI");
     servo.KP == mqtt.topic<float>("servo/KP");
     servo.KD == mqtt.topic<float>("servo/KD");
@@ -390,21 +438,22 @@ extern "C" void app_main(void)
     stepperServo.watchdogTimer.interval(3000);
     mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
     mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
-    stepperServo.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
-    stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-    stepperServo.adcPot >> mqtt.toTopic<int>("stepper/adcPot");
-    stepperServo.angleMeasured >>  mqtt.toTopic<int>("stepper/angleMeasured");
-    stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
-    stepperServo.deviceState >> mqtt.toTopic<int>("stepper/state");
-    stepperServo.deviceMessage >> mqtt.toTopic<std::string>("stepper/message");
-    poller(stepperServo.stepMeasured);
+    poller(stepperServo.stepMeasured) >> mqtt.toTopic<int>("stepper/stepMeasured");
+    poller(stepperServo.stepTarget) >> mqtt.toTopic<int>("stepper/stepTarget");
+    poller(stepperServo.adcPot) >> mqtt.toTopic<int>("stepper/adcPot");
+    poller(stepperServo.angleMeasured) >> mqtt.toTopic<int>("stepper/angleMeasured");
+    poller(stepperServo.angleTarget) >> mqtt.toTopic<int>("stepper/angleTarget");
+    stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
+    poller(stepperServo.deviceState) >> mqtt.toTopic<int>("stepper/state");
+    poller(stepperServo.deviceMessage) >> mqtt.toTopic<std::string>("stepper/message");
 #endif
 
 #ifdef DWM1000_TAG
-    DWM1000_Tag& tag=*(new DWM1000_Tag(workerThread,new Connector(DWM1000_TAG)));
+    DWM1000_Tag& tag =
+        *(new DWM1000_Tag(workerThread, new Connector(DWM1000_TAG)));
     tag.preStart();
     tag.mqttMsg >> mqtt.outgoing;
-//    tag.blink >> ledBlue.pulse;
+    //    tag.blink >> ledBlue.pulse;
     tag.blinks >> mqtt.toTopic<uint32_t>("tag/blinks");
     tag.polls >> mqtt.toTopic<uint32_t>("tag/polls");
     tag.resps >> mqtt.toTopic<uint32_t>("tag/resps");
@@ -412,14 +461,14 @@ extern "C" void app_main(void)
     tag.interruptCount >> mqtt.toTopic<uint32_t>("tag/interrupts");
     tag.errs >> mqtt.toTopic<uint32_t>("tag/errs");
     tag.timeouts >> mqtt.toTopic<uint32_t>("tag/timeouts");
-    poller(tag.blinks)(tag.polls)(tag.resps)(tag.finals)(tag.interruptCount)(tag.errs)(tag.timeouts);
-
+    poller(tag.blinks)(tag.polls)(tag.resps)(tag.finals)(tag.interruptCount)(
+        tag.errs)(tag.timeouts);
 
 #endif
 
-//   pinger.out >> echo.in; // the wiring
-//    echo.out >> pinger.in;
-//    echo.msgPerMsec >> mqtt.toTopic<int>("system/msgPerMSec");
+    //   pinger.out >> echo.in; // the wiring
+    //    echo.out >> pinger.in;
+    //    echo.msgPerMsec >> mqtt.toTopic<int>("system/msgPerMSec");
     echo.out >> mqtt.toTopic<int>("system/echo");
     mqtt.fromTopic<int>("system/echo") >> echo.in;
     /*    mqtt.incoming >> ([](const MqttMessage mm) {
@@ -429,6 +478,5 @@ extern "C" void app_main(void)
     ledThread.start();
     mqttThread.start();
     workerThread.start();
-    thisThread.run(); // DON'T EXIT , local variable will be destroyed
-
+    thisThread.run();  // DON'T EXIT , local variable will be destroyed
 }

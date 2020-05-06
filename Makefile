@@ -13,7 +13,7 @@ SERIAL_PORT ?= /dev/tty$(TTY)
 ESPPORT = $(SERIAL_PORT)
 SERIAL_BAUD = 115200
 ESPBAUD = 921600
-IDF_PATH ?= /home/lieven/esp/esp-idf
+IDF_PATH ?= /home/lieven/esp-idf
 WORKSPACE := /home/lieven/workspace
 DEFINES := -DWIFI_SSID=${SSID} -DWIFI_PASS=${PSWD}  -DESP32_IDF=1 $(DEFINE) -DMQTT_HOST=limero.ddns.net -DMQTT_PORT=1883 
 
@@ -41,6 +41,10 @@ STEPPER :
 STEPPER_SERVO :
 	touch main/main.cpp
 	make DEFINE=" -DSTEPPER_SERVO=1  -DHOSTNAME=drive"
+	
+HWTIMER :
+	touch main/main.cpp
+	make DEFINE=" -DHWTIMER=1  -DHOSTNAME=timer"
 
 
 GPIO :

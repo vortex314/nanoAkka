@@ -1,29 +1,36 @@
 #include "StepperServo.h"
 
 #define CONTROL_INTERVAL_MS 100
-#define ANGLE_MIN -75.0
-#define ANGLE_MAX 75.0
+#define ANGLE_MIN -90.0
+#define ANGLE_MAX 90.0
 
 #define ADC_MIN 200
-#define ADC_MAX 850
+#define ADC_MAX 800
 
 #define ADC_MIN_POT 50
 #define ADC_MAX_POT 1000
 
 #define MAX_INTEGRAL 30
 
+#define TEETH_BIG_GEAR  82.0
+#define TEETH_SMALL_GEA 10.0
+
+
 
 StepperServo::StepperServo(Thread& thr,Connector& uext) : Actor(thr),Device(thr),
     _uext(uext),
-    _pinStep(uext.getDigitalOut(LP_TXD)),
+    _pulser(uext.toPin(LP_TXD)),
     _pinDir(uext.getDigitalOut(LP_SCL)),
     _pinEnable(uext.getDigitalOut(LP_SDA)),
     _adcPot(ADC::create(uext.toPin(LP_RXD))),// _adcPot(uext.getADC(LP_RXD)),
-    _stepTimer(thr,1,2,true),
-    _measureTimer(thr,4,10,true),
+    _measureTimer(thr,4,20,true),
     _controlTimer(thr,3,CONTROL_INTERVAL_MS,true),
-    _reportTimer(thr,2,200,true)
+    _reportTimer(thr,2,500,true),
+    stepsPerRotation("stepper/stepsPerRotation",400)
 {
+    _pulser.divider=80;
+    _pulser.intervalSec=0.001;
+    _pulser.autoReload=true;
 }
 
 StepperServo::~StepperServo()
@@ -36,63 +43,50 @@ void StepperServo::init()
     INFO(" Checking potentiometer....");
     Erc rc = _adcPot.init();
     if ( rc != E_OK ) {
-        WARN("Potentiometer initialization failed");
         stop("Potentiometer initialization failed");
     }
     stopOutOfRange(_adcPot.getValue()) ;
-    _pinStep.setMode(DigitalOut::DOUT_PULL_UP);
+    _pulser.init();
     _pinDir.setMode(DigitalOut::DOUT_PULL_UP);
     _pinEnable.setMode(DigitalOut::DOUT_PULL_UP);
-    _pinStep.init();
-    _pinStep.write(1);
     _pinDir.init();
     _pinDir.write(1);
     _pinEnable.init();
     _pinEnable.write(1);
 
-    angleTarget >> ([&](const int& i ) {
-        stepTarget = (i * 200) / 90;
+    angleTarget >> ([&](const int& angle ) {
+        if ( angleTarget()< ANGLE_MIN) angleTarget=ANGLE_MIN;
+        if ( angleTarget()> ANGLE_MAX) angleTarget=ANGLE_MAX;
+        stepTarget = scale(angle,-90.0,90.0,-2.05*stepsPerRotation(),+2.05*stepsPerRotation());
     });
 
     _measureTimer >> ([&](TimerMsg tm) {
         measureAngle();
+        if ( angleMeasured()==0) stepMeasured=0; // correct missed steps
     });
 
     stepTarget >> ([&](const int& st) {
         _pinEnable.write(0);
-        if ( _stepCounter==0 ) { // previous stepped stopped
+        if ( !_pulser.busy ) { // previous stepped stopped
             int delta = st-stepMeasured();
+            stepMeasured = st;
             if ( delta < 0 ) {
                 _direction = -1;
                 _pinDir.write(1);
-                _stepCounter=-delta;
+                _pulser.ticks=-delta;
             } else {
                 _direction = 1;
                 _pinDir.write(0);
-                _stepCounter=delta;
+                _pulser.ticks=delta;
             }
-            _stepTimer.start();
+            if ( _pulser.ticks()) _pulser.start();
         }
     });
-    _stepTimer >> ([&](const TimerMsg& tm ) {
-        if ( _stepCounter<=0) {
-            _stepCounter=0;
-            return;
-        }
-//        INFO("%d:%d",_stepCounter,_stepUp);
-        _pinStep.write(_stepUp);
-        _stepUp = _stepUp ? 0 : 1;
-        if (_stepUp) {
-            _stepCounter--;
-            stepMeasured = stepMeasured() + _direction;
-        }
-    });
+
     _controlTimer >> ([&](TimerMsg tm) {
         measureAngle();
-        adcPot.on(_potFilter.getMedian());
         if ( isRunning() ) {
-            if ( angleTarget()< ANGLE_MIN) angleTarget=ANGLE_MIN;
-            if ( angleTarget()> ANGLE_MAX) angleTarget=ANGLE_MAX;
+
             if ( measureAngle() ) {
                 _error = angleTarget() - angleMeasured();
                 error=_error;
@@ -101,13 +95,11 @@ void StepperServo::init()
                 } else {
                     int pwm = PID(_error, CONTROL_INTERVAL_MS/1000.0);
                 }
-
             }
-
         }
-
     });
     _reportTimer >> ([&](TimerMsg tm) {
+        adcPot= _potFilter.getMedian();
         angleMeasured.request();
         adcPot.request();
         angleTarget.request();
@@ -117,6 +109,7 @@ void StepperServo::init()
     });
     angleTarget.pass(true);
     stepTarget.pass(true);
+    stepMeasured.pass(false);
     angleMeasured.pass(false);
     if ( ! stopOutOfRange(_adcPot.getValue()))run();
 }
@@ -137,7 +130,8 @@ bool StepperServo::stopOutOfRange(int adc)
 bool StepperServo::measureAngle()
 {
     int adc = _adcPot.getValue();
-    stopOutOfRange(adc);
+    if ( abs(adc-adcPot())>5) adcPot = adc; // noise filtering
+    stopOutOfRange(adc); // stop if needed
 //    adcPot.on(adc);
     _potFilter.addSample(adc);
     if ( _potFilter.isReady()) {
