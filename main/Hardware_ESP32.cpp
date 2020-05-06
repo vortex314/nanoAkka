@@ -397,14 +397,14 @@ struct AdcEntry {
     { 33, ADC1_CHANNEL_5, ADC1 }, //
     { 34, ADC1_CHANNEL_6, ADC1 }, //
     { 35, ADC1_CHANNEL_7, ADC1 }, //
-    { 36, ADC1_GPIO36_CHANNEL, ADC1 }, //
-    { 37, ADC1_GPIO37_CHANNEL, ADC1 }, // not connected on devkit
-    { 38, ADC1_GPIO38_CHANNEL, ADC1 }, // not connected on devkit
-    { 39, ADC1_GPIO39_CHANNEL, ADC1 }, //
-    { 13, ADC2_GPIO13_CHANNEL, ADC2 }, // ATTENTION ! ADC2 cannot be used while wifi is active
-    { 14, ADC2_GPIO14_CHANNEL, ADC2 }, // ATTENTION ! ADC2 cannot be used while wifi is active
-    { 15, ADC2_GPIO15_CHANNEL, ADC2 }, //
-    { 25, ADC2_GPIO25_CHANNEL, ADC2 }//
+    { 36, ADC1_CHANNEL_0, ADC1 }, //
+    { 37, ADC1_CHANNEL_1, ADC1 }, // not connected on devkit
+    { 38, ADC1_CHANNEL_2, ADC1 }, // not connected on devkit
+    { 39, ADC1_CHANNEL_3, ADC1 }, //
+    { 13, ADC2_CHANNEL_4, ADC2 }, // ATTENTION ! ADC2 cannot be used while wifi is active
+    { 14, ADC2_CHANNEL_5, ADC2 }, // ATTENTION ! ADC2 cannot be used while wifi is active
+    { 15, ADC2_CHANNEL_6, ADC2 }, //
+    { 25, ADC2_CHANNEL_8, ADC2 }//
 }; // INCOMPLETE !!
 
 class ADC_ESP32: public ADC
@@ -449,7 +449,7 @@ public:
         } else if (_unit == ADC2) {
             //    erc = adc2_config_channel_atten((adc2_channel_t)_channel,
             //    ADC_ATTEN_DB_11);
-            erc = adc2_config_channel_atten(ADC2_GPIO15_CHANNEL,
+            erc = adc2_config_channel_atten(ADC2_CHANNEL_3,
                                             ADC_ATTEN_DB_11);
             if (erc)
                 ERROR("adc2_config_channel_atten():%d:%s", erc,
