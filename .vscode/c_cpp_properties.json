@@ -9,7 +9,9 @@
                 "${workspaceFolder}/../Common/",
                 "${workspaceFolder}/../ArduinoJson/src/",
                 "${IDF_PATH}/components/**",
-                "${HOME}/esp/xtensa-esp32-elf/**"
+                "${HOME}/esp/xtensa-esp32-elf/**",
+                "${IDF_PATH}/components/wpa_supplicant/port/include/",
+                "${HOME}/.espressif/tools/xtensa-esp32-elf/**"
             ],
             "defines": [
                 "FREERTOS",

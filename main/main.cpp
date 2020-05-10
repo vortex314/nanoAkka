@@ -54,6 +54,7 @@ class BiFlow : public Flow<T, T> {
   int _idx = 0;
 
  public:
+  BiFlow() {}
   BiFlow(T t) { _t[0] = std::move(t); }
   void request() { this->emit(_t[_idx & 1]); }
 
@@ -63,6 +64,17 @@ class BiFlow : public Flow<T, T> {
   }
 };
 
+template <class T>
+class RequestFlow : public Flow<T, T> {
+  Source<T>& _source;
+
+ public:
+  RequestFlow(Source<T>& source) : _source(source) {}
+  void request() { _source.request(); }
+  void on(const T& t) { this->emit(t); }
+};
+//____________________________________________________________________________________
+//
 class Poller : public Actor {
   TimerSource _pollInterval;
   std::vector<Requestable*> _requestables;
@@ -78,13 +90,30 @@ class Poller : public Actor {
     };
     interval >> [&](const uint32_t iv) { _pollInterval.interval(iv); };
   };
+  /*
+    template <class T>Poller
+    Source<T>& cache(Source<T>& input){
+      BiFlow<T>* bf = new BiFlow<T>();
+      input >>
+      _requestables.push_back(bf);
+
+    }*/
 
   template <class T>
-  Flow<T, T>& operator()() {
+  Source<T>& poll(Source<T>& source) {
+    RequestFlow<T>* rf = new RequestFlow<T>(source);
+    source >> rf;
+    _requestables.push_back(rf);
+    return *rf;
+  }
+
+  template <class T>
+  Flow<T, T>& cache() {
     BiFlow<T>* vf = new BiFlow<T>();
     _requestables.push_back(vf);
     return *vf;
   }
+
   Poller& operator()(Requestable& rq) {
     _requestables.push_back(&rq);
     return *this;
@@ -231,11 +260,10 @@ extern "C" void app_main(void) {
   wifi.connected >> mqtt.wifiConnected;
   //-----------------------------------------------------------------  WIFI
   // props
-  wifi.macAddress >> mqtt.toTopic<std::string>("wifi/mac");
-  wifi.ipAddress >> mqtt.toTopic<std::string>("wifi/ip");
-  wifi.ssid >> mqtt.toTopic<std::string>("wifi/ssid");
-  wifi.rssi >> mqtt.toTopic<int>("wifi/rssi");
-  poller(wifi.macAddress)(wifi.ipAddress)(wifi.ssid)(wifi.rssi);
+  poller.poll(wifi.macAddress) >> mqtt.toTopic<std::string>("wifi/mac");
+  poller.poll(wifi.ipAddress) >> mqtt.toTopic<std::string>("wifi/ip");
+  poller.poll(wifi.ssid) >> mqtt.toTopic<std::string>("wifi/ssid");
+  poller.poll(wifi.rssi) >> mqtt.toTopic<int>("wifi/rssi");
 #endif
   mqtt.connected >> led.blinkSlow;
   mqtt.connected >> poller.connected;
@@ -400,16 +428,18 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(3000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
-  stepperServo.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
+  poller.poll(stepperServo.stepMeasured) >>
+      mqtt.toTopic<int>("stepper/stepMeasured");
   stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
   stepperServo.adcPot >> mqtt.toTopic<int>("stepper/adcPot");
-  stepperServo.angleMeasured >> poller<int>() >>
-      mqtt.toTopic<int>("stepper/angleMeasured");
+  stepperServo.angleMeasured >> mqtt.toTopic<int>("stepper/angleMeasured");
+  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
   stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
-  stepperServo.deviceState >> mqtt.toTopic<int>("stepper/state");
-  stepperServo.deviceMessage >> mqtt.toTopic<std::string>("stepper/message");
-  poller(stepperServo.stepMeasured);
+  poller.poll(stepperServo.deviceState) >> mqtt.toTopic<int>("stepper/state");
+  poller.poll(stepperServo.deviceMessage) >>
+      mqtt.toTopic<std::string>("stepper/message");
+  poller.poll(stepperServo.angleTarget);
 #endif
 
 #ifdef DWM1000_TAG
