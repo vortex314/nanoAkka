@@ -56,41 +56,35 @@ void Pulser::config(uint32_t div, bool reload, double interval) {
 }
 
 void Pulser::start() {
-  INFO("start %u", ticks());
-  CHECK(timer_start(_timerGroup, _timerIdx));
-  busy = true;
+  if (!busy) {
+    INFO("start %u", ticks());
+    CHECK(timer_start(_timerGroup, _timerIdx));
+    busy = true;
+  }
 }
 
 void Pulser::wiring() {
   intervalSec >> [&](const double& interval) {
-    if (busy) {
-      WARN(" pulser busy ");
-      return;
+    if (!busy && intervalSec() != interval) {
+      config(divider(), autoReload(), interval);
+      INFO(" interval %.4f sec", intervalSec);
     }
-    if (intervalSec() != interval) config(divider(), autoReload(), interval);
   };
   autoReload >> [&](const bool& reload) {
-    if (busy) {
-      WARN(" pulser busy ");
-      return;
+    if (!busy && autoReload() != reload) {
+      config(divider(), reload, intervalSec());
+      INFO(" reload : %s ", reload ? "true" : "false");
     }
-    if (autoReload() != reload) config(divider(), reload, intervalSec());
   };
   divider >> [&](const uint32_t& div) {
-    if (busy) {
-      WARN(" pulser busy ");
-      return;
+    if (!busy && div != divider()) {
+      config(div, autoReload(), intervalSec());
+      INFO(" divider : %u ", div);
     }
-    if (div != divider()) config(div, autoReload(), intervalSec());
   };
 
-  ticks >> [&](const uint32_t& t) {
-    if (busy) {
-      WARN(" pulser busy ");
-      return;
-    }
-    _counter = 2 * t;
-  };
+  ticks >> [&](const uint32_t& t) { _counter = 2 * t; };
+
   CHECK(timer_isr_register(_timerGroup, _timerIdx, timer_group0_isr, this,
                            ESP_INTR_FLAG_IRAM, NULL));
   ticks.pass(true);

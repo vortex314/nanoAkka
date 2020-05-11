@@ -428,9 +428,9 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(3000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
-  poller.poll(stepperServo.stepMeasured) >>
-      mqtt.toTopic<int>("stepper/stepMeasured");
-  stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+  /*  poller.poll(stepperServo.stepMeasured) >>
+        mqtt.toTopic<int>("stepper/stepMeasured");
+    stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget"); */
   stepperServo.adcPot >> mqtt.toTopic<int>("stepper/adcPot");
   stepperServo.angleMeasured >> mqtt.toTopic<int>("stepper/angleMeasured");
   stepperServo.output >> mqtt.toTopic<float>("stepper/output");

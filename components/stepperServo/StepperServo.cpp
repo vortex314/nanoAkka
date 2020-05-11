@@ -59,8 +59,11 @@ void StepperServo::init() {
   });
 
   _measureTimer >> ([&](TimerMsg tm) {
-    measureAngle();
-    if (angleMeasured() == 0) stepMeasured = 0;  // correct missed steps
+    int adc = _adcPot.getValue();
+    stopOutOfRange(adc);  // stop if needed
+    _potFilter.addSample(adc);
+    //    adcPot.on(adc);
+    //  if (angleMeasured() == 0) stepMeasured = 0;  // correct missed steps
   });
   /*
       stepTarget >> ([&](const int& st) {
@@ -87,25 +90,32 @@ void StepperServo::init() {
       if (measureAngle()) {
         _error = angleTarget() - angleMeasured();
         error = _error;
-        if (abs(_error) < 2) {
-          output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
-        } else {
-          output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
-        }
+        output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
         int direction = output() < 0 ? 1 : 0;
         _pinDir.write(direction);
-        if (abs(output()) > 10)
+        if (abs(output()) > 3) {
           _pulser.intervalSec = 0.001;
-        else
+          _pulser.ticks = 100;
+          _pulser.start();
+        } /*else if (abs(output()) > 1) {
           _pulser.intervalSec = 0.01;
-        _pulser.ticks = 100;
-        _pinEnable.write(0);
-        INFO("error : %f output : %f interval:%f dir:%d", _error, output(),
-             _pulser.intervalSec(), direction);
-      } else {
-        _pinEnable.write(1);
-        _pulser.ticks = 0;
+          _pulser.ticks = 9;
+          _pulser.start();
+        } */
+        else {
+          _pulser.stop();
+          _pulser.intervalSec = 0.01;
+          _pulser.ticks = 0;
+        };
+        _pinEnable.write(0);  // negative logic
+        INFO("error : %.3f output : %.3f interval:%.4f dir:%d", _error,
+             output(), _pulser.intervalSec(), direction);
       }
+    } else {
+      WARN(" disabled ");
+      _pulser.stop();
+      _pinEnable.write(1);  // negative logic
+      _pulser.ticks = 0;
     }
   });
   /*_reportTimer >> ([&](TimerMsg tm) {
@@ -119,8 +129,8 @@ void StepperServo::init() {
   });*/
   adcPot.pass(true);
   angleTarget.pass(true);
-  stepTarget.pass(true);
-  stepMeasured.pass(true);
+  // stepTarget.pass(true);
+  // stepMeasured.pass(true);
   angleMeasured.pass(true);
   if (!stopOutOfRange(_adcPot.getValue())) run();
 }
@@ -139,14 +149,9 @@ bool StepperServo::stopOutOfRange(int adc) {
 }
 
 bool StepperServo::measureAngle() {
-  int adc = _adcPot.getValue();
-  if (abs(adc - adcPot()) > 5) adcPot = adc;  // noise filtering
-  stopOutOfRange(adc);                        // stop if needed
-                                              //    adcPot.on(adc);
-  _potFilter.addSample(adc);
+  adcPot = _potFilter.getMedian();  // noise filtering
   if (_potFilter.isReady()) {
-    angleMeasured =
-        scale(_potFilter.getMedian(), ADC_MIN, ADC_MAX, ANGLE_MIN, ANGLE_MAX);
+    angleMeasured = scale(adcPot(), ADC_MIN, ADC_MAX, ANGLE_MIN, ANGLE_MAX);
     return true;
   }
   return false;
