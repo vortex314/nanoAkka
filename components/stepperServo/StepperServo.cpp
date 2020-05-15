@@ -91,7 +91,7 @@ void StepperServo::init() {
         _error = angleTarget() - angleMeasured();
         error = _error;
         output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
-        int direction = output() < 0 ? 1 : 0;
+        int direction = output() < 0 ? 0 : 1;
         _pinDir.write(direction);
         if (abs(output()) > 3) {
           _pulser.intervalSec = 0.001;
@@ -158,8 +158,6 @@ bool StepperServo::measureAngle() {
 }
 
 float StepperServo::scale(float x, float x1, float x2, float y1, float y2) {
-  //    if ( x < x1 ) x=x1;
-  //    if ( x > x2 ) x=x2;
   float y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
   return y;
 }
