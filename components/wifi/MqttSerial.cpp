@@ -4,7 +4,7 @@
 
 MqttSerial::MqttSerial(Thread& thr) : Mqtt(thr), _uart(UART::create(UART_NUM_0,1,3))
 	, connected(false)
-	, keepAliveTimer(thr,TIMER_KEEP_ALIVE, 1000, true)
+	, keepAliveTimer(thr,TIMER_KEEP_ALIVE, 500, true)
 	, connectTimer(thr,TIMER_CONNECT, 3000, true) {
 	_rxdString.reserve(256);
 

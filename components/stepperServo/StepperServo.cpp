@@ -4,8 +4,8 @@
 #define ANGLE_MIN -90.0
 #define ANGLE_MAX 90.0
 
-#define ADC_MIN 200
-#define ADC_MAX 800
+#define ADC_MIN 290
+#define ADC_MAX 700
 
 #define ADC_MIN_POT 50
 #define ADC_MAX_POT 1000

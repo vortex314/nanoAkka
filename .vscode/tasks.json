@@ -19,7 +19,7 @@
                 "panel": "shared"
             },
             "args": [
-                "STEPPER_SERVO"
+                "DRIVE"
             ],
             "problemMatcher": {
                 "owner": "cpp",

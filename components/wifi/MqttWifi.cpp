@@ -21,7 +21,7 @@
 #define TIMER_2 2
 //________________________________________________________________________
 //
-MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread,1,1000,true), _keepAliveTimer(thread)
+MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread,1,500,true), _keepAliveTimer(thread)
 {
     _lwt_message = "false";
     incoming.async(thread);
