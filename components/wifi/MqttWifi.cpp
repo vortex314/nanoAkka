@@ -21,7 +21,7 @@
 #define TIMER_2 2
 //________________________________________________________________________
 //
-MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread), _keepAliveTimer(thread)
+MqttWifi::MqttWifi(Thread& thread):Mqtt(thread),_reportTimer(thread,1,1000,true), _keepAliveTimer(thread)
 {
     _lwt_message = "false";
     incoming.async(thread);
@@ -55,6 +55,8 @@ void MqttWifi::init()
     _mqttClient = esp_mqtt_client_init(&mqtt_cfg);
 
     _reportTimer.start();
+
+    _reportTimer >> ([&](const TimerMsg& tm ){ mqttPublish(_lwt_topic.c_str(),"true");});
 
     wifiConnected.async(thread(),[&](bool conn) {
         INFO("WiFi %sconnected %d ",conn?"":"dis",conn);

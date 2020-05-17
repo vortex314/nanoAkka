@@ -112,7 +112,6 @@ void StepperServo::init() {
              output(), _pulser.intervalSec(), direction);
       }
     } else {
-      WARN(" disabled ");
       _pulser.stop();
       _pinEnable.write(1);  // negative logic
       _pulser.ticks = 0;

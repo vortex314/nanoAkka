@@ -13,7 +13,7 @@ SERIAL_PORT ?= /dev/tty$(TTY)
 ESPPORT = $(SERIAL_PORT)
 SERIAL_BAUD = 115200
 ESPBAUD = 921600
-IDF_PATH ?= /home/lieven/esp-idf
+IDF_PATH ?= /home/lieven/esp/esp-idf
 WORKSPACE := /home/lieven/workspace
 DEFINES := -DWIFI_SSID=${SSID} -DWIFI_PASS=${PSWD}  -DESP32_IDF=1 $(DEFINE) -DMQTT_HOST=limero.ddns.net -DMQTT_PORT=1883 
 
@@ -46,7 +46,6 @@ HWTIMER :
 	touch main/main.cpp
 	make DEFINE=" -DHWTIMER=1  -DHOSTNAME=timer"
 
-
 GPIO :
 	touch main/main.cpp
 	make DEFINE=" -DGPIO_TEST -DHOSTNAME=gpio"
@@ -64,6 +63,10 @@ REMOTE :
 	touch main/main.cpp
 	make DEFINE="-DREMOTE=1 -DHOSTNAME=remote -DMQTT_HOST=limero.ddns.net" 
 	
+DRIVE :
+	touch main/main.cpp
+	make DEFINE="-DMOTOR=1 -DSTEPPER_SERVO=2 -DHOSTNAME=drive"
+
 MOTOR_WIFI :
 	touch main/main.cpp
 	make DEFINE="-DMOTOR=1 -DHOSTNAME=drive"
