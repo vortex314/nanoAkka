@@ -371,7 +371,7 @@ extern "C" void app_main(void) {
   Motor& motor = *new Motor(
       thisThread, &uextMotor);  // cannot init as global var because of NVS
   INFO(" init motor ");
-  motor.watchdogTimer.interval(3000);
+  motor.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("motor/watchdogReset") >> motor.watchdogReset;
 
   rotaryEncoder.init();
@@ -425,8 +425,12 @@ extern "C" void app_main(void) {
 
 #ifdef STEPPER_SERVO
   stepperServo.init();
-  stepperServo.watchdogTimer.interval(3000);
+  stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
+  motor.rpmMeasured2 >> ([](const int& rpm){ // only correct steering when really driving
+    if ( abs(rpm) > 4 ) stepperServo.isDriving.on(true);
+    else stepperServo.isDriving.on(false);
+  });
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
   /*  poller.poll(stepperServo.stepMeasured) >>
         mqtt.toTopic<int>("stepper/stepMeasured");

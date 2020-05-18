@@ -86,7 +86,7 @@ void StepperServo::init() {
 
   _controlTimer >> ([&](TimerMsg tm) {
     measureAngle();
-    if (isRunning()) {
+    if (isRunning() && isDriving() ) {
       if (measureAngle()) {
         _error = angleTarget() - angleMeasured();
         error = _error;

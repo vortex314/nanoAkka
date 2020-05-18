@@ -35,6 +35,7 @@ class StepperServo : public Actor, public Device {
   ValueFlow<float> KI = 0.0;
   ValueFlow<float> KD = 0.0;
   ValueFlow<float> output = 0.0;
+  ValueFlow<bool> isDriving=false;
   StepperServo(Thread& thr, Connector& uext);
   ~StepperServo();
   void init();
