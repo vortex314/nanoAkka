@@ -428,7 +428,7 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
   motor.rpmMeasured2 >> ([](const int& rpm){ // only correct steering when really driving
-    if ( abs(rpm) > 4 ) stepperServo.isDriving.on(true);
+    if ( abs(rpm) > 20 ) stepperServo.isDriving.on(true);
     else stepperServo.isDriving.on(false);
   });
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;

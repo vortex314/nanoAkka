@@ -4,7 +4,7 @@
 #define ANGLE_MIN -90.0
 #define ANGLE_MAX 90.0
 
-#define ADC_MIN 290
+#define ADC_MIN 310
 #define ADC_MAX 700
 
 #define ADC_MIN_POT 50
@@ -15,15 +15,11 @@
 #define TEETH_BIG_GEAR 82.0
 #define TEETH_SMALL_GEA 10.0
 
-StepperServo::StepperServo(Thread& thr, Connector& uext)
-    : Actor(thr),
-      Device(thr),
-      _uext(uext),
-      _pulser(uext.toPin(LP_TXD)),
+StepperServo::StepperServo(Thread &thr, Connector &uext)
+    : Actor(thr), Device(thr), _uext(uext), _pulser(uext.toPin(LP_TXD)),
       _pinDir(uext.getDigitalOut(LP_SCL)),
       _pinEnable(uext.getDigitalOut(LP_SDA)),
-      _adcPot(
-          ADC::create(uext.toPin(LP_RXD))),  // _adcPot(uext.getADC(LP_RXD)),
+      _adcPot(ADC::create(uext.toPin(LP_RXD))), // _adcPot(uext.getADC(LP_RXD)),
       _measureTimer(thr, 4, 20, true),
       _controlTimer(thr, 3, CONTROL_INTERVAL_MS, true),
       _reportTimer(thr, 2, 500, true),
@@ -51,16 +47,18 @@ void StepperServo::init() {
   _pinEnable.init();
   _pinEnable.write(1);
 
-  angleTarget >> ([&](const int& angle) {
-    if (angleTarget() < ANGLE_MIN) angleTarget = ANGLE_MIN;
-    if (angleTarget() > ANGLE_MAX) angleTarget = ANGLE_MAX;
+  angleTarget >> ([&](const int &angle) {
+    if (angleTarget() < ANGLE_MIN)
+      angleTarget = ANGLE_MIN;
+    if (angleTarget() > ANGLE_MAX)
+      angleTarget = ANGLE_MAX;
     /*  stepTarget = scale(angle, -90.0, 90.0, -2.05 * stepsPerRotation(),
                          +2.05 * stepsPerRotation());*/
   });
 
   _measureTimer >> ([&](TimerMsg tm) {
     int adc = _adcPot.getValue();
-    stopOutOfRange(adc);  // stop if needed
+    stopOutOfRange(adc); // stop if needed
     _potFilter.addSample(adc);
     //    adcPot.on(adc);
     //  if (angleMeasured() == 0) stepMeasured = 0;  // correct missed steps
@@ -86,52 +84,52 @@ void StepperServo::init() {
 
   _controlTimer >> ([&](TimerMsg tm) {
     measureAngle();
-    if (isRunning() && isDriving() ) {
-      if (measureAngle()) {
-        _error = angleTarget() - angleMeasured();
-        error = _error;
-        output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
-        int direction = output() < 0 ? 0 : 1;
-        _pinDir.write(direction);
-        if (abs(output()) > 3) {
-          _pulser.intervalSec = 0.001;
-          _pulser.ticks = 100;
-          _pulser.start();
-        } /*else if (abs(output()) > 1) {
-          _pulser.intervalSec = 0.01;
-          _pulser.ticks = 9;
-          _pulser.start();
-        } */
-        else {
-          _pulser.stop();
-          _pulser.intervalSec = 0.01;
-          _pulser.ticks = 0;
-        };
-        _pinEnable.write(0);  // negative logic
-        INFO("error : %.3f output : %.3f interval:%.4f dir:%d", _error,
-             output(), _pulser.intervalSec(), direction);
+    if (isRunning()) {
+      if (isDriving()) {
+        if (measureAngle()) {
+          _error = angleTarget() - angleMeasured();
+          error = _error;
+          output = PID(_error, CONTROL_INTERVAL_MS / 1000.0);
+          int direction = output() < 0 ? 0 : 1;
+          _pinDir.write(direction);
+          if (abs(output()) > 3) {
+            _pulser.intervalSec = 0.001;
+            _pulser.ticks = 100;
+            _pulser.start();
+            _pinEnable.write(0); // negative logic
+          } else {
+            holdAngle();
+          };
+          INFO("error negative logic : %.3f output : %.3f interval:%.4f dir:%d",
+               _error, output(), _pulser.intervalSec(), direction);
+        }
+      } else {
+        holdAngle();
       }
-    } else {
-      _pulser.stop();
-      _pinEnable.write(1);  // negative logic
-      _pulser.ticks = 0;
+    } else if (isPaused()) { // isDriving false
+      holdAngle();
+    } else { // stopped
+      stopStepper();
     }
   });
-  /*_reportTimer >> ([&](TimerMsg tm) {
-    adcPot = _potFilter.getMedian();
-    angleMeasured.request();
-    adcPot.request();
-    angleTarget.request();
-    stepTarget.request();
-    deviceState.request();
-    deviceMessage.request();
-  });*/
   adcPot.pass(true);
   angleTarget.pass(true);
-  // stepTarget.pass(true);
-  // stepMeasured.pass(true);
   angleMeasured.pass(true);
-  if (!stopOutOfRange(_adcPot.getValue())) run();
+  if (!stopOutOfRange(_adcPot.getValue()))
+    run();
+}
+
+void StepperServo::holdAngle() {
+  _pulser.stop();
+  _pulser.ticks = 0;
+  _pinEnable.write(0); // enable current
+}
+
+void StepperServo::stopStepper() {
+  _pulser.stop();
+  _pulser.intervalSec = 0.01;
+  _pulser.ticks = 0;
+  _pinEnable.write(1); // disable: stop current through stepper motor
 }
 
 bool StepperServo::stopOutOfRange(int adc) {
@@ -148,7 +146,7 @@ bool StepperServo::stopOutOfRange(int adc) {
 }
 
 bool StepperServo::measureAngle() {
-  adcPot = _potFilter.getMedian();  // noise filtering
+  adcPot = _potFilter.getMedian(); // noise filtering
   if (_potFilter.isReady()) {
     angleMeasured = scale(adcPot(), ADC_MIN, ADC_MAX, ANGLE_MIN, ANGLE_MAX);
     return true;
@@ -165,8 +163,10 @@ float StepperServo::PID(float err, float interval) {
   integral = integral() + (err * interval);
   derivative = (err - _errorPrior) / interval;
   float integralPart = KI() * integral();
-  if (integralPart > MAX_INTEGRAL) integral = MAX_INTEGRAL / KI();
-  if (integralPart < -MAX_INTEGRAL) integral = -MAX_INTEGRAL / KI();
+  if (integralPart > MAX_INTEGRAL)
+    integral = MAX_INTEGRAL / KI();
+  if (integralPart < -MAX_INTEGRAL)
+    integral = -MAX_INTEGRAL / KI();
   float output = KP() * err + KI() * integral() + KD() * derivative();
   _errorPrior = err;
   return output;

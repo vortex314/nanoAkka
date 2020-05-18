@@ -43,6 +43,8 @@ class StepperServo : public Actor, public Device {
   bool stopOutOfRange(int adc);
   float scale(float x, float x1, float x2, float y1, float y2);
   float PID(float error, float interval);
+  void holdAngle();
+  void stopStepper();
 };
 
 #endif  // STEPPER_H
