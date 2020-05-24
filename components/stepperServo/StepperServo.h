@@ -27,14 +27,14 @@ class StepperServo : public Actor, public Device {
   ValueFlow<int> adcPot = 0;
   ValueFlow<int> angleTarget = 0;
   ValueFlow<int> angleMeasured = 0;
-  // ValueFlow<int> stepTarget = 0;
-  // ValueFlow<int> stepMeasured = 0;
-  ValueFlow<float> error = 0.0;
+  ValueFlow<int> stepTarget = 0;
+  ValueFlow<int> stepMeasured = 0;
+/*  ValueFlow<float> error = 0.0;
   ValueFlow<float> proportional = 0.0, integral = 0.0, derivative = 0.0;
   ValueFlow<float> KP = 1.0;
   ValueFlow<float> KI = 0.0;
   ValueFlow<float> KD = 0.0;
-  ValueFlow<float> output = 0.0;
+  ValueFlow<float> output = 0.0;*/
   ValueFlow<bool> isDriving=false;
   StepperServo(Thread& thr, Connector& uext);
   ~StepperServo();
