@@ -457,12 +457,12 @@ extern "C" void app_main(void)
       stepperServo.isDriving.on(false);
   });
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
-  /*  poller.poll(stepperServo.stepMeasured) >>
-        mqtt.toTopic<int>("stepper/stepMeasured");
-    stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget"); */
-  stepperServo.adcPot >> mqtt.toTopic<int>("stepper/adcPot");
-  stepperServo.angleMeasured >> mqtt.toTopic<int>("stepper/angleMeasured");
-  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
+  poller.poll(stepperServo.stepMeasured) >>
+      mqtt.toTopic<int>("stepper/stepMeasured");
+  stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+  stepperServo.adcPot >> poller.cache<int>() >> mqtt.toTopic<int>("stepper/adcPot");
+  stepperServo.angleMeasured >> poller.cache<int>() >>mqtt.toTopic<int>("stepper/angleMeasured");
+  //  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
   stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
   poller.poll(stepperServo.deviceState) >> mqtt.toTopic<int>("stepper/state");

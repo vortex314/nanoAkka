@@ -1,4 +1,6 @@
 #!/bin/bash
+gpio mode 29 out
+gpio write 29 1
 #cd /mnt/home/lieven/workspace/esp32-streams
 baudrate=921600
 export TTY=USB0
