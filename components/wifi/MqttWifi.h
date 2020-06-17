@@ -23,6 +23,7 @@ extern "C" {
 
 #include <ArduinoJson.h>
 #include <Mqtt.h>
+#include <MqttOta.h>
 
 #define QOS 0
 #define TIMEOUT 10000L
@@ -40,6 +41,8 @@ class MqttWifi :  public Mqtt  {
 		std::string _hostPrefix;
 		TimerSource _reportTimer;
 		TimerSource _keepAliveTimer;
+		std::string _lastTopic;
+		MqttOta mqttOta;
 
 	public:
 		Sink<bool,2> wifiConnected;

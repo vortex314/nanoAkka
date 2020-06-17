@@ -16,8 +16,7 @@
             "defines": [
                 "FREERTOS",
                 "ESP32_IDF",
-                "MOTOR",
-                "STEPPER_SERVO",
+                "STEPPER",
                 "MQTT_HOST=limero.ddns.net",
                 "MQTT_PORT=1883"
             ],

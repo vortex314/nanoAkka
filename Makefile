@@ -36,7 +36,7 @@ COMPASS :
 
 STEPPER :
 	touch main/main.cpp
-	make DEFINE=" -DSTEPPER=1 -DCOMPASS=2 -DHOSTNAME=drive"
+	make DEFINE=" -DSTEPPER=1 -DHOSTNAME=drive"
 	
 STEPPER_SERVO :
 	touch main/main.cpp

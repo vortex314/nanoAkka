@@ -1,63 +1,84 @@
 #include "Stepper.h"
 
-Stepper::Stepper(Thread& thr,Connector& uext) : Actor(thr),
-    _uext(uext),
-    _pinStep(uext.getDigitalOut(LP_TXD)),
-    _pinDir(uext.getDigitalOut(LP_SCL)),
-    _pinEnable(uext.getDigitalOut(LP_SDA)),
-    _stepTimer(thr,1,2,true)
-{
-    angleTarget >> ([&](const int& i ) {
-        stepTarget = (i * 200) / 90;
-    });
+#define MICROSTEP 1
+#define STEPS_PER_DEG (200 * MICROSTEP * 20) / 360
 
-    stepTarget >> ([&](const int& st) {
+Stepper::Stepper(Thread &thr, Connector &uext)
+    : Actor(thr),
+      Device(thr),
+      _uext(uext),
+      _pulser(uext.toPin(LP_TXD)),
+      _pinDir(uext.getDigitalOut(LP_SCL)),
+      _pinEnable(uext.getDigitalOut(LP_SDA)) {
+  _pulser.divider = 80;
+  _pulser.intervalSec = 0.001;
+  _pulser.autoReload = true;
+  angleTarget >> ([&](const int &deg) { stepTarget = deg * STEPS_PER_DEG; });
+
+  _pulser.busy >> ([&](const bool &busy) {
+    INFO(" pulser : %s target : %d vs measured : %d", busy ? "busy" : "free",
+         stepTarget(), stepMeasured());
+    if (!busy) {
+      if (stepTarget() == stepMeasured()) {
+        _pinEnable.write(1);
+      } else {
+        stepTarget.request(); 
+      }
+    }
+  });
+
+  auto stepHandler = new Sink<int,3>();
+  stepHandler->async(thread(),[&](const int &st) {
+    INFO(" target:%d measured:%d dir:%d pulser:%d", stepTarget(),
+         stepMeasured(), _direction, _pulser.busy());
+    if (!_pulser.busy()) {  // previous stepped stopped
+      int delta = st - stepMeasured();
+      stepMeasured = st;
+      if (delta > 0) {
+        _direction = 1;
+        _pinDir.write(1);
+        _pulser.ticks = delta;
         _pinEnable.write(0);
-        if ( _stepCounter==0 ) { // previous stepped stopped
-            int delta = st-stepMeasured();
-            if ( delta < 0 ) {
-                _direction = -1;
-                _pinDir.write(1);
-                _stepCounter=-delta;
-            } else {
-                _direction = 1;
-                _pinDir.write(0);
-                _stepCounter=delta;
-            }
-            INFO(" target:%d measured:%d ctr:%d dir:%d",stepTarget(),stepMeasured(),_stepCounter,_direction);
-            _stepTimer.start();
-        }
-    });
-    _stepTimer >> ([&](const TimerMsg& tm ) {
-        if ( _stepCounter<=0) {
-            _stepCounter=0;
-            return;
-        }
-//        INFO("%d:%d",_stepCounter,_stepUp);
-        _pinStep.write(_stepUp);
-        _stepUp = _stepUp ? 0 : 1;
-        if (_stepUp) {
-            _stepCounter--;
-            stepMeasured = stepMeasured() + _direction;
-        }
-    });
-    angleTarget.pass(true);
-    stepTarget.pass(true);
+        _pulser.start();
+      } else {
+        _direction = -1;
+        _pinDir.write(0);
+        _pulser.ticks = -delta;
+        _pinEnable.write(0);
+        _pulser.start();
+      }
+      INFO(" target:%d measured:%d dir:%d", stepTarget(), stepMeasured(),
+           _direction);
+    }
+  });
+
+  stepTarget >> stepHandler;
+  angleTarget.pass(true);
+  stepTarget.pass(true);
 }
 
-Stepper::~Stepper()
-{
+void Stepper::holdAngle() {
+  _pulser.stop();
+  _pulser.ticks = 0;
+  _pinEnable.write(0);  // enable current
 }
 
-void Stepper::init()
-{
-    _pinStep.setMode(DigitalOut::DOUT_PULL_UP);
-    _pinDir.setMode(DigitalOut::DOUT_PULL_UP);
-    _pinEnable.setMode(DigitalOut::DOUT_PULL_UP);
-    _pinStep.init();
-    _pinStep.write(1);
-    _pinDir.init();
-    _pinDir.write(1);
-    _pinEnable.init();
-    _pinEnable.write(1);
+void Stepper::stopStepper() {
+  _pulser.stop();
+  _pulser.intervalSec = 0.001;
+  _pulser.ticks = 0;
+  _pinEnable.write(1);  // disable: stop current through stepper motor
+}
+
+Stepper::~Stepper() {}
+
+void Stepper::init() {
+  INFO("init()..");
+  _pulser.init();
+  _pinEnable.setMode(DigitalOut::DOUT_PULL_UP);
+  _pinDir.init();
+  _pinDir.write(1);
+  _pinEnable.init();
+  _pinEnable.write(1);
+  INFO("init() done.");
 }

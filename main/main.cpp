@@ -14,28 +14,33 @@
 
 //______________________________________________________________________
 //
-class Pinger : public Actor {
+class Pinger : public Actor
+{
   int _counter = 0;
 
- public:
+public:
   ValueSource<int> out;
   Sink<int, 4> in;
-  Pinger(Thread& thr) : Actor(thr) {
-    in.async(thread(), [&](const int& i) { out = _counter++; });
+  Pinger(Thread &thr) : Actor(thr)
+  {
+    in.async(thread(), [&](const int &i) { out = _counter++; });
   }
   void start() { out = _counter++; }
 };
 #define DELTA 50000
-class Echo : public Actor {
+class Echo : public Actor
+{
   uint64_t _startTime;
 
- public:
+public:
   ValueSource<int> msgPerMsec = 0;
   ValueSource<int> out;
   Sink<int, 4> in;
-  Echo(Thread& thr) : Actor(thr) {
-    in.async(thread(), [&](const int& i) {
-      if (i % DELTA == 0) {
+  Echo(Thread &thr) : Actor(thr)
+  {
+    in.async(thread(), [&](const int &i) {
+      if (i % DELTA == 0)
+      {
         uint64_t endTime = Sys::millis();
         uint32_t delta = endTime - _startTime;
         msgPerMsec = DELTA / delta;
@@ -49,41 +54,46 @@ class Echo : public Actor {
 };
 
 template <class T>
-class BiFlow : public Flow<T, T> {
+class BiFlow : public Flow<T, T>
+{
   T _t[2];
   int _idx = 0;
 
- public:
+public:
   BiFlow() {}
   BiFlow(T t) { _t[0] = std::move(t); }
   void request() { this->emit(_t[_idx & 1]); }
 
-  void on(const T& in) {
+  void on(const T &in)
+  {
     _t[(_idx + 1) & 1] = std::move(in);
     _idx++;
   }
 };
 
 template <class T>
-class RequestFlow : public Flow<T, T> {
-  Source<T>& _source;
+class RequestFlow : public Flow<T, T>
+{
+  Source<T> &_source;
 
- public:
-  RequestFlow(Source<T>& source) : _source(source) {}
+public:
+  RequestFlow(Source<T> &source) : _source(source) {}
   void request() { _source.request(); }
-  void on(const T& t) { this->emit(t); }
+  void on(const T &t) { this->emit(t); }
 };
 //____________________________________________________________________________________
 //
-class Poller : public Actor {
+class Poller : public Actor
+{
   TimerSource _pollInterval;
-  std::vector<Requestable*> _requestables;
+  std::vector<Requestable *> _requestables;
   uint32_t _idx = 0;
 
- public:
+public:
   ValueFlow<bool> connected;
   ValueFlow<uint32_t> interval = 500;
-  Poller(Thread& t) : Actor(t), _pollInterval(t, 1, 500, true) {
+  Poller(Thread &t) : Actor(t), _pollInterval(t, 1, 500, true)
+  {
     _pollInterval >> [&](const TimerMsg tm) {
       if (_requestables.size() && connected())
         _requestables[_idx++ % _requestables.size()]->request();
@@ -100,21 +110,24 @@ class Poller : public Actor {
     }*/
 
   template <class T>
-  Source<T>& poll(Source<T>& source) {
-    RequestFlow<T>* rf = new RequestFlow<T>(source);
+  Source<T> &poll(Source<T> &source)
+  {
+    RequestFlow<T> *rf = new RequestFlow<T>(source);
     source >> rf;
     _requestables.push_back(rf);
     return *rf;
   }
 
   template <class T>
-  Flow<T, T>& cache() {
-    BiFlow<T>* vf = new BiFlow<T>();
+  Flow<T, T> &cache()
+  {
+    BiFlow<T> *vf = new BiFlow<T>();
     _requestables.push_back(vf);
     return *vf;
   }
 
-  Poller& operator()(Requestable& rq) {
+  Poller &operator()(Requestable &rq)
+  {
     _requestables.push_back(&rq);
     return *this;
   }
@@ -180,7 +193,7 @@ Connector uextServo(SERVO);
 ValueSource<std::string> systemBuild("NOT SET");
 ValueSource<std::string> systemHostname("NOT SET");
 ValueSource<bool> systemAlive = true;
-LambdaSource<uint32_t> systemHeap([]() { return xPortGetFreeHeapSize(); });
+LambdaSource<uint32_t> systemHeap([]() { return Sys::getFreeHeap(); });
 LambdaSource<uint64_t> systemUptime([]() { return Sys::millis(); });
 Poller poller(mqttThread);
 
@@ -214,7 +227,8 @@ Connector uextCompass(COMPASS);
 Compass compass(workerThread, uextCompass);
 #endif
 
-extern "C" void app_main(void) {
+extern "C" void app_main(void)
+{
   //    ESP_ERROR_CHECK(nvs_flash_erase());
 
 #ifdef HOSTNAME
@@ -235,15 +249,20 @@ extern "C" void app_main(void) {
   ;
   systemBuild = __DATE__ " " __TIME__;
   INFO("%s : %s ", Sys::hostname(), systemBuild().c_str());
-  for (int cnt = 0; cnt < 5; cnt++) {
+  for (int cnt = 0; cnt < 5; cnt++)
+  {
     uint32_t max = 100000;
     int x;
     uint64_t start = Sys::millis();
-    for (int i = 0; i < max; i++) {
+    for (int i = 0; i < max; i++)
+    {
       x = i;
-      if (q.push(x)) ERROR("write failed");
-      if (q.pop(x)) ERROR("read failed");
-      if (x != i) ERROR(" x!=i ");
+      if (q.push(x))
+        ERROR("write failed");
+      if (q.pop(x))
+        ERROR("read failed");
+      if (x != i)
+        ERROR(" x!=i ");
     }
     uint64_t end = Sys::millis();
     uint32_t delta = end - start;
@@ -279,7 +298,7 @@ extern "C" void app_main(void) {
   mqtt.fromTopic<int>("os/int") >> intSink;
 
   TimerSource logTimer(thisThread, 1, 20000, true);
-  logTimer >> ([](const TimerMsg& tm) {
+  logTimer >> ([](const TimerMsg &tm) {
     INFO(
         " ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  Cas : %u / %u "
         ", retries : %u",
@@ -296,20 +315,23 @@ extern "C" void app_main(void) {
   hw.captureTest();
 
   TimerSource pulser(thisThread, 1, 10, true);
-  pulser >> ([](const TimerMsg& tm) {
+  pulser >> ([](const TimerMsg &tm) {
     static int i = 0;
     int pwm = i % 200;
-    if (pwm > 100) pwm = 200 - i;
+    if (pwm > 100)
+      pwm = 200 - i;
     hw.pwm(50);
-    if (i++ == 200) i = 0;
+    if (i++ == 200)
+      i = 0;
   });
 
   TimerSource regTimer(thisThread, 1, 1000, true);
   LambdaFlow<TimerMsg, MqttMessage> regFlow;
-  regFlow.lambda([](MqttMessage& mq, const TimerMsg& tm) {
+  regFlow.lambda([](MqttMessage &mq, const TimerMsg &tm) {
     static int cnt = 0;
     cnt++;
-    if (hw.regs[cnt].name == 0) cnt = 0;
+    if (hw.regs[cnt].name == 0)
+      cnt = 0;
     mq.topic = hw.regs[cnt].name;
     Register reg(mq.topic.c_str(), hw.regs[cnt].format);
     reg.value(*hw.regs[cnt].address);
@@ -320,7 +342,7 @@ extern "C" void app_main(void) {
   regFlow >> mqtt.outgoing;
 
   Sink<uint32_t, 20> sinker;
-  sinker.async(thisThread, [](const uint32_t& cpt) {
+  sinker.async(thisThread, [](const uint32_t &cpt) {
     INFO("count : %u , freq : %f Hz", cpt,
          (160000000.0 / cpt) * (hw.captureNumberOfPulse + 1));
   });
@@ -350,26 +372,26 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef GPS
-  gps.init();  // no thread , driven from interrupt
+  gps.init(); // no thread , driven from interrupt
   gps >> mqtt.outgoing;
 #endif
 
 #ifdef REMOTE
   remote.init();
-  mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;    // timer driven
-  mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;  // timer driven
+  mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;   // timer driven
+  mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight; // timer driven
   remote.buttonLeft >>
-      mqtt.toTopic<bool>("remote/buttonLeft");  // change and timer driven
+      mqtt.toTopic<bool>("remote/buttonLeft"); // change and timer driven
   remote.buttonRight >> mqtt.toTopic<bool>("remote/buttonRight");
   remote.potLeft >> mqtt.toTopic<int>("remote/potLeft");
   remote.potRight >> mqtt.toTopic<int>("remote/potRight");
 #endif
 
 #ifdef MOTOR
-  RotaryEncoder& rotaryEncoder = *new RotaryEncoder(
+  RotaryEncoder &rotaryEncoder = *new RotaryEncoder(
       thisThread, uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
-  Motor& motor = *new Motor(
-      thisThread, &uextMotor);  // cannot init as global var because of NVS
+  Motor &motor = *new Motor(
+      thisThread, &uextMotor); // cannot init as global var because of NVS
   INFO(" init motor ");
   motor.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("motor/watchdogReset") >> motor.watchdogReset;
@@ -397,7 +419,7 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef SERVO
-  Servo& servo = *new Servo(thisThread, &uextServo);
+  Servo &servo = *new Servo(thisThread, &uextServo);
   servo.watchdogTimer.interval(3000);
   servo.init();
   mqtt.fromTopic<bool>("servo/watchdogReset") >> servo.watchdogReset;
@@ -416,10 +438,11 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef STEPPER
-  servo.watchdogTimer.interval(3000);
-  mqtt.fromTopic<int>("stepper/angleTarget") >> stepper.angleTarget;
+  stepper.init();
+ // stepper.watchdogTimer.interval(3000);
+  mqtt.topic<int>("stepper/angleTarget") == stepper.angleTarget;
   stepper.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
-  stepper.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
+  stepper.stepTarget >> poller.cache<int>() >> mqtt.toTopic<int>("stepper/stepTarget");
   poller(stepper.stepMeasured);
 #endif
 
@@ -427,9 +450,11 @@ extern "C" void app_main(void) {
   stepperServo.init();
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
-  motor.rpmMeasured2 >> ([](const int& rpm){ // only correct steering when really driving
-    if ( abs(rpm) > 20 ) stepperServo.isDriving.on(true);
-    else stepperServo.isDriving.on(false);
+  motor.rpmMeasured2 >> ([](const int &rpm) { // only correct steering when really driving
+    if (abs(rpm) > 20)
+      stepperServo.isDriving.on(true);
+    else
+      stepperServo.isDriving.on(false);
   });
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
   /*  poller.poll(stepperServo.stepMeasured) >>
@@ -447,7 +472,7 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef DWM1000_TAG
-  DWM1000_Tag& tag =
+  DWM1000_Tag &tag =
       *(new DWM1000_Tag(workerThread, new Connector(DWM1000_TAG)));
   tag.preStart();
   tag.mqttMsg >> mqtt.outgoing;
@@ -476,5 +501,5 @@ extern "C" void app_main(void) {
   ledThread.start();
   mqttThread.start();
   workerThread.start();
-  thisThread.run();  // DON'T EXIT , local variable will be destroyed
+  thisThread.run(); // DON'T EXIT , local variable will be destroyed
 }

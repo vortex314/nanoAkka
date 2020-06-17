@@ -56,7 +56,7 @@ void Pulser::config(uint32_t div, bool reload, double interval) {
 }
 
 void Pulser::start() {
-  if (!busy) {
+  if (!busy()) {
     INFO("start %u", ticks());
     CHECK(timer_start(_timerGroup, _timerIdx));
     busy = true;
@@ -65,19 +65,19 @@ void Pulser::start() {
 
 void Pulser::wiring() {
   intervalSec >> [&](const double& interval) {
-    if (!busy && intervalSec() != interval) {
+    if (!busy() && intervalSec() != interval) {
       config(divider(), autoReload(), interval);
       INFO(" interval %.4f sec", intervalSec);
     }
   };
   autoReload >> [&](const bool& reload) {
-    if (!busy && autoReload() != reload) {
+    if (!busy() && autoReload() != reload) {
       config(divider(), reload, intervalSec());
       INFO(" reload : %s ", reload ? "true" : "false");
     }
   };
   divider >> [&](const uint32_t& div) {
-    if (!busy && div != divider()) {
+    if (!busy() && div != divider()) {
       config(div, autoReload(), intervalSec());
       INFO(" divider : %u ", div);
     }
@@ -91,6 +91,7 @@ void Pulser::wiring() {
   divider.pass(true);
   autoReload.pass(true);
   intervalSec.pass(true);
+  busy.pass(true);
 }
 
 /*

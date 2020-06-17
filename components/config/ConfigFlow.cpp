@@ -1,7 +1,7 @@
 #include "ConfigFlow.h"
 
 
-#ifdef ESP32_IDF
+#if defined(ESP32_IDF) || defined(ESP8266_IDF) 
 #include "esp_system.h"
 #include "nvs.h"
 #include "nvs_flash.h"

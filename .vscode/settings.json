@@ -47,5 +47,7 @@
         "streambuf": "cpp",
         "algorithm": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Enabled"
+    "C_Cpp.errorSquiggles": "Enabled",
+    "editor.formatOnSave": true,
+    "C_Cpp.clang_format_fallbackStyle": "Google"
 }

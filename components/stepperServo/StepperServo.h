@@ -7,22 +7,23 @@
 #include <NanoAkka.h>
 #include <Pulser.h>
 
-class StepperServo : public Actor, public Device {
-  Connector& _uext;
+class StepperServo : public Actor, public Device
+{
+  Connector &_uext;
   Pulser _pulser;
-  DigitalOut& _pinDir;
-  DigitalOut& _pinEnable;
-  ADC& _adcPot;
+  DigitalOut &_pinDir;
+  DigitalOut &_pinEnable;
+  ADC &_adcPot;
   int _stepUp = 0;
   int _direction = 0;
-  TimerSource _measureTimer;  // ADC multi sample and median
-  TimerSource _controlTimer;  // PID loop interval
-  TimerSource _reportTimer;   // report to MQTT
+  TimerSource _measureTimer; // ADC multi sample and median
+  TimerSource _controlTimer; // PID loop interval
+  TimerSource _reportTimer;  // report to MQTT
   MedianFilter<int, 10> _potFilter;
   float _error = 0;
   float _errorPrior = 0;
 
- public:
+public:
   ConfigFlow<int> stepsPerRotation;
   ValueFlow<int> adcPot = 0;
   ValueFlow<int> angleTarget = 0;
@@ -35,8 +36,8 @@ class StepperServo : public Actor, public Device {
   ValueFlow<float> KI = 0.0;
   ValueFlow<float> KD = 0.0;
   ValueFlow<float> output = 0.0;
-  ValueFlow<bool> isDriving=false;
-  StepperServo(Thread& thr, Connector& uext);
+  ValueFlow<bool> isDriving = false;
+  StepperServo(Thread &thr, Connector &uext);
   ~StepperServo();
   void init();
   bool measureAngle();
@@ -47,4 +48,4 @@ class StepperServo : public Actor, public Device {
   void stopStepper();
 };
 
-#endif  // STEPPER_H
+#endif // STEPPER_H

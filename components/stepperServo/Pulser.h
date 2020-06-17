@@ -28,7 +28,7 @@ class Pulser {
   ValueFlow<double> intervalSec;
   ValueFlow<uint32_t> divider = 8000;
   ValueFlow<uint32_t> ticks = 0;
-  bool busy = false;
+  ValueFlow<bool> busy = false;
   void tick();
   void init();
   void start();
