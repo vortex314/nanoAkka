@@ -61,23 +61,25 @@ class DigitalIn_ESP32 : public DigitalIn {
     INFO(" interrupType : %d ", interruptType);
     io_conf.intr_type = interruptType;
     io_conf.pin_bit_mask = ((uint64_t)1ULL << _gpio);  // bit mask of the pins
-    io_conf.mode = GPIO_MODE_INPUT;                 // set as input mode
+    io_conf.mode = GPIO_MODE_INPUT;                    // set as input mode
     io_conf.pull_up_en =
         (gpio_pullup_t)(_mode == DIN_PULL_UP ? 1 : 0);  // enable pull-up mode
     io_conf.pull_down_en = (gpio_pulldown_t)(_mode == DIN_PULL_DOWN ? 1 : 0);
 
     //#define ESP_INTR_FLAG_DEFAULT 0
     if (_fp) {
-      INFO(" install handler for GPIO : %d ", _gpio);
       // install gpio isr service
       if (!_isrServiceInstalled) {
         erc = gpio_install_isr_service(ESP_INTR_FLAG_LOWMED);
-        if (erc) ERROR("gpio_install_isr_service() :%d", erc);
-        _isrServiceInstalled = true;
+        INFO(" gpio_install_isr_service() ", erc);
+        if (erc) ERROR("gpio_install_isr_service() = %d", erc);
+        _isrServiceInstalled = erc == 0;
       }
       // hook isr handler for specific gpio pin
       erc = gpio_isr_handler_add((gpio_num_t)_gpio, _fp, (void*)_object);
-      if (erc) ERROR("gpio_isr_handler_add() :%d", erc);
+      INFO(" gpio_isr_handler_add(%d,0x%X,0x%X) = %d ", _gpio, _fp, _object,
+           erc);
+      if (erc) ERROR("failed gpio_isr_handler_add() :%d", erc);
     }
     return gpio_config(&io_conf);
   }

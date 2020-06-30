@@ -101,15 +101,17 @@ void IRAM_ATTR Stepper::isrRight(void *ptr) {
 
 void Stepper::init() {
   INFO("init()..");
-  // _pulser.init();
-  _pinEnable.setMode(DigitalOut::DOUT_PULL_UP);
+  _pulser.init();
+
   _pinDir.init();
   _pinDir.write(1);
+
+  _pinEnable.setMode(DigitalOut::DOUT_PULL_UP);
   _pinEnable.init();
   _pinEnable.write(1);
 
   _pinCenter.setMode(DigitalIn::DIN_PULL_UP);
-  //  _pinCenter.onChange(DigitalIn::DIN_FALL, isrCenter, this);
+  _pinCenter.onChange(DigitalIn::DIN_FALL, isrCenter, this);
   _pinCenter.init();
 
   _pinLeft.setMode(DigitalIn::DIN_PULL_UP);
@@ -117,7 +119,7 @@ void Stepper::init() {
   _pinLeft.init();
 
   _pinRight.setMode(DigitalIn::DIN_PULL_UP);
-  //  _pinRight.onChange(DigitalIn::DIN_FALL, isrRight, this);
+  _pinRight.onChange(DigitalIn::DIN_FALL, isrRight, this);
   _pinRight.init();
 
   INFO("init() done.");

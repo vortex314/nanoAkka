@@ -227,7 +227,7 @@ Connector uextCompass(COMPASS);
 Compass compass(workerThread, uextCompass);
 #endif
 
-extern "C" void app_main(void)
+extern "C" void app_main_old(void)
 {
   //    ESP_ERROR_CHECK(nvs_flash_erase());
 
