@@ -14,33 +14,28 @@
 
 //______________________________________________________________________
 //
-class Pinger : public Actor
-{
+class Pinger : public Actor {
   int _counter = 0;
 
 public:
   ValueSource<int> out;
   Sink<int, 4> in;
-  Pinger(Thread &thr) : Actor(thr)
-  {
+  Pinger(Thread &thr) : Actor(thr) {
     in.async(thread(), [&](const int &i) { out = _counter++; });
   }
   void start() { out = _counter++; }
 };
 #define DELTA 50000
-class Echo : public Actor
-{
+class Echo : public Actor {
   uint64_t _startTime;
 
 public:
   ValueSource<int> msgPerMsec = 0;
   ValueSource<int> out;
   Sink<int, 4> in;
-  Echo(Thread &thr) : Actor(thr)
-  {
+  Echo(Thread &thr) : Actor(thr) {
     in.async(thread(), [&](const int &i) {
-      if (i % DELTA == 0)
-      {
+      if (i % DELTA == 0) {
         uint64_t endTime = Sys::millis();
         uint32_t delta = endTime - _startTime;
         msgPerMsec = DELTA / delta;
@@ -53,9 +48,7 @@ public:
   }
 };
 
-template <class T>
-class BiFlow : public Flow<T, T>
-{
+template <class T> class BiFlow : public Flow<T, T> {
   T _t[2];
   int _idx = 0;
 
@@ -64,16 +57,13 @@ public:
   BiFlow(T t) { _t[0] = std::move(t); }
   void request() { this->emit(_t[_idx & 1]); }
 
-  void on(const T &in)
-  {
+  void on(const T &in) {
     _t[(_idx + 1) & 1] = std::move(in);
     _idx++;
   }
 };
 
-template <class T>
-class RequestFlow : public Flow<T, T>
-{
+template <class T> class RequestFlow : public Flow<T, T> {
   Source<T> &_source;
 
 public:
@@ -83,8 +73,7 @@ public:
 };
 //____________________________________________________________________________________
 //
-class Poller : public Actor
-{
+class Poller : public Actor {
   TimerSource _pollInterval;
   std::vector<Requestable *> _requestables;
   uint32_t _idx = 0;
@@ -92,8 +81,7 @@ class Poller : public Actor
 public:
   ValueFlow<bool> connected;
   ValueFlow<uint32_t> interval = 500;
-  Poller(Thread &t) : Actor(t), _pollInterval(t, 1, 500, true)
-  {
+  Poller(Thread &t) : Actor(t), _pollInterval(t, 1, 500, true) {
     _pollInterval >> [&](const TimerMsg tm) {
       if (_requestables.size() && connected())
         _requestables[_idx++ % _requestables.size()]->request();
@@ -109,25 +97,20 @@ public:
 
     }*/
 
-  template <class T>
-  Source<T> &poll(Source<T> &source)
-  {
+  template <class T> Source<T> &poll(Source<T> &source) {
     RequestFlow<T> *rf = new RequestFlow<T>(source);
     source >> rf;
     _requestables.push_back(rf);
     return *rf;
   }
 
-  template <class T>
-  Flow<T, T> &cache()
-  {
+  template <class T> Flow<T, T> &cache() {
     BiFlow<T> *vf = new BiFlow<T>();
     _requestables.push_back(vf);
     return *vf;
   }
 
-  Poller &operator()(Requestable &rq)
-  {
+  Poller &operator()(Requestable &rq) {
     _requestables.push_back(&rq);
     return *this;
   }
@@ -227,8 +210,13 @@ Connector uextCompass(COMPASS);
 Compass compass(workerThread, uextCompass);
 #endif
 
-extern "C" void app_main_old(void)
-{
+#ifdef COMMAND
+#include <Cli.h>
+UART &uart0 = UART::create(0, 1, 3);
+Cli cli(uart0);
+#endif
+
+extern "C" void app_main(void) {
   //    ESP_ERROR_CHECK(nvs_flash_erase());
 
 #ifdef HOSTNAME
@@ -246,16 +234,13 @@ extern "C" void app_main_old(void)
   Sys::hostname(hn.c_str());
 #endif
   systemHostname = Sys::hostname();
-  ;
   systemBuild = __DATE__ " " __TIME__;
   INFO("%s : %s ", Sys::hostname(), systemBuild().c_str());
-  for (int cnt = 0; cnt < 5; cnt++)
-  {
+  for (int cnt = 0; cnt < 5; cnt++) {
     uint32_t max = 100000;
     int x;
     uint64_t start = Sys::millis();
-    for (int i = 0; i < max; i++)
-    {
+    for (int i = 0; i < max; i++) {
       x = i;
       if (q.push(x))
         ERROR("write failed");
@@ -306,6 +291,9 @@ extern "C" void app_main_old(void)
         stats.threadQueueOverflow, stats.bufferPushCasFailed,
         stats.bufferPopCasFailed, stats.bufferCasRetries);
   });
+
+  INFO(">>>>>>>>>>>>>> CLI");
+  cli.init();
 
 #ifdef GPIO_TEST
   hw.gpioTest();
@@ -439,10 +427,11 @@ extern "C" void app_main_old(void)
 
 #ifdef STEPPER
   stepper.init();
- // stepper.watchdogTimer.interval(3000);
+  // stepper.watchdogTimer.interval(3000);
   mqtt.topic<int>("stepper/angleTarget") == stepper.angleTarget;
   stepper.stepMeasured >> mqtt.toTopic<int>("stepper/stepMeasured");
-  stepper.stepTarget >> poller.cache<int>() >> mqtt.toTopic<int>("stepper/stepTarget");
+  stepper.stepTarget >> poller.cache<int>() >>
+      mqtt.toTopic<int>("stepper/stepTarget");
   poller(stepper.stepMeasured);
 #endif
 
@@ -450,18 +439,21 @@ extern "C" void app_main_old(void)
   stepperServo.init();
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
-  motor.rpmMeasured2 >> ([](const int &rpm) { // only correct steering when really driving
-    if (abs(rpm) > 20)
-      stepperServo.isDriving.on(true);
-    else
-      stepperServo.isDriving.on(false);
-  });
+  motor.rpmMeasured2 >>
+      ([](const int &rpm) { // only correct steering when really driving
+        if (abs(rpm) > 20)
+          stepperServo.isDriving.on(true);
+        else
+          stepperServo.isDriving.on(false);
+      });
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
   poller.poll(stepperServo.stepMeasured) >>
       mqtt.toTopic<int>("stepper/stepMeasured");
   stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-  stepperServo.adcPot >> poller.cache<int>() >> mqtt.toTopic<int>("stepper/adcPot");
-  stepperServo.angleMeasured >> poller.cache<int>() >>mqtt.toTopic<int>("stepper/angleMeasured");
+  stepperServo.adcPot >> poller.cache<int>() >>
+      mqtt.toTopic<int>("stepper/adcPot");
+  stepperServo.angleMeasured >> poller.cache<int>() >>
+      mqtt.toTopic<int>("stepper/angleMeasured");
   //  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
   stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");

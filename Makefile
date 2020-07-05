@@ -30,6 +30,10 @@ EXTRA_COMPONENT_DIRS = mqtt esp-mqtt
 
 include $(IDF_PATH)/make/project.mk
 
+COMMAND :
+	touch main/main.cpp
+	make DEFINE=" -DCOMMAND=1 -DHOSTNAME=cli"
+
 COMPASS :
 	touch main/main.cpp
 	make DEFINE=" -DCOMPASS=2 -DHOSTNAME=compass"
