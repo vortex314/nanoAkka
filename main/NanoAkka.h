@@ -205,6 +205,7 @@ class ArrayQueue : public AbstractQueue<T> {
 
  public:
   ArrayQueue() { _readPtr = _writePtr = 0; }
+
   int push(const T &t) {
     int cnt = 0;
     int expected = 0;
@@ -227,7 +228,8 @@ class ArrayQueue : public AbstractQueue<T> {
                                             std::memory_order_seq_cst)) {
         expected = desired;
         desired &= ~BUSY;
-        _array[desired] = std::move(t);
+        _array[desired]=t;
+//        _array[desired] = std::move(t);
         while (_writePtr.compare_exchange_strong(
                    expected, desired, std::memory_order_seq_cst,
                    std::memory_order_seq_cst) == false) {
@@ -275,7 +277,8 @@ class ArrayQueue : public AbstractQueue<T> {
                                            std::memory_order_seq_cst)) {
         expected = desired;
         desired &= ~BUSY;
-        t = std::move(_array[desired]);
+ //       t = std::move(_array[desired]);
+        t= _array[desired];
         while (_readPtr.compare_exchange_strong(
                    expected, desired, std::memory_order_seq_cst,
                    std::memory_order_seq_cst) == false) {
@@ -442,6 +445,7 @@ class TimerSource : public Source<TimerMsg> {
   void attach(Thread &thr) { thr.addTimer(this); }
   void reset() { start(); }
   void start() { _expireTime = Sys::millis() + _interval; }
+  void start(uint32_t interval) { _interval=interval; start();}
   void stop() { _expireTime = UINT64_MAX; }
   void interval(uint32_t i) { _interval = i; }
   void request() {

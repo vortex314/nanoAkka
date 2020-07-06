@@ -19,7 +19,7 @@
                 "panel": "shared"
             },
             "args": [
-                "COMMAND"
+                "STM32"
             ],
             "problemMatcher": {
                 "owner": "cpp",

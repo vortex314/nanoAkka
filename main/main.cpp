@@ -17,7 +17,7 @@
 class Pinger : public Actor {
   int _counter = 0;
 
-public:
+ public:
   ValueSource<int> out;
   Sink<int, 4> in;
   Pinger(Thread &thr) : Actor(thr) {
@@ -29,7 +29,7 @@ public:
 class Echo : public Actor {
   uint64_t _startTime;
 
-public:
+ public:
   ValueSource<int> msgPerMsec = 0;
   ValueSource<int> out;
   Sink<int, 4> in;
@@ -48,11 +48,12 @@ public:
   }
 };
 
-template <class T> class BiFlow : public Flow<T, T> {
+template <class T>
+class BiFlow : public Flow<T, T> {
   T _t[2];
   int _idx = 0;
 
-public:
+ public:
   BiFlow() {}
   BiFlow(T t) { _t[0] = std::move(t); }
   void request() { this->emit(_t[_idx & 1]); }
@@ -63,10 +64,11 @@ public:
   }
 };
 
-template <class T> class RequestFlow : public Flow<T, T> {
+template <class T>
+class RequestFlow : public Flow<T, T> {
   Source<T> &_source;
 
-public:
+ public:
   RequestFlow(Source<T> &source) : _source(source) {}
   void request() { _source.request(); }
   void on(const T &t) { this->emit(t); }
@@ -78,7 +80,7 @@ class Poller : public Actor {
   std::vector<Requestable *> _requestables;
   uint32_t _idx = 0;
 
-public:
+ public:
   ValueFlow<bool> connected;
   ValueFlow<uint32_t> interval = 500;
   Poller(Thread &t) : Actor(t), _pollInterval(t, 1, 500, true) {
@@ -97,14 +99,16 @@ public:
 
     }*/
 
-  template <class T> Source<T> &poll(Source<T> &source) {
+  template <class T>
+  Source<T> &poll(Source<T> &source) {
     RequestFlow<T> *rf = new RequestFlow<T>(source);
     source >> rf;
     _requestables.push_back(rf);
     return *rf;
   }
 
-  template <class T> Flow<T, T> &cache() {
+  template <class T>
+  Flow<T, T> &cache() {
     BiFlow<T> *vf = new BiFlow<T>();
     _requestables.push_back(vf);
     return *vf;
@@ -216,6 +220,12 @@ UART &uart0 = UART::create(0, 1, 3);
 Cli cli(uart0);
 #endif
 
+#ifdef STM32
+#include <Stm32.h>
+Thread stm32Thread("stm32");
+Stm32 stm32(stm32Thread, 17, 16, 5, 18);  // TODO correct pins
+#endif
+
 extern "C" void app_main(void) {
   //    ESP_ERROR_CHECK(nvs_flash_erase());
 
@@ -242,12 +252,9 @@ extern "C" void app_main(void) {
     uint64_t start = Sys::millis();
     for (int i = 0; i < max; i++) {
       x = i;
-      if (q.push(x))
-        ERROR("write failed");
-      if (q.pop(x))
-        ERROR("read failed");
-      if (x != i)
-        ERROR(" x!=i ");
+      if (q.push(x)) ERROR("write failed");
+      if (q.pop(x)) ERROR("read failed");
+      if (x != i) ERROR(" x!=i ");
     }
     uint64_t end = Sys::millis();
     uint32_t delta = end - start;
@@ -292,8 +299,15 @@ extern "C" void app_main(void) {
         stats.bufferPopCasFailed, stats.bufferCasRetries);
   });
 
-  INFO(">>>>>>>>>>>>>> CLI");
+#ifdef COMMAND
   cli.init();
+#endif
+
+#ifdef STM32
+  stm32.init();
+  stm32.wiring();
+  stm32.message >> mqtt.toTopic<std::string>("stm32/log");
+#endif
 
 #ifdef GPIO_TEST
   hw.gpioTest();
@@ -306,11 +320,9 @@ extern "C" void app_main(void) {
   pulser >> ([](const TimerMsg &tm) {
     static int i = 0;
     int pwm = i % 200;
-    if (pwm > 100)
-      pwm = 200 - i;
+    if (pwm > 100) pwm = 200 - i;
     hw.pwm(50);
-    if (i++ == 200)
-      i = 0;
+    if (i++ == 200) i = 0;
   });
 
   TimerSource regTimer(thisThread, 1, 1000, true);
@@ -318,8 +330,7 @@ extern "C" void app_main(void) {
   regFlow.lambda([](MqttMessage &mq, const TimerMsg &tm) {
     static int cnt = 0;
     cnt++;
-    if (hw.regs[cnt].name == 0)
-      cnt = 0;
+    if (hw.regs[cnt].name == 0) cnt = 0;
     mq.topic = hw.regs[cnt].name;
     Register reg(mq.topic.c_str(), hw.regs[cnt].format);
     reg.value(*hw.regs[cnt].address);
@@ -360,16 +371,16 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef GPS
-  gps.init(); // no thread , driven from interrupt
+  gps.init();  // no thread , driven from interrupt
   gps >> mqtt.outgoing;
 #endif
 
 #ifdef REMOTE
   remote.init();
-  mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;   // timer driven
-  mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight; // timer driven
+  mqtt.fromTopic<bool>("remote/ledLeft") >> remote.ledLeft;    // timer driven
+  mqtt.fromTopic<bool>("remote/ledRight") >> remote.ledRight;  // timer driven
   remote.buttonLeft >>
-      mqtt.toTopic<bool>("remote/buttonLeft"); // change and timer driven
+      mqtt.toTopic<bool>("remote/buttonLeft");  // change and timer driven
   remote.buttonRight >> mqtt.toTopic<bool>("remote/buttonRight");
   remote.potLeft >> mqtt.toTopic<int>("remote/potLeft");
   remote.potRight >> mqtt.toTopic<int>("remote/potRight");
@@ -379,7 +390,7 @@ extern "C" void app_main(void) {
   RotaryEncoder &rotaryEncoder = *new RotaryEncoder(
       thisThread, uextMotor.toPin(LP_SCL), uextMotor.toPin(LP_SDA));
   Motor &motor = *new Motor(
-      thisThread, &uextMotor); // cannot init as global var because of NVS
+      thisThread, &uextMotor);  // cannot init as global var because of NVS
   INFO(" init motor ");
   motor.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("motor/watchdogReset") >> motor.watchdogReset;
@@ -440,7 +451,7 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
   motor.rpmMeasured2 >>
-      ([](const int &rpm) { // only correct steering when really driving
+      ([](const int &rpm) {  // only correct steering when really driving
         if (abs(rpm) > 20)
           stepperServo.isDriving.on(true);
         else
@@ -493,5 +504,5 @@ extern "C" void app_main(void) {
   ledThread.start();
   mqttThread.start();
   workerThread.start();
-  thisThread.run(); // DON'T EXIT , local variable will be destroyed
+  thisThread.run();  // DON'T EXIT , local variable will be destroyed
 }

@@ -1,5 +1,5 @@
 COMPONENT_SRCDIRS := . 
-COMPONENT_EXTRA_INCLUDES :=   ../../ArduinoJson/src
+COMPONENT_EXTRA_INCLUDES :=   ../../ArduinoJson/src 
 #CXXFLAGS =  -fno-rtti -std=gnu++11  -mlongcalls -fdata-sections -ffunction-sections
 
 COMPONENT_ADD_INCLUDEDIRS := . ../../Common .

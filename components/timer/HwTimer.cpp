@@ -128,7 +128,7 @@ void IRAM_ATTR HwTimer::isr()
     /* Retrieve the interrupt status and the counter value
        from the timer that reported the interrupt */
     uint32_t timer_intr = timer_group_get_intr_status_in_isr(_timerGroup);
-    uint64_t timer_counter_value = timer_group_get_counter_value_in_isr(_timerGroup, _timerIdx);
+     timer_group_get_counter_value_in_isr(_timerGroup, _timerIdx);
 
     tick();
     /* Clear the interrupt

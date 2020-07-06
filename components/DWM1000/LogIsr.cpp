@@ -24,7 +24,7 @@ void LogIsr::log(const char* file, uint32_t line, const char* fmt, ...)
         snprintf(_me->_strBuffer, sizeof(_me->_strBuffer) - 1, "ISR >> %s:%d ", file, line);
     va_list ap;
     va_start(ap, fmt);
-    int n = vsnprintf(&_me->_strBuffer[offset], sizeof(_me->_strBuffer) - offset
+    vsnprintf(&_me->_strBuffer[offset], sizeof(_me->_strBuffer) - offset
                       - 1, fmt, ap);
     _me->_strBuffer[sizeof(_strBuffer) - 1] = 0;
     va_end(ap);
