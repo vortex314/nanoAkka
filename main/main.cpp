@@ -504,5 +504,6 @@ extern "C" void app_main(void) {
   ledThread.start();
   mqttThread.start();
   workerThread.start();
+  stm32Thread.start();
   thisThread.run();  // DON'T EXIT , local variable will be destroyed
 }
