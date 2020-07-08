@@ -14,14 +14,12 @@ Stm32::Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset)
       _boot0(DigitalOut::create(pinBoot0)),
       _timer(thread(), 1, 1000, false),
       _testTimer(thread(), 1, 1000, true) {
-  _timer.stop();
-  ackReply.write(BL_ACK);
-  nackReply.write(BL_NACK);
-  getCmd.write((uint8_t)BL_GET);
-  getCmd.write(XOR(BL_GET));
+  
 }
 
 void Stm32::init() {
+  _timer.stop();
+
   _uart.setClock(9600);
   _uart.onRxd(onReceive, this);
   _uart.mode("8N1");
@@ -31,7 +29,7 @@ void Stm32::init() {
   _reset.write(1);
   _boot0.setMode(DigitalOut::DOUT_PULL_UP);
   _boot0.init();
-  _boot0.write(1);
+  _boot0.write(0);
 }
 
 void Stm32::reset() {
@@ -52,20 +50,20 @@ void Stm32::wiring() {
     }
   });
   _timer >> [&](const TimerMsg& tm) { dispatch({TO, 0}); };
-  rxd.async(thread(), [&](const Bytes& data) {
-    INFO(">>RXD");
+  rxd.async(thread(), [&](const std::string& data) {
     dispatch({RXD, (void*)&data});
   });
-  dispatch({ANALYZE, 0});
-  _testTimer >> [&](const TimerMsg& tm) { dispatch({ANALYZE, 0}); };
+  dispatch({GET_ID, 0});
+  _testTimer >> [&](const TimerMsg& tm) { dispatch({GET_ID, 0}); };
 }
 
 void Stm32::onReceive(void* ptr) {
   Stm32* me = (Stm32*)ptr;
-  Bytes bytes;
-  INFO("");
+  std::string bytes;
   while (me->_uart.hasData()) {
-    bytes.write(me->_uart.read());
+    uint8_t b=me->_uart.read();
+    INFO("RXD>>0x%X",b);
+    bytes.append(1,b);
     vTaskDelay(1);  // assure all data is captured
   }
   me->rxd.on(bytes);
@@ -79,65 +77,55 @@ void Stm32::startOta(const MqttStream& msg) {
 
 void Stm32::stopOta(const MqttStream& msg) { writeOta(msg); }
 void Stm32::writeOta(const MqttStream& msg) {}
-void Stm32::write(int size, uint8_t* b) {
-  for (int i = 0; i < size; i++) _uart.write(b[i]);
-};
-void Stm32::write(Bytes& b) {
-  b.offset(0);
-  while (b.hasData()) _uart.write(b.read());
+void Stm32::write(std::string& b) {
+  for (int i = 0; i < b.length(); i++) _uart.write(b[i]);
 };
 
-class Analyze : public ProtoThread<Event>,public Stm32 {
-  public :
-  Analyze(Stm32* stm32) : Stm32(stm32){};
-  bool dispatch(const Event& event){
-    PT_BEGIN();
-    message.on("Analyzing...");
-      resetProg();
-      request(10,sync);
-      PT_WAIT_UNTIL(ev.isOneOf(RXD, TO));
-      _timer.stop();
-      if (ev.isRxd(ackReply)) {
-        request(10,getCmd);
-        PT_WAIT_UNTIL(ev.isOneOf(RXD, TO));
-        _timer.stop();
-        if (ev.isRxd(ackReply))
-          message.on("succeeded.");
-        else
-          message.on(" TO : erase Cmd failed.");
-      } else {
-        message.on(" TO : reset failed.");
-      }
-    PT_END();
+int Stm32::stm32GetId(const Event& ev) {
+  INFO("GetId... %d : %d", ev._type, _subState.lc);
+  PT_BEGIN(&_subState);
+  resetProg();
+  request(10, syncRequest);
+  PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+  stopTimer();
+  if (ev.isRxd(ackReply)) {
+    request(10, getRequest);
+    PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+    stopTimer();
+    if (ev.isRxd(ackReply))
+      message.on("RESET succeeded.");
+    else
+      message.on("GET failed : timeout .");
+  } else {
+    message.on("RESET failed : timeout on ACK .");
   }
+  PT_END(&_subState);
 }
 
-bool Stm32::dispatch(const Event& ev) {
-  INFO(" dispatch (%d,%X) isOneOf %d ", ev._type, ev._ptr,
-       ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
-  PT_BEGIN();
+int Stm32::dispatch(const Event& ev) {
+  /*  INFO(" dispatch (%d,%X) isOneOf %d ", ev._type, ev._ptr,
+         ev.isOneOf(GET_ID, WRITE_MEMORY, READ_MEMORY, ERASE_MEMORY));*/
+  PT_BEGIN(&_mainState);
   while (true) {
-    PT_WAIT_UNTIL(ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
-    INFO("");
-    if (ev == ANALYZE) ∏
-      Analyze analyze(this);
-      PT_WAIT_THREAD(analyze);
-    }
+    PT_WAIT_UNTIL(&_mainState, ev.isCommand());
+    if (ev == GET_ID) PT_SPAWN(&_mainState, &_subState, stm32GetId(ev));
   }
-  PT_END();
+  PT_END(&_mainState);
 }
 
-void Stm32::request(int timeout,Bytes& data){
+void Stm32::request(int timeout, std::string& data) {
   write(data);
   _timer.start(timeout);
 }
 
-void Stm32::resetProg(){
+void Stm32::resetProg() {
   _boot0.write(1);
   reset();
 }
 
-void Stm32::resetRun(){
+void Stm32::resetRun() {
   _boot0.write(0);
   reset();
 }
+
+void Stm32::stopTimer() { _timer.stop(); }

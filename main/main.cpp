@@ -223,7 +223,7 @@ Cli cli(uart0);
 #ifdef STM32
 #include <Stm32.h>
 Thread stm32Thread("stm32");
-Stm32 stm32(stm32Thread, 17, 16, 5, 18);  // TODO correct pins
+Stm32 stm32(stm32Thread, 17, 16, 5, 18);  
 #endif
 
 extern "C" void app_main(void) {

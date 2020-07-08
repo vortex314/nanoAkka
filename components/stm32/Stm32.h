@@ -11,7 +11,7 @@
 #include <Bytes.h>
 #include <Hardware.h>
 #include <NanoAkka.h>
-#include <ProtoThread.h>
+#include <pt.h>
 
 class MqttStream {
  public:
@@ -44,25 +44,22 @@ class MqttStream {
 #define BL_READOUT_UNPROTECT 0x92
 #define BL_ACK 0x79
 #define BL_NACK 0x1F
-/*  BL_GET_VERSION = 1,
-  BL_GET_ID = 2,
-  BL_READ_MEMORY = 0x11,
-  BL_GO = 0x21,
-  BL_WRITE_MEMORY = 0x31,
-  BL_ERASE_MEMORY = 0x43,
-  BL_EXTENDED_ERASE_MEMORY = 0x44,
-  BL_WRITE_PROTECT = 0x63,
-  BL_WRITE_UNPROTECT = 0x73,
-  BL_READOUT_PROTECT = 0x82,
-  BL_READOUT_UNPROTECT = 0x92,
-  BL_ACK = 0x79,
-  BL_NACK = 0x1F
-} BL;*/
-#define XOR(xxx) (xxx ^ 0xFF)
+#define BL_SYNC 0x7F
+#define XOR(xxx) (char)(xxx ^ 0xFF)
 
 #define DELAY 100
 
-enum { NOP, RXD, TO, ERASE, WRITE, READ, ANALYZE };
+enum {
+  NOP,
+  RXD,
+  TO,
+  ERASE_MEMORY,
+  WRITE_MEMORY,
+  READ_MEMORY,
+  GET_ID,
+  GET_REQUEST,
+  GET_VERSION
+};
 
 class Event {
  public:
@@ -70,7 +67,7 @@ class Event {
   union {
     void* _ptr;
     MqttStream* _mqttStream;
-    Bytes* _rxdBytes;
+    std::string* _rxdBytes;
   };
 
  public:
@@ -78,17 +75,11 @@ class Event {
     return _type == v1 || _type == v2 || _type == v3 || _type == v4;
   };
   bool is(int v) const { return _type == v; };
-  bool isCommand() const { return _type >= ERASE; };
-  bool isRxd(const char* s) const {
-    return _type == RXD && memcmp(s, _rxdBytes->data(), strlen(s)) == 0;
+  bool isCommand() const { return _type >= ERASE_MEMORY; };
+  bool isRxd(std::string& bytes) const {
+    return _type == RXD && bytes.compare(*_rxdBytes) == 0;
   };
-  bool isRxd(Bytes& bytes) const {
-    return _type == RXD &&
-           memcmp(bytes.data(), _rxdBytes->data(), bytes.length()) == 0;
-  };
-  bool isRxd(int size, uint8_t* b) const {
-    return _type == RXD && memcmp(b, _rxdBytes->data(), size) == 0;
-  };
+
   bool isCommand(int command) const { return _type == command; };
 
   void operator=(int v) { _type = v; }
@@ -99,38 +90,28 @@ class Event {
   bool operator==(int v) const { return _type == v; }
 };
 
-class Stm32;
-
-class Analyze : public ProtoThread<Event>,public Stm32 {
-  public :
-  Analyze(Stm32* stm32):Stm32(stm32){};
-  virtual bool dispatch(const Event& event);
-};
-
-
-class Stm32 : public Actor, public ProtoThread<Event> {
+class Stm32 : public Actor {
   UART& _uart;
   DigitalOut& _reset;
   DigitalOut& _boot0;
   TimerSource _timer;
   TimerSource _testTimer;
-  Bytes _supportedCommands; // to be filled at analyze phase
+  Bytes _supportedCommands;  // to be filled at analyze phase
   uint8_t _bootloaderVersion;
   uint16_t _chipId;
-
-
-  Analyze _analyze(this)
-
+  struct pt _mainState, _subState;
 
  public:
-  Bytes getRequest;
-  Bytes getIdRequest; // 0x02+0xFD
-  Bytes ackReply;
-  Bytes nackReply;
-  Bytes syncRequest; // 0x7F
+  std::string getRequest = {BL_GET, XOR(BL_GET)};
+  std::string getIdRequest = {BL_GET_ID, XOR(BL_GET_ID)};  // 0x02+0xFD
+  std::string ackReply = {BL_ACK};
+  std::string nackReply = {BL_NACK};
+  std::string syncRequest = {BL_SYNC};  // 0x7F
+
+  std::string GetIdRequest = {BL_GET};
 
   Sink<MqttStream, 10> ota;
-  Sink<Bytes, 5> rxd;
+  Sink<std::string, 5> rxd;
   ValueFlow<std::string> message;
   Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset);
   void init();
@@ -145,11 +126,11 @@ class Stm32 : public Actor, public ProtoThread<Event> {
   void startOta(const MqttStream&);
   void stopOta(const MqttStream&);
   void writeOta(const MqttStream&);
-  bool dispatch(const Event& ev);
-  void write(int, uint8_t*);
-  void write(Bytes& b);
-  void request(int timeout,Bytes& data);
+  void write(std::string&);
+  void request(int timeout, std::string&);
   void stopTimer();
+  int dispatch(const Event& ev);
+  int stm32GetId(const Event&);
 };
 
 #endif /* STM32_H_ */
