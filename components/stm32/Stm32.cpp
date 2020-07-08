@@ -87,23 +87,18 @@ void Stm32::write(Bytes& b) {
   while (b.hasData()) _uart.write(b.read());
 };
 
-bool Stm32::dispatch(const Event& ev) {
-  INFO(" dispatch (%d,%X) isOneOf %d ", ev._type, ev._ptr,
-       ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
-  PT_BEGIN();
-  while (true) {
-    PT_WAIT_UNTIL(ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
-    INFO("");
-    if (ev == ANALYZE) {
-      message.on("Analyzing...");
+class Analyze : public ProtoThread<Event>,public Stm32 {
+  public :
+  Analyze(Stm32* stm32) : Stm32(stm32){};
+  bool dispatch(const Event& event){
+    PT_BEGIN();
+    message.on("Analyzing...");
       resetProg();
-      _uart.write(0x7F);  // send sync for bootloader
-      _timer.start(10);
+      request(10,sync);
       PT_WAIT_UNTIL(ev.isOneOf(RXD, TO));
       _timer.stop();
       if (ev.isRxd(ackReply)) {
-        write(getCmd);
-        _timer.start(10);
+        request(10,getCmd);
         PT_WAIT_UNTIL(ev.isOneOf(RXD, TO));
         _timer.stop();
         if (ev.isRxd(ackReply))
@@ -113,9 +108,28 @@ bool Stm32::dispatch(const Event& ev) {
       } else {
         message.on(" TO : reset failed.");
       }
+    PT_END();
+  }
+}
+
+bool Stm32::dispatch(const Event& ev) {
+  INFO(" dispatch (%d,%X) isOneOf %d ", ev._type, ev._ptr,
+       ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
+  PT_BEGIN();
+  while (true) {
+    PT_WAIT_UNTIL(ev.isOneOf(ANALYZE, WRITE, READ, ERASE));
+    INFO("");
+    if (ev == ANALYZE) ∏
+      Analyze analyze(this);
+      PT_WAIT_THREAD(analyze);
     }
   }
   PT_END();
+}
+
+void Stm32::request(int timeout,Bytes& data){
+  write(data);
+  _timer.start(timeout);
 }
 
 void Stm32::resetProg(){

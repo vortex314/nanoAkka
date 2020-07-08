@@ -99,17 +99,35 @@ class Event {
   bool operator==(int v) const { return _type == v; }
 };
 
+class Stm32;
+
+class Analyze : public ProtoThread<Event>,public Stm32 {
+  public :
+  Analyze(Stm32* stm32):Stm32(stm32){};
+  virtual bool dispatch(const Event& event);
+};
+
+
 class Stm32 : public Actor, public ProtoThread<Event> {
   UART& _uart;
   DigitalOut& _reset;
   DigitalOut& _boot0;
   TimerSource _timer;
   TimerSource _testTimer;
+  Bytes _supportedCommands; // to be filled at analyze phase
+  uint8_t _bootloaderVersion;
+  uint16_t _chipId;
+
+
+  Analyze _analyze(this)
+
 
  public:
-  Bytes getCmd;
+  Bytes getRequest;
+  Bytes getIdRequest; // 0x02+0xFD
   Bytes ackReply;
   Bytes nackReply;
+  Bytes syncRequest; // 0x7F
 
   Sink<MqttStream, 10> ota;
   Sink<Bytes, 5> rxd;
@@ -130,6 +148,8 @@ class Stm32 : public Actor, public ProtoThread<Event> {
   bool dispatch(const Event& ev);
   void write(int, uint8_t*);
   void write(Bytes& b);
+  void request(int timeout,Bytes& data);
+  void stopTimer();
 };
 
 #endif /* STM32_H_ */
