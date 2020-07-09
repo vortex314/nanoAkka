@@ -812,11 +812,11 @@ public:
           break;
         // Event of UART parity check error
         case UART_PARITY_ERR:
-          INFO("uart parity error");
+          WARN("uart parity error");
           break;
         // Event of UART frame error
         case UART_FRAME_ERR:
-          INFO("uart frame error");
+          WARN("uart frame error");
           break;
         // UART_PATTERN_DET
         case UART_PATTERN_DET: {

@@ -4,8 +4,24 @@
  *  Created on: Jul 2, 2016
  *      Author: lieven
  */
-
 #include "Stm32.h"
+
+std::string string_to_hex(const std::string& input) {
+  static const char hex_digits[] = "0123456789ABCDEF";
+
+  std::string output;
+  output.reserve(input.length() * 2);
+  for (unsigned char c : input) {
+    output.push_back(hex_digits[c >> 4]);
+    output.push_back(hex_digits[c & 15]);
+    output.push_back(' ');
+  }
+  return output;
+}
+
+const char* strEvents[] = {"NOP",          "RXD",          "TO",
+                           "ERASE_MEMORY", "WRITE_MEMORY", "READ_MEMORY",
+                           "GET_ID",       "GET_REQUEST",  "GET_VERSION"};
 
 Stm32::Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset)
     : Actor(thr),
@@ -13,14 +29,12 @@ Stm32::Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset)
       _reset(DigitalOut::create(pinReset)),
       _boot0(DigitalOut::create(pinBoot0)),
       _timer(thread(), 1, 1000, false),
-      _testTimer(thread(), 1, 1000, true) {
-  
-}
+      _testTimer(thread(), 1, 1000, true) {}
 
 void Stm32::init() {
   _timer.stop();
 
-  _uart.setClock(9600);
+  _uart.setClock(115200);
   _uart.onRxd(onReceive, this);
   _uart.mode("8E1");
   _uart.init();
@@ -34,9 +48,9 @@ void Stm32::init() {
 
 void Stm32::reset() {
   _reset.write(0);
-  vTaskDelay(2);
+  vTaskDelay(1);
   _reset.write(1);
-  vTaskDelay(2);
+  vTaskDelay(1);
 }
 
 void Stm32::wiring() {
@@ -51,20 +65,19 @@ void Stm32::wiring() {
   });
   _timer >> [&](const TimerMsg& tm) { dispatch({TO, 0}); };
   rxd.async(thread(), [&](const std::string& data) {
+    INFO("RXD >>>> %s", string_to_hex(data).c_str());
     dispatch({RXD, (void*)&data});
   });
-  dispatch({GET_ID, 0});
-  _testTimer >> [&](const TimerMsg& tm) { dispatch({GET_ID, 0}); };
+  _testTimer >> [&](const TimerMsg& tm) { dispatch({GET_VERSION, 0}); };
 }
 
 void Stm32::onReceive(void* ptr) {
   Stm32* me = (Stm32*)ptr;
   std::string bytes;
   while (me->_uart.hasData()) {
-    uint8_t b=me->_uart.read();
-    INFO("RXD>>0x%X",b);
-    bytes.append(1,b);
-    vTaskDelay(1);  // assure all data is captured
+    uint8_t b = me->_uart.read();
+    bytes.append(1, b);
+    //    vTaskDelay(1);  // assure all data is captured
   }
   me->rxd.on(bytes);
 }
@@ -75,6 +88,9 @@ void Stm32::startOta(const MqttStream& msg) {
   writeOta(msg);
 }
 
+void Stm32::dump(std::string& s) {
+  INFO(" RXD : %s", string_to_hex(s).c_str());
+}
 void Stm32::stopOta(const MqttStream& msg) { writeOta(msg); }
 void Stm32::writeOta(const MqttStream& msg) {}
 void Stm32::write(std::string& b) {
@@ -82,21 +98,27 @@ void Stm32::write(std::string& b) {
 };
 
 int Stm32::stm32GetId(const Event& ev) {
-  INFO("GetId... %d : %d", ev._type, _subState.lc);
+  INFO("GetId... [%s] line : %d", strEvents[ev._type], _subState.lc);
   PT_BEGIN(&_subState);
-  resetProg();
-  request(10, syncRequest);
-  PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+  resetToProg();
+  request(50, syncRequest);
+  PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
   stopTimer();
   if (ev.isRxd(ackReply)) {
+    INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
     request(10, getIdRequest);
-    PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+    PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
     stopTimer();
     if (ev.is(RXD)) {
-      INFO(" GET_ID result : %d 0x%X",ev._rxdBytes.length(),ev._rxdBytes[0])
-      message.on("GET_ID succeeded.");
-    }
-    else
+      INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
+      if (ev.data->length() > 3) {
+        INFO(" GET_ID : 0x%X", ev.data->at(3));
+        message.on("GET_ID succeeded.");
+      } else {
+        WARN(" GET_ID response too short %d", ev.data->length());
+        message.on(" GET_ID failed : too short answer");
+      }
+    } else
       message.on("GET_ID failed : timeout .");
   } else {
     message.on("RESET failed : timeout on ACK .");
@@ -105,21 +127,26 @@ int Stm32::stm32GetId(const Event& ev) {
 }
 
 int Stm32::stm32Get(const Event& ev) {
-  INFO("Get... %d : %d", ev._type, _subState.lc);
+  INFO("Get... [%s] line : %d", strEvents[ev._type], _subState.lc);
   PT_BEGIN(&_subState);
-  resetProg();
-  request(10, syncRequest);
-  PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+  resetToProg();
+  request(50, syncRequest);
+  PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
   stopTimer();
   if (ev.isRxd(ackReply)) {
+    INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
     request(10, getRequest);
-    PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+    PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
     stopTimer();
     if (ev.is(RXD)) {
-      INFO(" GET result : %d 0x%X",ev._rxdBytes.length(),ev._rxdBytes[0])
-      message.on("GET succeeded.");
-    }
-    else
+      INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
+      if (ev.data->length() > 3) {
+        message.on("GET succeeded.");
+      } else {
+        WARN(" GET response too short %d", ev.data->length());
+        message.on(" GET failed : too short answer");
+      }
+    } else
       message.on("GET failed : timeout .");
   } else {
     message.on("RESET failed : timeout on ACK .");
@@ -127,13 +154,43 @@ int Stm32::stm32Get(const Event& ev) {
   PT_END(&_subState);
 }
 
+int Stm32::stm32GetVersion(const Event& ev) {
+  INFO("Get... [%s] line : %d", strEvents[ev._type], _subState.lc);
+  PT_BEGIN(&_subState);
+  resetToProg();
+  request(50, syncRequest);
+  PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+  stopTimer();
+  if (ev.isRxd(ackReply)) {
+    INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
+    request(10, getVersionRequest);
+    PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+    stopTimer();
+    if (ev.is(RXD)) {
+      INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
+      if (ev.data->length() > 3) {
+        message.on("GET_VERSION succeeded.");
+      } else {
+        WARN(" GET_VERSION response too short %d", ev.data->length());
+        message.on(" GET failed : too short answer");
+      }
+    } else
+      message.on("GET_VERSION failed : timeout .");
+  } else {
+    message.on("RESET failed : timeout on ACK .");
+  }
+  PT_END(&_subState);
+}
+
 int Stm32::dispatch(const Event& ev) {
-  /*  INFO(" dispatch (%d,%X) isOneOf %d ", ev._type, ev._ptr,
-         ev.isOneOf(GET_ID, WRITE_MEMORY, READ_MEMORY, ERASE_MEMORY));*/
+  INFO(" dispatch [%s] line %d ", strEvents[ev._type], _mainState.lc);
   PT_BEGIN(&_mainState);
   while (true) {
-    PT_WAIT_UNTIL(&_mainState, ev.isCommand());
+    PT_YIELD_UNTIL(&_mainState, ev.isCommand());
     if (ev == GET_ID) PT_SPAWN(&_mainState, &_subState, stm32GetId(ev));
+    if (ev == GET_REQUEST) PT_SPAWN(&_mainState, &_subState, stm32Get(ev));
+    if (ev == GET_VERSION)
+      PT_SPAWN(&_mainState, &_subState, stm32GetVersion(ev));
   }
   PT_END(&_mainState);
 }
@@ -143,12 +200,12 @@ void Stm32::request(int timeout, std::string& data) {
   _timer.start(timeout);
 }
 
-void Stm32::resetProg() {
+void Stm32::resetToProg() {
   _boot0.write(1);
   reset();
 }
 
-void Stm32::resetRun() {
+void Stm32::resetToRun() {
   _boot0.write(0);
   reset();
 }

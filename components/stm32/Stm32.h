@@ -67,7 +67,7 @@ class Event {
   union {
     void* _ptr;
     MqttStream* _mqttStream;
-    std::string* _rxdBytes;
+    std::string* data;
   };
 
  public:
@@ -77,7 +77,7 @@ class Event {
   bool is(int v) const { return _type == v; };
   bool isCommand() const { return _type >= ERASE_MEMORY; };
   bool isRxd(std::string& bytes) const {
-    return _type == RXD && bytes.compare(*_rxdBytes) == 0;
+    return _type == RXD && bytes.compare(*data) == 0;
   };
 
   bool isCommand(int command) const { return _type == command; };
@@ -104,6 +104,9 @@ class Stm32 : public Actor {
  public:
   std::string getRequest = {BL_GET, XOR(BL_GET)};
   std::string getIdRequest = {BL_GET_ID, XOR(BL_GET_ID)};  // 0x02+0xFD
+  std::string getVersionRequest = {BL_GET_VERSION,
+                                   XOR(BL_GET_VERSION)};  // 0x02+0xFD
+
   std::string ackReply = {BL_ACK};
   std::string nackReply = {BL_NACK};
   std::string syncRequest = {BL_SYNC};  // 0x7F
@@ -118,8 +121,8 @@ class Stm32 : public Actor {
   void wiring();
   static void onReceive(void*);
   void reset();
-  void resetRun();
-  void resetProg();
+  void resetToRun();
+  void resetToProg();
   void setBoot0(bool);
   bool timeout();
   void timeout(uint32_t delta);
@@ -131,8 +134,9 @@ class Stm32 : public Actor {
   void stopTimer();
   int dispatch(const Event& ev);
   int stm32GetId(const Event&);
-    int stm32Get(const Event&);
-
+  int stm32Get(const Event&);
+  int stm32GetVersion(const Event&);
+  void dump(std::string&);
 };
 
 #endif /* STM32_H_ */

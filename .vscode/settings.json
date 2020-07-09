@@ -64,7 +64,9 @@
         "csignal": "cpp",
         "unordered_set": "cpp",
         "netfwd": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "*.ipp": "cpp",
+        "*.inc": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "editor.formatOnSave": true,
