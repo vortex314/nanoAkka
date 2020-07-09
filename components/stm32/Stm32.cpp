@@ -154,7 +154,7 @@ int Stm32::stm32Get(const Event& ev) {
   PT_END(&_subState);
 }
 
-int Stm32::stm32GetVersion(const Event& ev) {
+int Stm32::stm32Request(const Event& ev,std::string& req) {
   INFO("Get... [%s] line : %d", strEvents[ev._type], _subState.lc);
   PT_BEGIN(&_subState);
   resetToProg();
@@ -163,19 +163,19 @@ int Stm32::stm32GetVersion(const Event& ev) {
   stopTimer();
   if (ev.isRxd(ackReply)) {
     INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
-    request(10, getVersionRequest);
+    request(50, req);
     PT_YIELD_UNTIL(&_subState, ev.isOneOf(RXD, TO));
     stopTimer();
     if (ev.is(RXD)) {
       INFO(" RXD : %s", string_to_hex(*ev.data).c_str());
       if (ev.data->length() > 3) {
-        message.on("GET_VERSION succeeded.");
+        message.on("Request succeeded.");
       } else {
-        WARN(" GET_VERSION response too short %d", ev.data->length());
+        WARN(" Request response too short %d", ev.data->length());
         message.on(" GET failed : too short answer");
       }
     } else
-      message.on("GET_VERSION failed : timeout .");
+      message.on("Request failed : timeout .");
   } else {
     message.on("RESET failed : timeout on ACK .");
   }
@@ -190,7 +190,7 @@ int Stm32::dispatch(const Event& ev) {
     if (ev == GET_ID) PT_SPAWN(&_mainState, &_subState, stm32GetId(ev));
     if (ev == GET_REQUEST) PT_SPAWN(&_mainState, &_subState, stm32Get(ev));
     if (ev == GET_VERSION)
-      PT_SPAWN(&_mainState, &_subState, stm32GetVersion(ev));
+      PT_SPAWN(&_mainState, &_subState, stm32Request(ev,getVersionRequest));
   }
   PT_END(&_mainState);
 }

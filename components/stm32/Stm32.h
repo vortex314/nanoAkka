@@ -136,6 +136,7 @@ class Stm32 : public Actor {
   int stm32GetId(const Event&);
   int stm32Get(const Event&);
   int stm32GetVersion(const Event&);
+  int stm32Request(const Event&, std::string&);
   void dump(std::string&);
 };
 
