@@ -131,6 +131,8 @@ class Stm32 : public Actor {
   void stopTimer();
   int dispatch(const Event& ev);
   int stm32GetId(const Event&);
+    int stm32Get(const Event&);
+
 };
 
 #endif /* STM32_H_ */

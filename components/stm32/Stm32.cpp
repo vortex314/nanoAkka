@@ -22,7 +22,7 @@ void Stm32::init() {
 
   _uart.setClock(9600);
   _uart.onRxd(onReceive, this);
-  _uart.mode("8N1");
+  _uart.mode("8E1");
   _uart.init();
   _reset.setMode(DigitalOut::DOUT_PULL_UP);
   _reset.init();
@@ -89,11 +89,36 @@ int Stm32::stm32GetId(const Event& ev) {
   PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
   stopTimer();
   if (ev.isRxd(ackReply)) {
+    request(10, getIdRequest);
+    PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+    stopTimer();
+    if (ev.is(RXD)) {
+      INFO(" GET_ID result : %d 0x%X",ev._rxdBytes.length(),ev._rxdBytes[0])
+      message.on("GET_ID succeeded.");
+    }
+    else
+      message.on("GET_ID failed : timeout .");
+  } else {
+    message.on("RESET failed : timeout on ACK .");
+  }
+  PT_END(&_subState);
+}
+
+int Stm32::stm32Get(const Event& ev) {
+  INFO("Get... %d : %d", ev._type, _subState.lc);
+  PT_BEGIN(&_subState);
+  resetProg();
+  request(10, syncRequest);
+  PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
+  stopTimer();
+  if (ev.isRxd(ackReply)) {
     request(10, getRequest);
     PT_WAIT_UNTIL(&_subState, ev.isOneOf(RXD, TO));
     stopTimer();
-    if (ev.isRxd(ackReply))
-      message.on("RESET succeeded.");
+    if (ev.is(RXD)) {
+      INFO(" GET result : %d 0x%X",ev._rxdBytes.length(),ev._rxdBytes[0])
+      message.on("GET succeeded.");
+    }
     else
       message.on("GET failed : timeout .");
   } else {
