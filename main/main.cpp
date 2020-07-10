@@ -307,6 +307,7 @@ extern "C" void app_main(void) {
   stm32.init();
   stm32.wiring();
   stm32.message >> mqtt.toTopic<std::string>("stm32/log");
+  stm32.startAddress == mqtt.topic<uint32_t>("stm32/startAddress");
 #endif
 
 #ifdef GPIO_TEST

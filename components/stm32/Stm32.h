@@ -73,13 +73,13 @@ class Event {
 
  public:
   Event(int tpe, void* ptr = 0);
-  bool isOneOf(int v1, int v2 = NOP, int v3 = NOP, int v4 = NOP) const ;
-  bool is(int v) const ;
-  bool isCommand() const ;
+  bool isOneOf(int v1, int v2 = NOP, int v3 = NOP, int v4 = NOP) const;
+  bool is(int v) const;
+  bool isCommand() const;
   bool isRxd(std::string& bytes) const;
   bool isTimeout() const;
-  void operator=(int v) ;
-  bool operator==(int v) const ;
+  void operator=(int v);
+  bool operator==(int v) const;
   const char* toString();
 };
 
@@ -93,20 +93,26 @@ class Stm32 : public Actor {
   uint8_t _bootloaderVersion;
   uint16_t _chipId;
   struct pt _mainState, _subState;
-  enum { PROG, RUN } _mode;
+  enum { PROG, RUN, ERROR } _mode;
 
  public:
   std::string getRequest = {BL_GET, XOR(BL_GET)};
   std::string getIdRequest = {BL_GET_ID, XOR(BL_GET_ID)};  // 0x02+0xFD
-  std::string getVersionRequest = {BL_GET_VERSION,XOR(BL_GET_VERSION)};  // 0x02+0xFD
+  std::string getVersionRequest = {BL_GET_VERSION,
+                                   XOR(BL_GET_VERSION)};  // 0x02+0xFD
   std::string ackReply = {BL_ACK};
   std::string nackReply = {BL_NACK};
   std::string syncRequest = {BL_SYNC};  // 0x7F
-  std::string readMemoryRequest = {BL_READ_MEMORY,XOR(BL_READ_MEMORY)}
+  std::string readMemoryRequest = {BL_READ_MEMORY, XOR(BL_READ_MEMORY)};
+  std::string writeMemoryRequest = {BL_WRITE_MEMORY, XOR(BL_WRITE_MEMORY)};
+  std::string eraseMemoryRequest = {BL_ERASE_MEMORY, XOR(BL_ERASE_MEMORY)};
+  std::string readMemory;
+  std::string writeMemory;
 
   Sink<MqttStream, 10> ota;
   Sink<std::string, 5> rxd;
   ValueFlow<std::string> message;
+  ValueFlow<uint32_t> startAddress;
   Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset);
   void init();
   void wiring();
@@ -124,9 +130,14 @@ class Stm32 : public Actor {
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
-  int stm32Request(const Event&, std::string& request,std::string& response);
-  int stm32ReadMemory(uint32_t address);
-  std::string  stm32Address(uint32_t);
+  int stm32Request(struct pt* state, const Event&, std::string request,
+                   std::string& response);
+  int stm32ReadMemory(struct pt* state, const Event& ev, uint32_t address,
+                      uint32_t length, std::string& memory);
+  int stm32WriteMemory(struct pt* state, const Event& ev, uint32_t address,
+                       uint32_t length, std::string& memory);
+  int stm32EraseMemory(struct pt* state, const Event& ev);
+  std::string stm32Address(uint32_t);
   std::string stm32Length(uint8_t);
   void dump(std::string&);
 };
