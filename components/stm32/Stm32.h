@@ -71,23 +71,14 @@ class Event {
   };
 
  public:
-  bool isOneOf(int v1, int v2 = NOP, int v3 = NOP, int v4 = NOP) const {
-    return _type == v1 || _type == v2 || _type == v3 || _type == v4;
-  };
-  bool is(int v) const { return _type == v; };
-  bool isCommand() const { return _type >= ERASE_MEMORY; };
-  bool isRxd(std::string& bytes) const {
-    return _type == RXD && bytes.compare(*data) == 0;
-  };
-
-  bool isCommand(int command) const { return _type == command; };
-
-  void operator=(int v) { _type = v; }
-  Event(int tpe, void* ptr = 0) {
-    _type = tpe;
-    _ptr = ptr;
-  }
-  bool operator==(int v) const { return _type == v; }
+   Event(int tpe, void* ptr = 0);
+  bool isOneOf(int v1, int v2 = NOP, int v3 = NOP, int v4 = NOP) const ;
+  bool is(int v) const ;
+  bool isCommand() const ;
+  bool isRxd(std::string& bytes) const;
+  bool isCommand(int command) const ;
+  void operator=(int v) ;
+  bool operator==(int v) const ;
 };
 
 class Stm32 : public Actor {
@@ -133,10 +124,7 @@ class Stm32 : public Actor {
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
-  int stm32GetId(const Event&);
-  int stm32Get(const Event&);
-  int stm32GetVersion(const Event&);
-  int stm32Request(const Event&, std::string&);
+  int stm32Request(const Event&, std::string& request,std::string& response);
   void dump(std::string&);
 };
 
