@@ -124,7 +124,7 @@ void Stm32::write(std::string& s) {
   for (int i = 0; i < s.length(); i++) _uart.write(s[i]);
 };
 
-int Stm32::stm32Request(struct pt* state, const Event& ev, std::string req,
+int Stm32::blRequest(struct pt* state, const Event& ev, std::string req,
                         std::string& response) {
   INFO("Request... [%s] line : %d", strEvents[ev._type], _subState.lc);
   response = "";
@@ -146,19 +146,19 @@ int Stm32::stm32Request(struct pt* state, const Event& ev, std::string req,
   PT_END(&_subState);
 }
 
-int Stm32::stm32EraseMemory(struct pt* state, const Event& ev) {
+int Stm32::blEraseMemory(struct pt* state, const Event& ev) {
   INFO("EraseMemory... [%s] line : %d", strEvents[ev._type], state->lc);
   static struct pt subState;
   std::string response = "";
   PT_BEGIN(state);
   PT_SPAWN(state, &subState,
-           stm32Request(&subState, ev, eraseMemoryRequest, response));
+           blRequest(&subState, ev, eraseMemoryRequest, response));
   if (response.compare(ackReply) == 0) {
     PT_SPAWN(state, &subState,
-             stm32Request(&subState, ev, stm32Length(255), response));
+             blRequest(&subState, ev, blLength(255), response));
     if (response.compare(ackReply) == 0) {
-      INFO("Memory erased");
-     PT_EXIT(state);
+      message.on("Memory erased");
+      PT_EXIT(state);
     } else {
       _mode = ERROR;
     }
@@ -168,24 +168,24 @@ int Stm32::stm32EraseMemory(struct pt* state, const Event& ev) {
   PT_END(state);
 }
 
-int Stm32::stm32WriteMemory(struct pt* state, const Event& ev, uint32_t address,
+int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
                             uint32_t length, std::string& memory) {
-  INFO("ReadMemory... [%s] line : %d", strEvents[ev._type], state->lc);
+  INFO("WriteMemory... [%s] line : %d", strEvents[ev._type], state->lc);
   static struct pt subState;
   std::string response = "";
   PT_BEGIN(state);
   memory = "";
   PT_SPAWN(state, &subState,
-           stm32Request(&subState, ev, writeMemoryRequest, response));
+           blRequest(&subState, ev, writeMemoryRequest, response));
   if (response.compare(ackReply) == 0) {
     PT_SPAWN(state, &subState,
-             stm32Request(&subState, ev, stm32Address(address), response));
+             blRequest(&subState, ev, blAddress(address), response));
     if (response.compare(ackReply) == 0) {
       PT_SPAWN(state, &subState,
-               stm32Request(&subState, ev, stm32Length(length - 1), response));
+               blRequest(&subState, ev, blLength(length - 1), response));
       if (response.compare(ackReply) == 0) {
         write(memory);
-        _uart.write(xorBytes((uint8_t*)memory.data(),memory.length()));
+        _uart.write(xorBytes((uint8_t*)memory.data(), memory.length()));
       } else {
         _mode = ERROR;
       }
@@ -198,7 +198,7 @@ int Stm32::stm32WriteMemory(struct pt* state, const Event& ev, uint32_t address,
   PT_END(state);
 }
 
-int Stm32::stm32ReadMemory(struct pt* state, const Event& ev, uint32_t address,
+int Stm32::blReadMemory(struct pt* state, const Event& ev, uint32_t address,
                            uint32_t length, std::string& memory) {
   INFO("ReadMemory... [%s] line : %d", strEvents[ev._type], state->lc);
   static struct pt subState;
@@ -206,13 +206,13 @@ int Stm32::stm32ReadMemory(struct pt* state, const Event& ev, uint32_t address,
   PT_BEGIN(state);
   memory = "";
   PT_SPAWN(state, &subState,
-           stm32Request(&subState, ev, readMemoryRequest, response));
+           blRequest(&subState, ev, readMemoryRequest, response));
   if (response.compare(ackReply) == 0) {
     PT_SPAWN(state, &subState,
-             stm32Request(&subState, ev, stm32Address(address), response));
+             blRequest(&subState, ev, blAddress(address), response));
     if (response.compare(ackReply) == 0) {
       PT_SPAWN(state, &subState,
-               stm32Request(&subState, ev, stm32Length(length - 1), response));
+               blRequest(&subState, ev, blLength(length - 1), response));
       if (response.rfind(ackReply, 0) == 0) {
         memory = response.substr(1);
         _timer.start(500);
@@ -220,6 +220,7 @@ int Stm32::stm32ReadMemory(struct pt* state, const Event& ev, uint32_t address,
           PT_YIELD_UNTIL(state, ev.isOneOf(RXD, TO));
           if (ev.is(RXD)) {
             memory.append(*ev.data);
+            if (memory.length() == length) message.on("Read Memory ok. ");
           } else {
             break;
           }
@@ -258,23 +259,27 @@ int Stm32::dispatch(const Event& ev) {
     }
     if (ev == GET_ID) {
       PT_SPAWN(&_mainState, &_subState,
-               stm32Request(&_subState, ev, getIdRequest, response));
+               blRequest(&_subState, ev, getIdRequest, response));
     }
     if (ev == GET_REQUEST) {
       PT_SPAWN(&_mainState, &_subState,
-               stm32Request(&_subState, ev, getRequest, response));
+               blRequest(&_subState, ev, getRequest, response));
     }
     if (ev == GET_VERSION) {
       PT_SPAWN(&_mainState, &_subState,
-               stm32Request(&_subState, ev, getVersionRequest, response));
+               blRequest(&_subState, ev, getVersionRequest, response));
     }
     if (ev == ERASE_MEMORY) {
-      PT_SPAWN(&_mainState, &_subState,stm32EraseMemory(&_subState, ev));
+      PT_SPAWN(&_mainState, &_subState, blEraseMemory(&_subState, ev));
     }
     if (ev == READ_MEMORY) {
       PT_SPAWN(&_mainState, &_subState,
-               stm32ReadMemory(&_subState, ev, 0x08000000, 256, readMemory));
+               blReadMemory(&_subState, ev, 0x08000000, 256, readMemory));
       INFO(" readMemory length : %d", readMemory.length());
+    }
+    if (ev == WRITE_MEMORY) {
+      PT_SPAWN(&_mainState, &_subState,
+               blWriteMemory(&_subState, ev, 0x08000000, 256, writeMemory));
     }
   }
   PT_END(&_mainState);
@@ -306,8 +311,7 @@ uint8_t slice(uint32_t word, int offset) {
   return (uint8_t)((word >> (offset * 8)) & 0xFF);
 }
 
-
-std::string Stm32::stm32Address(uint32_t address) {
+std::string Stm32::blAddress(uint32_t address) {
   uint8_t ADDRESS[] = {slice(address, 3), slice(address, 2), slice(address, 1),
                        slice(address, 0), 0};
   ADDRESS[4] = xorBytes(ADDRESS, 4);
@@ -315,7 +319,7 @@ std::string Stm32::stm32Address(uint32_t address) {
   return a;
 }
 
-std::string Stm32::stm32Length(uint8_t length) {
+std::string Stm32::blLength(uint8_t length) {
   std::string bytes = {(char)length, XOR(length)};
   return bytes;
 }

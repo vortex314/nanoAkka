@@ -130,15 +130,15 @@ class Stm32 : public Actor {
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
-  int stm32Request(struct pt* state, const Event&, std::string request,
+  int blRequest(struct pt* state, const Event&, std::string request,
                    std::string& response);
-  int stm32ReadMemory(struct pt* state, const Event& ev, uint32_t address,
+  int blReadMemory(struct pt* state, const Event& ev, uint32_t address,
                       uint32_t length, std::string& memory);
-  int stm32WriteMemory(struct pt* state, const Event& ev, uint32_t address,
+  int blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
                        uint32_t length, std::string& memory);
-  int stm32EraseMemory(struct pt* state, const Event& ev);
-  std::string stm32Address(uint32_t);
-  std::string stm32Length(uint8_t);
+  int blEraseMemory(struct pt* state, const Event& ev);
+  std::string blAddress(uint32_t);
+  std::string blLength(uint8_t);
   void dump(std::string&);
 };
 
