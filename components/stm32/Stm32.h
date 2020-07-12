@@ -10,25 +10,9 @@
 
 #include <Bytes.h>
 #include <Hardware.h>
+#include <Mqtt.h>
 #include <NanoAkka.h>
 #include <pt.h>
-
-class MqttStream {
- public:
-  std::string topic;
-  //  Bytes data;
-  uint32_t offset;
-  uint32_t length;
-  uint32_t total;
-  MqttStream operator=(const MqttStream& other) {
-    topic = other.topic;
-    //    data=other.data;
-    offset = other.offset;
-    length = other.length;
-    total = other.total;
-    return *this;
-  }
-};
 
 #define BL_GET 0
 #define BL_GET_VERSION 1
@@ -59,7 +43,8 @@ enum {
   READ_MEMORY,
   GET_ID,
   GET_REQUEST,
-  GET_VERSION
+  GET_VERSION,
+  RUN
 };
 
 class Event {
@@ -67,7 +52,6 @@ class Event {
   int _type;
   union {
     void* _ptr;
-    MqttStream* _mqttStream;
     std::string* data;
   };
 
@@ -94,6 +78,7 @@ class Stm32 : public Actor {
   uint16_t _chipId;
   struct pt _mainState, _subState;
   enum { PROG, RUN, ERROR } _mode;
+  uint32_t _nextAddress;
 
  public:
   std::string getRequest = {BL_GET, XOR(BL_GET)};
@@ -109,10 +94,13 @@ class Stm32 : public Actor {
   std::string readMemory;
   std::string writeMemory;
 
-  Sink<MqttStream, 10> ota;
+  Sink<MqttBlock, 10> ota;
   Sink<std::string, 5> rxd;
   ValueFlow<std::string> message;
   ValueFlow<uint32_t> startAddress;
+  ValueFlow<uint32_t> baudrate;
+  ValueFlow<MqttBlock> blocks;
+
   Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset);
   void init();
   void wiring();
@@ -123,19 +111,19 @@ class Stm32 : public Actor {
   void setBoot0(bool);
   bool timeout();
   void timeout(uint32_t delta);
-  void startOta(const MqttStream&);
-  void stopOta(const MqttStream&);
-  void writeOta(const MqttStream&);
+  void startOta(const MqttBlock&);
+  void stopOta(const MqttBlock&);
+  void writeOta(const MqttBlock&);
   void write(std::string&);
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
   int blRequest(struct pt* state, const Event&, std::string request,
-                   std::string& response);
+                std::string& response);
   int blReadMemory(struct pt* state, const Event& ev, uint32_t address,
-                      uint32_t length, std::string& memory);
+                   uint32_t length, std::string& memory);
   int blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
-                       uint32_t length, std::string& memory);
+                    uint32_t length, std::string& memory);
   int blEraseMemory(struct pt* state, const Event& ev);
   std::string blAddress(uint32_t);
   std::string blLength(uint8_t);

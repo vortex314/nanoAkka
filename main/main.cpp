@@ -142,6 +142,7 @@ MqttSerial mqtt(mqttThread);
 #include <Wifi.h>
 Wifi wifi(mqttThread);
 MqttWifi mqtt(mqttThread);
+MqttOta mqttOta;
 #endif
 
 #ifdef US
@@ -223,7 +224,7 @@ Cli cli(uart0);
 #ifdef STM32
 #include <Stm32.h>
 Thread stm32Thread("stm32");
-Stm32 stm32(stm32Thread, 17, 16, 5, 18);  
+Stm32 stm32(stm32Thread, 17, 16, 5, 18);
 #endif
 
 extern "C" void app_main(void) {
@@ -275,6 +276,7 @@ extern "C" void app_main(void) {
   poller.poll(wifi.ipAddress) >> mqtt.toTopic<std::string>("wifi/ip");
   poller.poll(wifi.ssid) >> mqtt.toTopic<std::string>("wifi/ssid");
   poller.poll(wifi.rssi) >> mqtt.toTopic<int>("wifi/rssi");
+  mqtt.blocks >> mqttOta.blocks;
 #endif
   mqtt.connected >> led.blinkSlow;
   mqtt.connected >> poller.connected;
@@ -306,8 +308,10 @@ extern "C" void app_main(void) {
 #ifdef STM32
   stm32.init();
   stm32.wiring();
+  mqtt.blocks >> stm32.blocks;
   stm32.message >> mqtt.toTopic<std::string>("stm32/log");
   stm32.startAddress == mqtt.topic<uint32_t>("stm32/startAddress");
+  stm32.baudrate == mqtt.topic<uint32_t>("stm32/baudrate");
 #endif
 
 #ifdef GPIO_TEST

@@ -29,9 +29,9 @@ uint8_t xorBytes(uint8_t* data, uint32_t count) {
   return x;
 }
 
-const char* strEvents[] = {"NOP",          "RXD",          "TO",
-                           "ERASE_MEMORY", "WRITE_MEMORY", "READ_MEMORY",
-                           "GET_ID",       "GET_REQUEST",  "GET_VERSION"};
+const char* strEvents[] = {
+    "NOP",         "RXD",    "TO",          "ERASE_MEMORY", "WRITE_MEMORY",
+    "READ_MEMORY", "GET_ID", "GET_REQUEST", "GET_VERSION",  "RUN"};
 
 Event::Event(int tpe, void* ptr) {
   _type = tpe;
@@ -84,7 +84,7 @@ void Stm32::reset() {
 }
 
 void Stm32::wiring() {
-  ota.async(thread(), [&](const MqttStream& msg) {
+  ota.async(thread(), [&](const MqttBlock& msg) {
     if (msg.offset == 0) {
       startOta(msg);
     } else if (msg.offset + msg.length == msg.total) {
@@ -98,7 +98,18 @@ void Stm32::wiring() {
     INFO("RXD : %s", string_to_hex(data).c_str());
     dispatch({RXD, (void*)&data});
   });
-  _testTimer >> [&](const TimerMsg& tm) { dispatch({READ_MEMORY, 0}); };
+  blocks >> [&](const MqttBlock& block) {
+    if (block.topic.find("stm32/ota") != std::string::npos) {
+      if (block.offset == 0) {
+        startOta(block);
+      }
+      writeOta(block);
+      if (block.offset + block.length == block.length) {
+        stopOta(block);
+      }
+    }
+  };
+  _testTimer >> [&](const TimerMsg& tm) { };
 }
 
 void Stm32::onReceive(void* ptr) {
@@ -111,21 +122,32 @@ void Stm32::onReceive(void* ptr) {
   if (bytes.length()) me->rxd.on(bytes);
 }
 
-void Stm32::startOta(const MqttStream& msg) {
-  _boot0.write(0);
-  reset();
-  writeOta(msg);
+void Stm32::startOta(const MqttBlock& msg) {
+  resetToProg();
+  _nextAddress = 0x08000000;
 }
 
-void Stm32::stopOta(const MqttStream& msg) { writeOta(msg); }
-void Stm32::writeOta(const MqttStream& msg) {}
+void Stm32::stopOta(const MqttBlock& msg) { resetToRun(); }
+void Stm32::writeOta(const MqttBlock& msg) {
+  uint32_t offset = 0;
+  while (offset < msg.length) {
+    uint32_t size =
+        (offset + 256) > msg.length ? offset + 256 : msg.length - offset;
+    writeMemory = msg.data.substr(0, size);
+    INFO("WRITE_MEMORY 0x%X : %d", _nextAddress, size);
+    //    dispatch({WRITE_MEMORY, (void*)&writeMemory});
+    offset += size;
+    _nextAddress += size;
+  }
+}
+
 void Stm32::write(std::string& s) {
   INFO("TXD : %s", string_to_hex(s).c_str());
   for (int i = 0; i < s.length(); i++) _uart.write(s[i]);
 };
 
 int Stm32::blRequest(struct pt* state, const Event& ev, std::string req,
-                        std::string& response) {
+                     std::string& response) {
   INFO("Request... [%s] line : %d", strEvents[ev._type], _subState.lc);
   response = "";
   PT_BEGIN(state);
@@ -169,7 +191,7 @@ int Stm32::blEraseMemory(struct pt* state, const Event& ev) {
 }
 
 int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
-                            uint32_t length, std::string& memory) {
+                         uint32_t length, std::string& memory) {
   INFO("WriteMemory... [%s] line : %d", strEvents[ev._type], state->lc);
   static struct pt subState;
   std::string response = "";
@@ -199,7 +221,7 @@ int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
 }
 
 int Stm32::blReadMemory(struct pt* state, const Event& ev, uint32_t address,
-                           uint32_t length, std::string& memory) {
+                        uint32_t length, std::string& memory) {
   INFO("ReadMemory... [%s] line : %d", strEvents[ev._type], state->lc);
   static struct pt subState;
   std::string response = "";
