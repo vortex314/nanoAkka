@@ -622,7 +622,7 @@ class UART_ESP32 : public UART {
 
 public:
   UART_ESP32(uint32_t driver, PhysicalPin txd, PhysicalPin rxd)
-      : _pinTxd(txd), _pinRxd(rxd), _rxdBuf(256) {
+      : _pinTxd(txd), _pinRxd(rxd), _rxdBuf(300) {
     _driver = driver;
     switch (driver) {
     case 0: {
@@ -705,7 +705,7 @@ public:
     std::string taskName;
     string_format(taskName, "uart_event_task_%d", _driver);
     xTaskCreate(uart_event_task, taskName.c_str(), 3120, this,
-                tskIDLE_PRIORITY + 2, &_taskHandle);
+                tskIDLE_PRIORITY + 5, &_taskHandle);
     return E_OK;
   }
 

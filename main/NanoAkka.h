@@ -473,7 +473,7 @@ class Sink : public Subscriber<T>, public Invoker {
      {
          return ++index % S;
      }*/
-  T _lastValue;
+ T _lastValue;
 
  public:
   Sink() {

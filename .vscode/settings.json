@@ -67,9 +67,11 @@
         "future": "cpp",
         "*.ipp": "cpp",
         "*.inc": "cpp",
-        "*.contiki": "cpp"
+        "*.contiki": "cpp",
+        "*.def": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "editor.formatOnSave": true,
-    "C_Cpp.clang_format_fallbackStyle": "Google"
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

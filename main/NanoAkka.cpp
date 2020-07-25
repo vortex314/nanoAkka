@@ -20,7 +20,7 @@ void Thread::start()
 {
     xTaskCreate([](void* task) {
         ((Thread*)task)->run();
-    }, _name.c_str(), 20000, this, 17, NULL);
+    }, _name.c_str(), 20000, this, tskIDLE_PRIORITY, NULL);
     /*
     	xTaskCreatePinnedToCore([](void* task) {
     		((Thread*)task)->run();

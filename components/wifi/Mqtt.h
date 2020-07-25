@@ -16,7 +16,7 @@ class MqttBlock {
   uint32_t offset;
   uint32_t length;
   uint32_t total;
-  std::string data;
+  uint8_t  *data;
   MqttBlock operator=(const MqttBlock &other) {
     topic = other.topic;
     //    data=other.data;

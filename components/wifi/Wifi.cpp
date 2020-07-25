@@ -160,8 +160,7 @@ void Wifi::startScan()
 {
     INFO(" starting WiFi scan."); //https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/wifi.html#scan-configuration
     wifi_scan_config_t scanConfig = {
-        NULL, NULL, 0, false, WIFI_SCAN_TYPE_ACTIVE, { 0, 0 }
-    };
+        NULL, NULL, 0, false, WIFI_SCAN_TYPE_ACTIVE, {{ 0, 0 },0} };
     CHECK(esp_wifi_scan_start(&scanConfig, false));
 
 }

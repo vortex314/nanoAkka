@@ -62,8 +62,8 @@ Stm32::Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset)
 void Stm32::init() {
   _timer.stop();
 
-  _uart.setClock(115200);
-  _uart.onRxd(onReceive, this);
+  _uart.setClock(512000);
+  //  _uart.onRxd(onReceive, this);
   _uart.mode("8E1");
   _uart.init();
   _reset.setMode(DigitalOut::DOUT_PULL_UP);
@@ -78,20 +78,17 @@ void Stm32::init() {
 
 void Stm32::reset() {
   _reset.write(0);
-  vTaskDelay(1);
+  vTaskDelay(0);
   _reset.write(1);
-  vTaskDelay(1);
+  vTaskDelay(0);
 }
 
 void Stm32::wiring() {
-  ota.async(thread(), [&](const MqttBlock& msg) {
-    if (msg.offset == 0) {
-      startOta(msg);
-    } else if (msg.offset + msg.length == msg.total) {
-      stopOta(msg);
-    } else {
-      writeOta(msg);
-    }
+  // ota needs to be sync, as not enough memory to store
+  ota.sync([&](const MqttBlock& msg) {
+    if (msg.offset == 0) startOta(msg);
+    writeOta(msg);
+    if (msg.offset + msg.length == msg.total) stopOta(msg);
   });
   _timer >> [&](const TimerMsg& tm) { dispatch({TO, 0}); };
   rxd.async(thread(), [&](const std::string& data) {
@@ -109,7 +106,7 @@ void Stm32::wiring() {
       }
     }
   };
-  _testTimer >> [&](const TimerMsg& tm) { };
+  _testTimer >> [&](const TimerMsg& tm) {};
 }
 
 void Stm32::onReceive(void* ptr) {
@@ -122,29 +119,7 @@ void Stm32::onReceive(void* ptr) {
   if (bytes.length()) me->rxd.on(bytes);
 }
 
-void Stm32::startOta(const MqttBlock& msg) {
-  resetToProg();
-  _nextAddress = 0x08000000;
-}
 
-void Stm32::stopOta(const MqttBlock& msg) { resetToRun(); }
-void Stm32::writeOta(const MqttBlock& msg) {
-  uint32_t offset = 0;
-  while (offset < msg.length) {
-    uint32_t size =
-        (offset + 256) > msg.length ? offset + 256 : msg.length - offset;
-    writeMemory = msg.data.substr(0, size);
-    INFO("WRITE_MEMORY 0x%X : %d", _nextAddress, size);
-    //    dispatch({WRITE_MEMORY, (void*)&writeMemory});
-    offset += size;
-    _nextAddress += size;
-  }
-}
-
-void Stm32::write(std::string& s) {
-  INFO("TXD : %s", string_to_hex(s).c_str());
-  for (int i = 0; i < s.length(); i++) _uart.write(s[i]);
-};
 
 int Stm32::blRequest(struct pt* state, const Event& ev, std::string req,
                      std::string& response) {
@@ -190,6 +165,115 @@ int Stm32::blEraseMemory(struct pt* state, const Event& ev) {
   PT_END(state);
 }
 
+bool Stm32::startOta(const MqttBlock& msg) {
+  message.on("OTA start.");
+  resetToProg();
+  waitFor("flush");
+  write(syncRequest);
+  _nextAddress = 0x08000000;
+  writeBuffer.clear();
+  if (!waitFor(ackReply)) return false;
+  return eraseMemorySync();
+}
+
+bool Stm32::stopOta(const MqttBlock& msg) {
+  message.on("OTA end.");
+  resetToRun();
+  return true;
+}
+/*
+If data block size not multiple of 4 saveguard data 
+and concatenate for later
+
+*/
+bool writeFiller(uint8_t* data,uint32_t length) {
+
+}
+
+bool Stm32::writeOta(const MqttBlock& msg) {
+  uint32_t offset = 0;
+  while (offset < (msg.length - 3)) {
+    uint32_t delta = msg.length - offset;
+    uint32_t size = delta < 256 ? delta : 256;
+    if (writeBuffer.length()) { // complete to 4 
+      int rest = 4 - writeBuffer.length();
+      writeBuffer.append((char*)msg.data, rest);
+      bool rc = writeMemorySync(_nextAddress, (uint8_t*)writeBuffer.data(), 4);
+      if (!rc) {
+        WARN(" writeMemory failed ");
+        return rc;
+      }
+      writeBuffer = "";
+      offset += rest;
+      _nextAddress += 4;
+    }
+    if (size % 4 != 0) { // capture fragment
+      writeBuffer.append((char*)(msg.data + offset + (size & 0xFC)),
+                         size & 0x3);
+      size = size & 0xFC;
+    }
+    INFO("WRITE_MEMORY 0x%X : %d", _nextAddress, size);
+    bool rc = writeMemorySync(_nextAddress, msg.data + offset, size);
+    if (!rc) {
+      WARN(" writeMemory failed ");
+      return rc;
+    }
+    offset += size;
+    _nextAddress += size;
+    if (_nextAddress % 4 != 0)
+      WARN(" >>>>>>> silent failure 0x%X ", _nextAddress);
+  }
+  return true;
+}
+
+bool Stm32::waitFor(std::string reply, uint32_t timeout) {
+  uint64_t start = Sys::millis();
+  std::string data;
+  while (Sys::millis() < start + timeout) {
+    while (_uart.hasData()) data += _uart.read();
+    if (data.compare(reply) == 0) {
+      DEBUG("RXD OK  : %s", string_to_hex(data).c_str());
+      return true;
+    }
+    vTaskDelay(0);
+  }
+  INFO("RXD NOK : %s", string_to_hex(data).c_str());
+  return false;
+}
+
+bool Stm32::eraseMemorySync() {
+  write(eraseMemoryRequest);
+  if (!waitFor(ackReply)) return false;
+  std::string s = blLength(255);
+  write(s);
+  return waitFor(ackReply);
+}
+
+bool Stm32::write(uint8_t data){
+  return _uart.write(data) == E_OK;
+}
+
+bool Stm32::write(uint8_t* data,uint32_t length){
+  return _uart.write(data,length) == E_OK;
+}
+
+bool Stm32::write(std::string s) {
+  DEBUG("TXD : %s", string_to_hex(s).c_str());
+  return _uart.write((uint8_t*)s.data(), s.length()) == E_OK;
+};
+
+bool Stm32::writeBlock(uint8_t* data, uint32_t length) {
+  return write(length - 1) && write(data, length) &&
+         write(((uint8_t)(length - 1)) ^ xorBytes(data, length));
+}
+
+// data should be multiple of 4
+bool Stm32::writeMemorySync(uint32_t address, uint8_t data[], uint32_t length) {
+  return write(writeMemoryRequest) && waitFor(ackReply) &&
+         write(blAddress(address)) && waitFor(ackReply) &&
+         writeBlock(data, length) && waitFor(ackReply, 200);
+}
+
 int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
                          uint32_t length, std::string& memory) {
   INFO("WriteMemory... [%s] line : %d", strEvents[ev._type], state->lc);
@@ -207,7 +291,7 @@ int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
                blRequest(&subState, ev, blLength(length - 1), response));
       if (response.compare(ackReply) == 0) {
         write(memory);
-        _uart.write(xorBytes((uint8_t*)memory.data(), memory.length()));
+        write(xorBytes((uint8_t*)memory.data(), memory.length()));
       } else {
         _mode = ERROR;
       }
@@ -298,10 +382,6 @@ int Stm32::dispatch(const Event& ev) {
       PT_SPAWN(&_mainState, &_subState,
                blReadMemory(&_subState, ev, 0x08000000, 256, readMemory));
       INFO(" readMemory length : %d", readMemory.length());
-    }
-    if (ev == WRITE_MEMORY) {
-      PT_SPAWN(&_mainState, &_subState,
-               blWriteMemory(&_subState, ev, 0x08000000, 256, writeMemory));
     }
   }
   PT_END(&_mainState);

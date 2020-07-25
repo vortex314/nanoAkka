@@ -5,9 +5,11 @@
             "includePath": [
                 "${workspaceFolder}/main",
                 "${workspaceFolder}/components/**",
-                "${HOME}/esp/esp-idf/**",
+                "${workspaceFolder}/build/include",
                 "${workspaceFolder}/../Common/",
                 "${workspaceFolder}/../ArduinoJson/src/",
+                "${HOME}/esp/esp-idf/**",
+                "/home/lieven/esp/esp-idf/components/freertos/include/freertos",
                 "${HOME}/esp/esp-idf/components/**",
                 "${HOME}/esp/xtensa-esp32-elf/**",
                 "${HOME}/esp/esp-idf/components/wpa_supplicant/port/include/",
@@ -22,7 +24,7 @@
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
-            "cppStandard": "c++17",
+            "cppStandard": "c++11",
             "intelliSenseMode": "clang-x64",
             "forcedInclude": []
         }

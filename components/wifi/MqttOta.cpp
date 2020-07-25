@@ -13,7 +13,7 @@ void MqttOta::onBlock(const MqttBlock &block) {
     init();
     initUpgrade();
   }
-  writeUpgrade((uint8_t *)(block.data.data()), block.length);
+  writeUpgrade(block.data, block.length);
   if (block.offset + block.length == block.length) {
     endUpgrade();
     execUpgrade();

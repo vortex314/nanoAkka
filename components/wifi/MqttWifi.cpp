@@ -158,7 +158,7 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t *event) {
         block.length = event->data_len;
         block.total = event->total_data_len;
         block.topic = me._lastTopic;
-        block.data = std::string((char *)(event->data), event->data_len);
+        block.data = (uint8_t*)event->data;
         me.blocks.on(block);
       } else {
         if (event->current_data_offset == 0) {

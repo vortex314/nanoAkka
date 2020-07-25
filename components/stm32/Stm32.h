@@ -92,7 +92,7 @@ class Stm32 : public Actor {
   std::string writeMemoryRequest = {BL_WRITE_MEMORY, XOR(BL_WRITE_MEMORY)};
   std::string eraseMemoryRequest = {BL_ERASE_MEMORY, XOR(BL_ERASE_MEMORY)};
   std::string readMemory;
-  std::string writeMemory;
+  std::string writeBuffer;
 
   Sink<MqttBlock, 10> ota;
   Sink<std::string, 5> rxd;
@@ -111,10 +111,16 @@ class Stm32 : public Actor {
   void setBoot0(bool);
   bool timeout();
   void timeout(uint32_t delta);
-  void startOta(const MqttBlock&);
-  void stopOta(const MqttBlock&);
-  void writeOta(const MqttBlock&);
-  void write(std::string&);
+
+  bool startOta(const MqttBlock&);
+  bool stopOta(const MqttBlock&);
+  bool writeOta(const MqttBlock&);
+
+  bool write(std::string);
+  bool write(uint8_t data);
+  bool write(uint8_t* data, uint32_t length);
+  bool writeBlock(uint8_t* data, uint32_t length);
+  bool writeFiller(uint8_t* data,uint32_t length);
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
@@ -125,6 +131,11 @@ class Stm32 : public Actor {
   int blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
                     uint32_t length, std::string& memory);
   int blEraseMemory(struct pt* state, const Event& ev);
+  bool resetToProgSync();
+  bool resetToRunSync();
+  bool eraseMemorySync();
+  bool writeMemorySync(uint32_t address, uint8_t* data, uint32_t length);
+  bool waitFor(std::string response, uint32_t timeout = 50);
   std::string blAddress(uint32_t);
   std::string blLength(uint8_t);
   void dump(std::string&);

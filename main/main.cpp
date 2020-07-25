@@ -308,7 +308,7 @@ extern "C" void app_main(void) {
 #ifdef STM32
   stm32.init();
   stm32.wiring();
-  mqtt.blocks >> stm32.blocks;
+  mqtt.blocks >> stm32.ota;
   stm32.message >> mqtt.toTopic<std::string>("stm32/log");
   stm32.startAddress == mqtt.topic<uint32_t>("stm32/startAddress");
   stm32.baudrate == mqtt.topic<uint32_t>("stm32/baudrate");
