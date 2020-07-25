@@ -187,7 +187,7 @@ and concatenate for later
 
 */
 bool writeFiller(uint8_t* data,uint32_t length) {
-
+return true;
 }
 
 bool Stm32::writeOta(const MqttBlock& msg) {

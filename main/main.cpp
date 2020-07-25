@@ -227,6 +227,12 @@ Thread stm32Thread("stm32");
 Stm32 stm32(stm32Thread, 17, 16, 5, 18);
 #endif
 
+#ifdef SWD
+#include <Swd.h>
+Thread stm32Thread("stm32");
+Swd swd(stm32Thread, 13, 14, 12);
+#endif
+
 extern "C" void app_main(void) {
   //    ESP_ERROR_CHECK(nvs_flash_erase());
 
@@ -312,6 +318,14 @@ extern "C" void app_main(void) {
   stm32.message >> mqtt.toTopic<std::string>("stm32/log");
   stm32.startAddress == mqtt.topic<uint32_t>("stm32/startAddress");
   stm32.baudrate == mqtt.topic<uint32_t>("stm32/baudrate");
+#endif
+
+#ifdef SWD
+  TimerSource swdTimer(thisThread, 1, 2000, true);
+
+  swd.init();
+  mqtt.blocks >> swd.ota;
+  swdTimer >> [](const TimerMsg &tm) { swd.test(); };
 #endif
 
 #ifdef GPIO_TEST

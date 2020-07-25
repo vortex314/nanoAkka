@@ -30,6 +30,10 @@ EXTRA_COMPONENT_DIRS = mqtt esp-mqtt
 
 include $(IDF_PATH)/make/project.mk
 
+SWD:
+	touch main/main.cpp
+	make DEFINE=" -DCOMMAND=1 -DSWD "
+
 STM32:
 	touch main/main.cpp
 	make DEFINE=" -DCOMMAND=1 -DSTM32 "
