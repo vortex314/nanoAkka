@@ -58,7 +58,7 @@ void Swd::init() {
 }
 
 void Swd::test() {
-  uint32_t address = 0x08000000; // 0x20001000;  // Example address
+  uint32_t address = 0x08000000;  // 0x20001000;  // Example address
   INFO("[libswd_memap_init]");
   auto memmap_res = libswd_memap_init(libswdctx, LIBSWD_OPERATION_EXECUTE);
   if (LIBSWD_OK != memmap_res) {
@@ -66,7 +66,7 @@ void Swd::test() {
     return;  // Warning, this example does not close handles correctly
   }
 
-  const uint16_t buffCnt = 4;
+  const uint16_t buffCnt = 16;
   uint8_t buff[buffCnt] = {0};
   int read_res = libswd_memap_read_char(libswdctx, LIBSWD_OPERATION_EXECUTE,
                                         address, buffCnt, (char*)&buff);
@@ -76,8 +76,10 @@ void Swd::test() {
   }
 
   char stringBuff[128];
-  sprintf(stringBuff, "MEMAP read at %08X: %02X %02X %02X %02X", address,
-          buff[0], buff[1], buff[2], buff[3]);
+  sprintf(stringBuff,
+          "MEMAP read at %08X: %02X %02X %02X %02X %02X %02X %02X %02X",
+          address, buff[0], buff[1], buff[2], buff[3], buff[4], buff[5],
+          buff[6], buff[7]);
   INFO("%s", stringBuff);
 
   int idcode = 0;

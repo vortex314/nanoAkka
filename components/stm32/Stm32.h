@@ -9,6 +9,7 @@
 #define STM32_H_
 
 #include <Bytes.h>
+#include <ConfigFlow.h>
 #include <Hardware.h>
 #include <Mqtt.h>
 #include <NanoAkka.h>
@@ -100,6 +101,9 @@ class Stm32 : public Actor {
   ValueFlow<uint32_t> startAddress;
   ValueFlow<uint32_t> baudrate;
   ValueFlow<MqttBlock> blocks;
+  ConfigFlow<uint32_t> progBaudrate;
+  ConfigFlow<uint32_t> logBaudrate;
+  ConfigFlow<uint32_t> flashStartAddress;
 
   Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset);
   void init();
@@ -107,7 +111,7 @@ class Stm32 : public Actor {
   static void onReceive(void*);
   void reset();
   void resetToRun();
-  void resetToProg();
+  bool resetToProg();
   void setBoot0(bool);
   bool timeout();
   void timeout(uint32_t delta);
@@ -120,7 +124,8 @@ class Stm32 : public Actor {
   bool write(uint8_t data);
   bool write(uint8_t* data, uint32_t length);
   bool writeBlock(uint8_t* data, uint32_t length);
-  bool writeFiller(uint8_t* data,uint32_t length);
+  bool saveAnyQuadFragment(uint8_t* data, uint32_t length);
+  uint32_t completeAndWriteQuadFragment(uint8_t* data, uint32_t length);
   void request(int timeout, std::string&);
   void stopTimer();
   int dispatch(const Event& ev);
