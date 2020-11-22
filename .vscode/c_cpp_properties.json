@@ -18,7 +18,7 @@
             "defines": [
                 "FREERTOS",
                 "ESP32_IDF",
-                "STM32",
+                "STEPPER_SERVO",
                 "COMMAND",
                 "MQTT_PORT=1883"
             ],

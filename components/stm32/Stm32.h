@@ -100,7 +100,6 @@ class Stm32 : public Actor {
   ValueFlow<std::string> message;
   ValueFlow<uint32_t> startAddress;
   ValueFlow<uint32_t> baudrate;
-  ValueFlow<MqttBlock> blocks;
   ConfigFlow<uint32_t> progBaudrate;
   ConfigFlow<uint32_t> logBaudrate;
   ConfigFlow<uint32_t> flashStartAddress;
@@ -140,10 +139,13 @@ class Stm32 : public Actor {
   bool resetToRunSync();
   bool eraseMemorySync();
   bool writeMemorySync(uint32_t address, uint8_t* data, uint32_t length);
+  bool readMemorySync(uint32_t address, uint32_t length);
   bool waitFor(std::string response, uint32_t timeout = 50);
-  std::string blAddress(uint32_t);
-  std::string blLength(uint8_t);
-  void dump(std::string&);
-};
+  bool waitData(std::string& data, uint32_t length, uint32_t timeout) ;
+  bool getId();
+    std::string blAddress(uint32_t);
+    std::string blLength(uint8_t);
+    void dump(std::string&);
+  };
 
 #endif /* STM32_H_ */

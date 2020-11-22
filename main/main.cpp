@@ -1,6 +1,7 @@
 
 #include "Hardware.h"
 #include "LedBlinker.h"
+#include "esp_system.h"
 #include "freertos/task.h"
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
@@ -469,13 +470,7 @@ extern "C" void app_main(void) {
   stepperServo.init();
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
-  motor.rpmMeasured2 >>
-      ([](const int &rpm) {  // only correct steering when really driving
-        if (abs(rpm) > 20)
-          stepperServo.isDriving.on(true);
-        else
-          stepperServo.isDriving.on(false);
-      });
+
   mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
   poller.poll(stepperServo.stepMeasured) >>
       mqtt.toTopic<int>("stepper/stepMeasured");
@@ -523,6 +518,8 @@ extern "C" void app_main(void) {
   ledThread.start();
   mqttThread.start();
   workerThread.start();
+#ifdef STM32
   stm32Thread.start();
+#endif
   thisThread.run();  // DON'T EXIT , local variable will be destroyed
 }

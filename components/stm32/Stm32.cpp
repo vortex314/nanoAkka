@@ -94,32 +94,8 @@ void Stm32::wiring() {
     if (msg.offset + msg.length == msg.total) stopOta(msg);
   });
   _timer >> [&](const TimerMsg& tm) { dispatch({TO, 0}); };
-  rxd.async(thread(), [&](const std::string& data) {
-    INFO("RXD : %s", string_to_hex(data).c_str());
-    dispatch({RXD, (void*)&data});
-  });
-  blocks >> [&](const MqttBlock& block) {
-    if (block.topic.find("stm32/ota") != std::string::npos) {
-      if (block.offset == 0) {
-        startOta(block);
-      }
-      writeOta(block);
-      if (block.offset + block.length == block.length) {
-        stopOta(block);
-      }
-    }
-  };
-  _testTimer >> [&](const TimerMsg& tm) {};
-}
 
-void Stm32::onReceive(void* ptr) {
-  Stm32* me = (Stm32*)ptr;
-  std::string bytes;
-  while (me->_uart.hasData()) {
-    uint8_t b = me->_uart.read();
-    bytes.append(1, b);
-  }
-  if (bytes.length()) me->rxd.on(bytes);
+  _testTimer >> [&](const TimerMsg& tm) {};
 }
 
 int Stm32::blRequest(struct pt* state, const Event& ev, std::string req,
@@ -188,27 +164,6 @@ bool Stm32::stopOta(const MqttBlock& msg) {
   resetToRun();
   return true;
 }
-/*
-If data block size not multiple of 4 saveguard data
-and concatenate for later
-
-*/
-bool Stm32::saveAnyQuadFragment(uint8_t* data, uint32_t length) {
-  if (length > 0) writeBuffer.append((char*)data, length);
-  return true;
-}
-
-uint32_t Stm32::completeAndWriteQuadFragment(uint8_t* data, uint32_t length) {
-  int rest = 4 - writeBuffer.length();
-  writeBuffer.append((char*)data, rest);
-  bool rc = writeMemorySync(_nextAddress, (uint8_t*)writeBuffer.data(), 4);
-  if (!rc) {
-    WARN(" writeMemory failed ");
-    return rc;
-  }
-  writeBuffer.clear();
-  return rest;
-}
 
 bool Stm32::writeOta(const MqttBlock& msg) {
   uint32_t offset = 0;
@@ -234,6 +189,21 @@ bool Stm32::waitFor(std::string reply, uint32_t timeout) {
   while (Sys::millis() < endTime) {
     while (_uart.hasData()) data += _uart.read();
     if (data.compare(reply) == 0) {
+      DEBUG("RXD OK  : %s", string_to_hex(data).c_str());
+      return true;
+    }
+    vTaskDelay(0);
+  }
+  INFO("RXD NOK : %s", string_to_hex(data).c_str());
+  return false;
+}
+
+bool Stm32::waitData(std::string& data, uint32_t length, uint32_t timeout) {
+  uint64_t endTime = Sys::millis() + timeout;
+  data.clear();
+  while (Sys::millis() < endTime && data.size() < length) {
+    while (_uart.hasData()) data += _uart.read();
+    if (data.size() == length) {
       DEBUG("RXD OK  : %s", string_to_hex(data).c_str());
       return true;
     }
@@ -272,76 +242,21 @@ bool Stm32::writeMemorySync(uint32_t address, uint8_t data[], uint32_t length) {
          writeBlock(data, length) && waitFor(ackReply, 200);
 }
 
-int Stm32::blWriteMemory(struct pt* state, const Event& ev, uint32_t address,
-                         uint32_t length, std::string& memory) {
-  INFO("WriteMemory... [%s] line : %d", strEvents[ev._type], state->lc);
-  static struct pt subState;
-  std::string response = "";
-  PT_BEGIN(state);
-  memory = "";
-  PT_SPAWN(state, &subState,
-           blRequest(&subState, ev, writeMemoryRequest, response));
-  if (response.compare(ackReply) == 0) {
-    PT_SPAWN(state, &subState,
-             blRequest(&subState, ev, blAddress(address), response));
-    if (response.compare(ackReply) == 0) {
-      PT_SPAWN(state, &subState,
-               blRequest(&subState, ev, blLength(length - 1), response));
-      if (response.compare(ackReply) == 0) {
-        write(memory);
-        write(xorBytes((uint8_t*)memory.data(), memory.length()));
-      } else {
-        _mode = ERROR;
-      }
-    } else {
-      _mode = ERROR;
-    }
-  } else {
-    _mode = ERROR;
+bool Stm32::readMemorySync(uint32_t startAddress, uint32_t length) {
+  std::string buffer;
+  for (uint32_t offset = 0; offset < length; offset += 256) {
+    uint32_t size = offset + 256 < length ? 256 : length - offset;
+    bool success = write(readMemoryRequest) && waitFor(ackReply) &&
+                   write(blAddress(startAddress + offset)) &&
+                   waitFor(ackReply) && write(blLength(size - 1)) &&
+                   waitData(buffer, size, 200);
+    if (!success) return false;
   }
-  PT_END(state);
+  return true;
 }
 
-int Stm32::blReadMemory(struct pt* state, const Event& ev, uint32_t address,
-                        uint32_t length, std::string& memory) {
-  INFO("ReadMemory... [%s] line : %d", strEvents[ev._type], state->lc);
-  static struct pt subState;
-  std::string response = "";
-  PT_BEGIN(state);
-  memory = "";
-  PT_SPAWN(state, &subState,
-           blRequest(&subState, ev, readMemoryRequest, response));
-  if (response.compare(ackReply) == 0) {
-    PT_SPAWN(state, &subState,
-             blRequest(&subState, ev, blAddress(address), response));
-    if (response.compare(ackReply) == 0) {
-      PT_SPAWN(state, &subState,
-               blRequest(&subState, ev, blLength(length - 1), response));
-      if (response.rfind(ackReply, 0) == 0) {
-        memory = response.substr(1);
-        _timer.start(500);
-        while (memory.length() != length) {
-          PT_YIELD_UNTIL(state, ev.isOneOf(RXD, TO));
-          if (ev.is(RXD)) {
-            memory.append(*ev.data);
-            if (memory.length() == length) message.on("Read Memory ok. ");
-          } else {
-            break;
-          }
-        }
-        stopTimer();
-      } else {
-        _mode = ERROR;
-      }
-    } else {
-      _mode = ERROR;
-    }
-  } else {
-    _mode = ERROR;
-  }
-  PT_END(state);
-}
-
+bool Stm32::getId() { return write(getIdRequest) && waitFor(ackReply); }
+/*
 int Stm32::dispatch(const Event& ev) {
   std::string response;
   INFO("dispatch [%s] line %d ", strEvents[ev._type], _mainState.lc);
@@ -377,13 +292,16 @@ int Stm32::dispatch(const Event& ev) {
       PT_SPAWN(&_mainState, &_subState, blEraseMemory(&_subState, ev));
     }
     if (ev == READ_MEMORY) {
-      PT_SPAWN(&_mainState, &_subState,
-               blReadMemory(&_subState, ev, flashStartAddress(), 256, readMemory));
+      PT_SPAWN(
+          &_mainState, &_subState,
+          blReadMemory(&_subState, ev, flashStartAddress(), 256, readMemory));
       INFO(" readMemory length : %d", readMemory.length());
     }
   }
   PT_END(&_mainState);
 }
+
+*/
 
 void Stm32::request(int timeout, std::string& data) {
   write(data);
