@@ -106,7 +106,7 @@ class MqttFlow : public Flow<T, T> {
 //
 class Mqtt : public Actor {
  public:
-  QueueFlow<MqttMessage, 5> incoming;
+  QueueFlow<MqttMessage, 20> incoming;
   Sink<MqttMessage, 10> outgoing;
   ValueFlow<MqttBlock> blocks;
   ValueSource<bool> connected;

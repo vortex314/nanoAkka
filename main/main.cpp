@@ -200,9 +200,12 @@ Stepper stepper(workerThread, uextStepper);
 #endif
 
 #ifdef STEPPER_SERVO
+#include <As5600.h>
 #include <StepperServo.h>
+Connector uextAs5600(2);
+As5600 as5600(uextAs5600);
 Connector uextStepperServo(STEPPER_SERVO);
-StepperServo stepperServo(workerThread, uextStepperServo);
+StepperServo stepperServo(workerThread, uextStepperServo, as5600);
 #endif
 
 #ifdef HWTIMER
@@ -298,14 +301,29 @@ extern "C" void app_main(void) {
   Sink<int, 3> intSink([](int i) { INFO("received an int %d", i); });
   mqtt.fromTopic<int>("os/int") >> intSink;
 
-  TimerSource logTimer(thisThread, 1, 20000, true);
+  TimerSource logTimer(thisThread, 1, 5000, true);
+
   logTimer >> ([](const TimerMsg &tm) {
-    INFO(
-        " ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  Cas : %u / %u "
-        ", retries : %u",
-        stats.bufferOverflow, stats.bufferPopBusy, stats.bufferPushBusy,
-        stats.threadQueueOverflow, stats.bufferPushCasFailed,
-        stats.bufferPopCasFailed, stats.bufferCasRetries);
+    /*   Register conf("CONF",
+                     "- - - - - - - - - - - - - - - - - - - WD + FTH + SF + "
+                     "PWMF + OUTS + HYST + PWM");
+       Register status(
+           "STATUS",
+           "- - - - - - - - - - - - - - - - - - - - - - - - - - MD ML MH - -
+       -");
+
+       INFO(
+           " angle : %d , rawAngle : %d  status : 0x%X magnitude : %d cof : 0x%X
+       " "agc : %d ", as5600.angle(), as5600.rawAngle(), as5600.status(),
+       as5600.magnitude(), as5600.conf(), as5600.agc());
+       conf.value(as5600.conf());
+       status.value(as5600.status());*/
+    //   status.show();
+    //   conf.show();
+    INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  CAS push : %u pop : %u retries : %u",
+         stats.bufferOverflow, stats.bufferPopBusy, stats.bufferPushBusy,
+         stats.threadQueueOverflow, stats.bufferPushCasFailed,
+         stats.bufferPopCasFailed, stats.bufferCasRetries);
   });
 
 #ifdef COMMAND
@@ -467,18 +485,17 @@ extern "C" void app_main(void) {
 #endif
 
 #ifdef STEPPER_SERVO
+  as5600.init();
   stepperServo.init();
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
 
-  mqtt.fromTopic<int>("stepper/angleTarget") >> stepperServo.angleTarget;
-  poller.poll(stepperServo.stepMeasured) >>
-      mqtt.toTopic<int>("stepper/stepMeasured");
+  poller.poll(stepperServo.stepMeasured) >> mqtt.toTopic<int>("stepper/stepMeasured");
   stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-  stepperServo.adcPot >> poller.cache<int>() >>
-      mqtt.toTopic<int>("stepper/adcPot");
-  stepperServo.angleMeasured >> poller.cache<int>() >>
-      mqtt.toTopic<int>("stepper/angleMeasured");
+  stepperServo.angleMeasured >> mqtt.toTopic<int>("stepper/angleMeasured");
+      stepperServo.errorCount >> poller.cache<int>() >>
+      mqtt.toTopic<int>("stepper/errorCount");
+
   //  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
   stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
@@ -486,6 +503,7 @@ extern "C" void app_main(void) {
   poller.poll(stepperServo.deviceMessage) >>
       mqtt.toTopic<std::string>("stepper/message");
   poller.poll(stepperServo.angleTarget);
+  poller.poll(stepperServo.errorCount);
 #endif
 
 #ifdef DWM1000_TAG

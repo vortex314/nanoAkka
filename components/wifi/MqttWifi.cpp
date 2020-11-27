@@ -199,6 +199,6 @@ void MqttWifi::mqttPublish(const char *topic, const char *message) {
 //
 void MqttWifi::mqttSubscribe(const char *topic) {
   INFO("Subscribing to topic %s.", topic);
-  int id = esp_mqtt_client_subscribe(_mqttClient, topic, 0);
+  int id = esp_mqtt_client_subscribe(_mqttClient, topic, 1);
   if (id < 0) WARN("esp_mqtt_client_subscribe() failed.");
 }
