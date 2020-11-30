@@ -492,7 +492,10 @@ extern "C" void app_main(void) {
 
   poller.poll(stepperServo.stepMeasured) >> mqtt.toTopic<int>("stepper/stepMeasured");
   stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-  stepperServo.angleMeasured >> mqtt.toTopic<int>("stepper/angleMeasured");
+    Cache<int> cache(mqttThread,300,1000);
+
+  stepperServo.angleMeasured >>  *(new Cache<int>(mqttThread,300,1000)) >> mqtt.toTopic<int>("stepper/angleMeasured");
+  //stepperServo.angleMeasured >> [](const int& in){ INFO(" angleMeasured : %d",in);};
       stepperServo.errorCount >> poller.cache<int>() >>
       mqtt.toTopic<int>("stepper/errorCount");
 

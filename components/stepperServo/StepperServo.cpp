@@ -27,7 +27,7 @@ StepperServo::StepperServo(Thread &thr, Connector &uext, As5600 &as5600)
       _reportTimer(thr, 2, 500, true),
       stepsPerRotation("stepper/stepsPerRotation", STEPS * STEP_FACTOR) {
   _pulser.divider = 80;
-  _pulser.intervalSec = 0.001;
+  _pulser.intervalSec = 0.0008;
   _pulser.autoReload = true;
   stepsPerRotation = STEPS * STEP_FACTOR;
 }

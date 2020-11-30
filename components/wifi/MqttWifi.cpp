@@ -149,9 +149,9 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t *event) {
         me._lastTopic = me._lastTopic.substr(me._hostPrefix.length());
       }
       bool isOtaData = me._lastTopic.find("/ota") != std::string::npos;
-      INFO(" MQTT_EVENT_DATA %s offset:%d length:%d total:%d ",
+ /*     INFO(" MQTT_EVENT_DATA %s offset:%d length:%d total:%d ",
            me._lastTopic.c_str(), event->current_data_offset, event->data_len,
-           event->total_data_len);
+           event->total_data_len);*/
       if (isOtaData) {
         MqttBlock block;
         block.offset = event->current_data_offset;
@@ -168,8 +168,8 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t *event) {
         }
         if (event->current_data_offset + event->data_len ==
             event->total_data_len) {
-          INFO("MQTT RXD topic : %s , message  : %d", me._lastTopic.c_str(),
-               data.length());
+  /*        INFO("MQTT RXD topic : %s , message  : %d", me._lastTopic.c_str(),
+               data.length());*/
           me.incoming.on({me._lastTopic, data});
         }
       }

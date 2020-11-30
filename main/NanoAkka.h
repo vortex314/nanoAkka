@@ -219,7 +219,6 @@ class ArrayQueue : public AbstractQueue<T> {
       }
       desired = next(expected);
       if (desired == _readPtr % SIZE) {
-        stats.bufferOverflow++;
         return ENOBUFS;
       }
       desired |= BUSY;
@@ -228,8 +227,8 @@ class ArrayQueue : public AbstractQueue<T> {
                                             std::memory_order_seq_cst)) {
         expected = desired;
         desired &= ~BUSY;
-        _array[desired]=t;
-//        _array[desired] = std::move(t);
+        _array[desired] = t;
+        //        _array[desired] = std::move(t);
         while (_writePtr.compare_exchange_strong(
                    expected, desired, std::memory_order_seq_cst,
                    std::memory_order_seq_cst) == false) {
@@ -277,8 +276,8 @@ class ArrayQueue : public AbstractQueue<T> {
                                            std::memory_order_seq_cst)) {
         expected = desired;
         desired &= ~BUSY;
- //       t = std::move(_array[desired]);
-        t= _array[desired];
+        //       t = std::move(_array[desired]);
+        t = _array[desired];
         while (_readPtr.compare_exchange_strong(
                    expected, desired, std::memory_order_seq_cst,
                    std::memory_order_seq_cst) == false) {
@@ -445,7 +444,10 @@ class TimerSource : public Source<TimerMsg> {
   void attach(Thread &thr) { thr.addTimer(this); }
   void reset() { start(); }
   void start() { _expireTime = Sys::millis() + _interval; }
-  void start(uint32_t interval) { _interval=interval; start();}
+  void start(uint32_t interval) {
+    _interval = interval;
+    start();
+  }
   void stop() { _expireTime = UINT64_MAX; }
   void interval(uint32_t i) { _interval = i; }
   void request() {
@@ -462,8 +464,7 @@ class TimerSource : public Source<TimerMsg> {
   uint64_t expireTime() { return _expireTime; }
   inline uint32_t interval() { return _interval; }
 };
-//-______________________________________________________ Sink
-//______________________
+//____________________________________  SINK ______________________
 template <class T, int S>
 class Sink : public Subscriber<T>, public Invoker {
   ArrayQueue<T, S> _t;
@@ -473,7 +474,7 @@ class Sink : public Subscriber<T>, public Invoker {
      {
          return ++index % S;
      }*/
- T _lastValue;
+  T _lastValue;
 
  public:
   Sink() {
@@ -484,11 +485,12 @@ class Sink : public Subscriber<T>, public Invoker {
 
   void on(const T &t) {
     if (_thread) {
-      if (_t.push(t)) {
-        // WARN(" sink full ");
-      } else {
-        _thread->enqueue(this);
+      while (_t.push(t) != 0) {
+        stats.bufferOverflow++;
+        T t1;
+        _t.pop(t1);  // drop oldest from queue
       }
+      _thread->enqueue(this);
     } else {
       _func(t);
     }
@@ -530,6 +532,36 @@ class Flow : public Subscriber<IN>, public Source<OUT> {
     flow.subscribe(this);
   };
 };
+// -------------------------------------------------------- Cache
+template <class T>
+class Cache : public Flow<T,T>,public Subscriber<TimerMsg> {
+  Thread& _thread;
+  uint32_t _min, _max;
+  uint64_t _lastSend;
+  T _t;
+  TimerSource _timerSource;
+
+ public:
+  Cache(Thread &thread, uint32_t min, uint32_t max)
+      : _thread(thread), _min(min), _max(max), _timerSource(thread) {
+    _timerSource.interval(max);
+    _timerSource.start();
+    _timerSource.subscribe(this);
+  }
+  void on(const T &t) {
+    _t = t;
+    uint64_t now = Sys::millis();
+    if (_lastSend + _min < now) {
+      this->emit(t);
+      _lastSend = now;
+    }
+  }
+  void on(const TimerMsg &tm) {
+    this->emit(_t);
+    _timerSource.reset();
+  }
+  void request(){ this->emit(_t); }
+};
 //_____________________________________________________________________________
 //
 template <class T, int S>
@@ -541,11 +573,12 @@ class QueueFlow : public Flow<T, T>, public Invoker {
  public:
   void on(const T &t) {
     if (_thread) {
-      if (_queue.push(t)) {
-        //					WARN(" sink full ");
-      } else {
-        _thread->enqueue(this);
+      while (_queue.push(t) != 0) {
+        stats.bufferOverflow++;
+        T t1;
+        _queue.pop(t1);
       }
+      _thread->enqueue(this);
     } else {
       this->emit(t);
     }
