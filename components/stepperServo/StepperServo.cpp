@@ -62,8 +62,8 @@ void StepperServo::init() {
     if (!_measurementError) { // drop i2c errors
       angleMeasured = angle;
       stepTarget = angleToSteps(angleMeasured() - angleTarget());
-      INFO(" angle measured:%d target:%d steps:%d ", angleMeasured(),
-           angleTarget(), stepTarget());
+  /*    INFO(" angle measured:%d target:%d steps:%d ", angleMeasured(),
+           angleTarget(), stepTarget());*/
     } else {
       _measurementError = false;
     }
@@ -107,7 +107,6 @@ void StepperServo::init() {
   angleTarget.pass(true);
   angleMeasured.pass(true);
   stepTarget.pass(true);
-  stepMeasured.pass(true);
   run();
 }
 

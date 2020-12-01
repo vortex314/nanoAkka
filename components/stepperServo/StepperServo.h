@@ -30,7 +30,6 @@ class StepperServo : public Actor, public Device {
   ValueFlow<int> angleTarget = 0;
   ValueFlow<int> angleMeasured = 0;
   ValueFlow<int> stepTarget = 0;
-  ValueFlow<int> stepMeasured = 0;
   ValueFlow<bool> isDriving = false;
   ValueFlow<int> stepDirection;
   StepperServo(Thread &thr, Connector &uext, As5600 &as5600);

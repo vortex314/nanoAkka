@@ -490,17 +490,16 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
 
-  poller.poll(stepperServo.stepMeasured) >> mqtt.toTopic<int>("stepper/stepMeasured");
-  stepperServo.stepTarget >> mqtt.toTopic<int>("stepper/stepTarget");
-    Cache<int> cache(mqttThread,300,1000);
+ 
+  stepperServo.stepTarget >> *(new Cache<int>(mqttThread,300,1000)) >> mqtt.toTopic<int>("stepper/stepTarget");
 
   stepperServo.angleMeasured >>  *(new Cache<int>(mqttThread,300,1000)) >> mqtt.toTopic<int>("stepper/angleMeasured");
-  //stepperServo.angleMeasured >> [](const int& in){ INFO(" angleMeasured : %d",in);};
+  stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
+
       stepperServo.errorCount >> poller.cache<int>() >>
       mqtt.toTopic<int>("stepper/errorCount");
 
   //  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
-  stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
   poller.poll(stepperServo.deviceState) >> mqtt.toTopic<int>("stepper/state");
   poller.poll(stepperServo.deviceMessage) >>

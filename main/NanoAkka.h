@@ -306,7 +306,7 @@ class ArrayQueue : public AbstractQueue<T> {
 
 // STREAMS
 class TimerSource;
-
+//____________________________________________________________________ THREAD __
 class Thread {
 #ifdef FREERTOS
   QueueHandle_t _workQueue = 0;
@@ -336,7 +336,7 @@ class Thread {
   void addTimer(TimerSource *ts) { _timers.push_back(ts); }
 };
 
-//__________________________________________________________________________`
+//_____________________________________________________________________ SOURCE _
 //
 template <class T>
 class Source : public Publisher<T>, public Requestable {
@@ -354,7 +354,7 @@ class Source : public Publisher<T>, public Requestable {
   ~Source() { WARN(" Source destructor. Really ? "); }
   void last(T &last) { last = _last; }
 };
-//__________________________________________________________________________`
+//____________________________________________________________ LAMBDASOURCE
 //
 template <class T>
 class LambdaSource : public Source<T> {
@@ -542,7 +542,7 @@ class Cache : public Flow<T,T>,public Subscriber<TimerMsg> {
   TimerSource _timerSource;
 
  public:
-  Cache(Thread &thread, uint32_t min, uint32_t max)
+  Cache(Thread &thread, uint32_t min, uint32_t max,bool request=false)
       : _thread(thread), _min(min), _max(max), _timerSource(thread) {
     _timerSource.interval(max);
     _timerSource.start();
@@ -557,7 +557,7 @@ class Cache : public Flow<T,T>,public Subscriber<TimerMsg> {
     }
   }
   void on(const TimerMsg &tm) {
-    this->emit(_t);
+     this->emit(_t);
     _timerSource.reset();
   }
   void request(){ this->emit(_t); }
