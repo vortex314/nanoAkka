@@ -58,18 +58,18 @@ class MqttWifi : public Mqtt {
   void onNext(const TimerMsg&);
   void onNext(const MqttMessage&);
   void request();
-  template <class T>
+ /* template <class T>
   Subscriber<T>& toTopic(const char* name) {
-    auto flow = new ToMqtt<T>(name);
+    auto flow = new ToMqtt<T>(name,srcPrefix);
     *flow >> outgoing;
     return *flow;
   }
   template <class T>
   Source<T>& fromTopic(const char* name) {
-    auto newSource = new FromMqtt<T>(name);
+    auto newSource = new FromMqtt<T>(name,dstPrefix);
     incoming >> *newSource;
     return *newSource;
-  }
+  }*/
   /*
                           template <class T>
                           MqttFlow<T>& topic(const char* name) {

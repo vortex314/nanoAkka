@@ -34,7 +34,7 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
   NanoString _name;
 
  public:
-  ToMqtt(NanoString name)
+  ToMqtt(NanoString name, NanoString srcPrefix)
       : LambdaFlow<T, MqttMessage>([&](MqttMessage &msg, const T &event) {
           NanoString s;
           DynamicJsonDocument doc(100);
@@ -44,7 +44,17 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
           msg = {_name, s};
           return 0;
         }),
-        _name(name) {}
+        _name(name) {
+    std::string topic = name;
+    std::string targetTopic;
+    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
+      INFO(" no prefix for %s ", name);
+      _name = name;
+    } else {
+      INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name);
+      _name = srcPrefix + name;
+    }
+  }
   void request(){};
 };
 //_______________________________________________________________________________________________________________
@@ -54,10 +64,9 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
   NanoString _name;
 
  public:
-  FromMqtt(NanoString name)
+  FromMqtt(NanoString name, NanoString dstPrefix)
       : LambdaFlow<MqttMessage, T>([&](T &t, const MqttMessage &mqttMessage) {
-          //          INFO(" '%s' <>'%s'", mqttMessage.topic.c_str(),
-          //          _name.c_str());
+          INFO(" '%s' <>'%s'", mqttMessage.topic.c_str(), _name.c_str());
           if (mqttMessage.topic != _name) {
             return EINVAL;
           }
@@ -82,8 +91,17 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
           return 0;
           // emit doesn't work as such
           // https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
-        }),
-        _name(name){};
+        }) {
+    std::string topic = name;
+    std::string targetTopic;
+    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
+      INFO(" no prefix for %s ", name);
+      _name = name;
+    } else {
+      INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name);
+      _name = dstPrefix + name;
+    }
+  };
   void request(){};
 };
 //____________________________________________________________________________________________________________
@@ -93,9 +111,9 @@ class MqttFlow : public Flow<T, T> {
  public:
   ToMqtt<T> toMqtt;
   FromMqtt<T> fromMqtt;
-  MqttFlow(const char *topic)
-      : toMqtt(topic),
-        fromMqtt(topic){
+  MqttFlow(const char *topic, NanoString dstPrefix, NanoString srcPrefix)
+      : toMqtt(topic, srcPrefix),
+        fromMqtt(topic, dstPrefix){
             //       INFO(" created MqttFlow : %s ",topic);
         };
   void request() { fromMqtt.request(); };
@@ -125,37 +143,19 @@ class Mqtt : public Actor {
   void init();
   template <class T>
   Subscriber<T> &toTopic(const char *name) {
-    std::string topic = name;
-    std::string targetTopic;
-    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
-      INFO(" no prefix for %s ", name);
-      targetTopic = name;
-    } else {
-      INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name);
-      targetTopic = srcPrefix + name;
-    }
-    auto flow = new ToMqtt<T>(targetTopic.c_str());
+    auto flow = new ToMqtt<T>(name, srcPrefix);
     *flow >> outgoing;
     return *flow;
   }
   template <class T>
   Source<T> &fromTopic(const char *name) {
-    std::string topic = name;
-    std::string targetTopic;
-    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
-      INFO(" no prefix for %s ", name);
-      targetTopic = name;
-    } else {
-      INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name);
-      targetTopic = dstPrefix + name;
-    }
-    auto newSource = new FromMqtt<T>(targetTopic.c_str());
+    auto newSource = new FromMqtt<T>(name, dstPrefix);
     incoming >> *newSource;
     return *newSource;
   }
   template <class T>
   Flow<T, T> &topic(const char *name) {
-    auto flow = new MqttFlow<T>(name);
+    auto flow = new MqttFlow<T>(name, dstPrefix, srcPrefix);
     incoming >> flow->fromMqtt;
     flow->toMqtt >> outgoing;
     return *flow;
