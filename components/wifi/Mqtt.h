@@ -48,7 +48,7 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
     std::string topic = name;
     std::string targetTopic;
     if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
-      INFO(" no prefix for %s ", name);
+      INFO(" no prefix for %s ", name.c_str());
       _name = name;
     } else {
       INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name.c_str());
@@ -95,7 +95,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
     std::string topic = name;
     std::string targetTopic;
     if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
-      INFO(" no prefix for %s ", name);
+      INFO(" no prefix for %s ", name.c_str());
       _name = name;
     } else {
       INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name.c_str());
