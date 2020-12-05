@@ -5,6 +5,14 @@
 
 #define STRINGIFY(X) #X
 #define S(X) STRINGIFY(X)
+// ------------------------------------------------- Linux
+#ifdef __linux__
+#include <mqueue.h>
+
+#include <string>
+#include <thread>
+typedef std::string NanoString;
+#endif
 //--------------------------------------------------  ESP8266
 #ifdef ESP_OPEN_RTOS
 #define FREERTOS
@@ -308,7 +316,11 @@ class ArrayQueue : public AbstractQueue<T> {
 class TimerSource;
 //____________________________________________________________________ THREAD __
 class Thread {
-#ifdef FREERTOS
+#ifdef __linux__
+  int _pipeFd[2];
+  int _writePipe = 0;
+  int _readPipe = 0;
+#elif defined(FREERTOS)
   QueueHandle_t _workQueue = 0;
 #else
   ArrayQueue<Invoker *, 10> _workQueue;
@@ -534,15 +546,15 @@ class Flow : public Subscriber<IN>, public Source<OUT> {
 };
 // -------------------------------------------------------- Cache
 template <class T>
-class Cache : public Flow<T,T>,public Subscriber<TimerMsg> {
-  Thread& _thread;
+class Cache : public Flow<T, T>, public Subscriber<TimerMsg> {
+  Thread &_thread;
   uint32_t _min, _max;
   uint64_t _lastSend;
   T _t;
   TimerSource _timerSource;
 
  public:
-  Cache(Thread &thread, uint32_t min, uint32_t max,bool request=false)
+  Cache(Thread &thread, uint32_t min, uint32_t max, bool request = false)
       : _thread(thread), _min(min), _max(max), _timerSource(thread) {
     _timerSource.interval(max);
     _timerSource.start();
@@ -557,10 +569,10 @@ class Cache : public Flow<T,T>,public Subscriber<TimerMsg> {
     }
   }
   void on(const TimerMsg &tm) {
-     this->emit(_t);
+    this->emit(_t);
     _timerSource.reset();
   }
-  void request(){ this->emit(_t); }
+  void request() { this->emit(_t); }
 };
 //_____________________________________________________________________________
 //

@@ -320,10 +320,12 @@ extern "C" void app_main(void) {
        status.value(as5600.status());*/
     //   status.show();
     //   conf.show();
-    INFO(" ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  CAS push : %u pop : %u retries : %u",
-         stats.bufferOverflow, stats.bufferPopBusy, stats.bufferPushBusy,
-         stats.threadQueueOverflow, stats.bufferPushCasFailed,
-         stats.bufferPopCasFailed, stats.bufferCasRetries);
+    INFO(
+        " ovfl : %u busyPop : %u busyPush : %u threadQovfl : %u  CAS push : %u "
+        "pop : %u retries : %u",
+        stats.bufferOverflow, stats.bufferPopBusy, stats.bufferPushBusy,
+        stats.threadQueueOverflow, stats.bufferPushCasFailed,
+        stats.bufferPopCasFailed, stats.bufferCasRetries);
   });
 
 #ifdef COMMAND
@@ -490,16 +492,15 @@ extern "C" void app_main(void) {
   stepperServo.watchdogTimer.interval(2000);
   mqtt.fromTopic<bool>("stepper/watchdogReset") >> stepperServo.watchdogReset;
 
- 
-  stepperServo.stepTarget >> *(new Cache<int>(mqttThread,300,1000)) >> mqtt.toTopic<int>("stepper/stepTarget");
-
-  stepperServo.angleMeasured >>  *(new Cache<int>(mqttThread,300,1000)) >> mqtt.toTopic<int>("stepper/angleMeasured");
+  stepperServo.stepTarget >> *(new Cache<int>(mqttThread, 300, 1000)) >>
+      mqtt.toTopic<int>("stepper/stepTarget");
+  stepperServo.angleMeasured >> *(new Cache<int>(mqttThread, 300, 1000)) >>
+      mqtt.toTopic<int>("stepper/angleMeasured");
   stepperServo.angleTarget == mqtt.topic<int>("stepper/angleTarget");
 
-      stepperServo.errorCount >> poller.cache<int>() >>
+  stepperServo.errorCount >> poller.cache<int>() >>
       mqtt.toTopic<int>("stepper/errorCount");
 
-  //  stepperServo.output >> mqtt.toTopic<float>("stepper/output");
   stepperServo.stepsPerRotation == mqtt.topic<int>("stepper/stepsPerRotation");
   poller.poll(stepperServo.deviceState) >> mqtt.toTopic<int>("stepper/state");
   poller.poll(stepperServo.deviceMessage) >>

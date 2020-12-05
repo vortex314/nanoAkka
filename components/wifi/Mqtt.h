@@ -16,7 +16,7 @@ class MqttBlock {
   uint32_t offset;
   uint32_t length;
   uint32_t total;
-  uint8_t  *data;
+  uint8_t *data;
   MqttBlock operator=(const MqttBlock &other) {
     topic = other.topic;
     //    data=other.data;
@@ -56,8 +56,8 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
  public:
   FromMqtt(NanoString name)
       : LambdaFlow<MqttMessage, T>([&](T &t, const MqttMessage &mqttMessage) {
-          //       INFO(" '%s' <>
-          //       '%s'",mqttMessage.topic.c_str(),_name.c_str());
+          //          INFO(" '%s' <>'%s'", mqttMessage.topic.c_str(),
+          //          _name.c_str());
           if (mqttMessage.topic != _name) {
             return EINVAL;
           }
@@ -106,23 +106,50 @@ class MqttFlow : public Flow<T, T> {
 //
 class Mqtt : public Actor {
  public:
+  std::string dstPrefix;
+  std::string srcPrefix;
   QueueFlow<MqttMessage, 20> incoming;
   Sink<MqttMessage, 10> outgoing;
   ValueFlow<MqttBlock> blocks;
   ValueSource<bool> connected;
   TimerSource keepAliveTimer;
-  Mqtt(Thread &thr) : Actor(thr){};
+  Mqtt(Thread &thr) : Actor(thr) {
+    dstPrefix = "dst/";
+    dstPrefix += Sys::hostname();
+    dstPrefix += "/";
+    srcPrefix = "src";
+    srcPrefix += Sys::hostname();
+    srcPrefix += "/";
+  };
   ~Mqtt(){};
   void init();
   template <class T>
   Subscriber<T> &toTopic(const char *name) {
-    auto flow = new ToMqtt<T>(name);
+    std::string topic = name;
+    std::string targetTopic;
+    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
+      INFO(" no prefix for %s ", name);
+      targetTopic = name;
+    } else {
+      INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name);
+      targetTopic = srcPrefix + name;
+    }
+    auto flow = new ToMqtt<T>(targetTopic.c_str());
     *flow >> outgoing;
     return *flow;
   }
   template <class T>
   Source<T> &fromTopic(const char *name) {
-    auto newSource = new FromMqtt<T>(name);
+    std::string topic = name;
+    std::string targetTopic;
+    if (topic.find("src/") == 0 || topic.find("dst/") == 0) {
+      INFO(" no prefix for %s ", name);
+      targetTopic = name;
+    } else {
+      INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name);
+      targetTopic = dstPrefix + name;
+    }
+    auto newSource = new FromMqtt<T>(targetTopic.c_str());
     incoming >> *newSource;
     return *newSource;
   }
