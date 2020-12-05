@@ -51,7 +51,7 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
       INFO(" no prefix for %s ", name);
       _name = name;
     } else {
-      INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name);
+      INFO(" adding prefix %s to %s ", srcPrefix.c_str(), name.c_str());
       _name = srcPrefix + name;
     }
   }
@@ -98,7 +98,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
       INFO(" no prefix for %s ", name);
       _name = name;
     } else {
-      INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name);
+      INFO(" adding prefix %s to %s ", dstPrefix.c_str(), name.c_str());
       _name = dstPrefix + name;
     }
   };
