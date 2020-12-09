@@ -66,7 +66,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
  public:
   FromMqtt(NanoString name, NanoString dstPrefix)
       : LambdaFlow<MqttMessage, T>([&](T &t, const MqttMessage &mqttMessage) {
-          INFO(" '%s' <>'%s'", mqttMessage.topic.c_str(), _name.c_str());
+          DEBUG(" '%s' <>'%s'", mqttMessage.topic.c_str(), _name.c_str());
           if (mqttMessage.topic != _name) {
             return EINVAL;
           }
