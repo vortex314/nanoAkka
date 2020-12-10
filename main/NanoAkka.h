@@ -549,6 +549,7 @@ template <class T>
 class Cache : public Flow<T, T>, public Subscriber<TimerMsg> {
   Thread &_thread;
   uint32_t _min, _max;
+  bool _unsendValue = false;
   uint64_t _lastSend;
   T _t;
   TimerSource _timerSource;
@@ -556,23 +557,41 @@ class Cache : public Flow<T, T>, public Subscriber<TimerMsg> {
  public:
   Cache(Thread &thread, uint32_t min, uint32_t max, bool request = false)
       : _thread(thread), _min(min), _max(max), _timerSource(thread) {
-    _timerSource.interval(max);
+    _timerSource.interval(min);
     _timerSource.start();
     _timerSource.subscribe(this);
   }
   void on(const T &t) {
     _t = t;
     uint64_t now = Sys::millis();
+    _unsendValue = true;
     if (_lastSend + _min < now) {
       this->emit(t);
+      _unsendValue = false;
       _lastSend = now;
     }
   }
   void on(const TimerMsg &tm) {
-    this->emit(_t);
+    uint64_t now = Sys::millis();
+
+    if (_unsendValue) {
+      this->emit(_t);
+      _unsendValue = false;
+      _lastSend = now;
+    }
+    if (now > _lastSend + _max) {
+      this->emit(_t);
+      _unsendValue = false;
+      _lastSend = now;
+    }
     _timerSource.reset();
   }
   void request() { this->emit(_t); }
+
+  static Cache<T> &nw(Thread &t, uint32_t min, uint32_t max) {
+    auto cache = new Cache<T>(t, min, max);
+    return *cache;
+  }
 };
 //_____________________________________________________________________________
 //
