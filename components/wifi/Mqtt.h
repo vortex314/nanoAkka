@@ -89,14 +89,14 @@ class ToMqtt : public LambdaFlow<T, MqttMessage> {
 
  public:
   ToMqtt(NanoString name, Mqtt *mqtt)
-      : LambdaFlow<T, MqttMessage>([&](const T &event) {
+      : LambdaFlow<T, MqttMessage>([&](MqttMessage& msg,const T &event) {
           NanoString s;
           DynamicJsonDocument doc(100);
           JsonVariant variant = doc.to<JsonVariant>();
           variant.set(event);
           serializeJson(doc, s);
-          MqttMessage msg = {_name, s};
-          return msg;
+          msg = {_name, s};
+          return 0;
         }),
         _name(name) {
     std::string topic = name;
@@ -119,7 +119,7 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
 
  public:
   FromMqtt(NanoString name, Mqtt *mqtt)
-      : LambdaFlow<MqttMessage, T>([&](const MqttMessage &mqttMessage) {
+      : LambdaFlow<MqttMessage, T>([&](T& t,const MqttMessage &mqttMessage) {
           DEBUG(" '%s' <>'%s'", mqttMessage.topic.c_str(), _name.c_str());
           if (mqttMessage.topic != _name) {
             return EINVAL;
@@ -141,8 +141,8 @@ class FromMqtt : public LambdaFlow<MqttMessage, T> {
                  mqttMessage.message.c_str());
             return ENODATA;
           }
-          T t = variant.as<T>();
-          return t;
+        t=  variant.as<T>();
+          return 0;
           // emit doesn't work as such
           // https://stackoverflow.com/questions/9941987/there-are-no-arguments-that-depend-on-a-template-parameter
         }) {

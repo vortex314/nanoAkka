@@ -633,20 +633,20 @@ class QueueFlow : public Flow<T, T>, public Invoker {
 
 template <class IN, class OUT>
 class LambdaFlow : public Flow<IN, OUT> {
-  std::function<OUT(const IN &)> _func;
+  std::function<int(OUT& ,const IN &)> _func;
 
  public:
   LambdaFlow() {
-    _func = [](const IN &in) {
+    _func = [](OUT& out,const IN &in) {
       WARN("no handler for this flow");
-      return new OUT;
+      return ENODATA;
     };
   };
-  LambdaFlow(std::function<OUT(const IN &)> func) : _func(func){};
-  void lambda(std::function<OUT(const IN &)> func) { _func = func; }
-  virtual void on(const IN &in) { this->emit(_func(in)); }
+  LambdaFlow(std::function<int(OUT&,const IN &)> func) : _func(func){};
+  void lambda(std::function<int(OUT&,const IN &)> func) { _func = func; }
+  virtual void on(const IN &in) { OUT out; if ( _func(out,in) ==0) this->emit(out); }
   void request(){};
-  static LambdaFlow<IN, OUT> &nw(std::function<OUT(const IN &)> func) {
+  static LambdaFlow<IN, OUT> &nw(std::function<int(OUT&,const IN &)> func) {
     auto lf = new LambdaFlow(func);
     return *lf;
   }

@@ -33,7 +33,6 @@ class MqttWifi : public Mqtt {
   esp_mqtt_client_handle_t _mqttClient;
   std::string _lwt_topic;
   std::string _lwt_message;
-  std::string _hostPrefix;
   TimerSource _reportTimer;
   TimerSource _keepAliveTimer;
   std::string _lastTopic;

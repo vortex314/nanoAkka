@@ -37,7 +37,12 @@ MqttWifi::~MqttWifi() {}
 void MqttWifi::init() {
   string_format(_address, "mqtt://%s:%d", S(MQTT_HOST), MQTT_PORT);
   string_format(_lwt_topic, "src/%s/system/alive", Sys::hostname());
-  string_format(_hostPrefix, "src/%s/", Sys::hostname());
+  srcPrefix = "src/";
+  srcPrefix += Sys::hostname();
+  srcPrefix += "/";
+  dstPrefix = "dst/";
+  dstPrefix += Sys::hostname();
+  dstPrefix += "/";
   _clientId = Sys::hostname();
   //	esp_log_level_set("*", ESP_LOG_VERBOSE);
   esp_mqtt_client_config_t mqtt_cfg;
@@ -69,11 +74,11 @@ void MqttWifi::init() {
       if (connected()) esp_mqtt_client_stop(_mqttClient);
     }
   });
-  outgoing.async(thread(), [&](const MqttMessage &m) {
-    std::string topic = _hostPrefix;
-    topic += m.topic;
-    mqttPublish(topic.c_str(), m.message.c_str());
+
+    outgoing.async(thread(), [&](const MqttMessage& m) {
+    mqttPublish(m.topic.c_str(), m.message.c_str());
   });
+
   keepAliveTimer.interval(1000);
   keepAliveTimer.repeat(true);
   keepAliveTimer >> [&](const TimerMsg &tm) {
@@ -89,9 +94,7 @@ void MqttWifi::init() {
 
 void MqttWifi::onNext(const MqttMessage &m) {
   if (connected()) {
-    std::string topic = _hostPrefix;
-    topic += m.topic;
-    mqttPublish(topic.c_str(), m.message.c_str());
+    mqttPublish(m.topic.c_str(), m.message.c_str());
   };
 }
 //________________________________________________________________________
@@ -146,19 +149,19 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t *event) {
       static std::string data;
       if (event->current_data_offset == 0) {
         me._lastTopic = std::string(event->topic, event->topic_len);
-        me._lastTopic = me._lastTopic.substr(me._hostPrefix.length());
+        me._lastTopic = me._lastTopic.substr(me.srcPrefix.length());
       }
       bool isOtaData = me._lastTopic.find("/ota") != std::string::npos;
- /*     INFO(" MQTT_EVENT_DATA %s offset:%d length:%d total:%d ",
-           me._lastTopic.c_str(), event->current_data_offset, event->data_len,
-           event->total_data_len);*/
+      /*     INFO(" MQTT_EVENT_DATA %s offset:%d length:%d total:%d ",
+                me._lastTopic.c_str(), event->current_data_offset,
+         event->data_len, event->total_data_len);*/
       if (isOtaData) {
         MqttBlock block;
         block.offset = event->current_data_offset;
         block.length = event->data_len;
         block.total = event->total_data_len;
         block.topic = me._lastTopic;
-        block.data = (uint8_t*)event->data;
+        block.data = (uint8_t *)event->data;
         me.blocks.on(block);
       } else {
         if (event->current_data_offset == 0) {
@@ -168,8 +171,8 @@ int MqttWifi::mqtt_event_handler(esp_mqtt_event_t *event) {
         }
         if (event->current_data_offset + event->data_len ==
             event->total_data_len) {
-  /*        INFO("MQTT RXD topic : %s , message  : %d", me._lastTopic.c_str(),
-               data.length());*/
+          /*        INFO("MQTT RXD topic : %s , message  : %d",
+             me._lastTopic.c_str(), data.length());*/
           me.incoming.on({me._lastTopic, data});
         }
       }
