@@ -22,9 +22,9 @@ StepperServo::StepperServo(Thread &thr, Connector &uext, As5600 &as5600)
       _pulser(uext.toPin(LP_TXD)),
       _pinDir(uext.getDigitalOut(LP_SCL)),
       _pinEnable(uext.getDigitalOut(LP_SDA)),
-      _measureTimer(thr, 4, 100, true),
-      _controlTimer(thr, 3, CONTROL_INTERVAL_MS, true),
-      _reportTimer(thr, 2, 500, true),
+      _measureTimer(thr,  100, true),
+      _controlTimer(thr,  CONTROL_INTERVAL_MS, true),
+      _reportTimer(thr,  500, true),
       stepsPerRotation("stepper/stepsPerRotation", STEPS * STEP_FACTOR) {
   _pulser.divider = 80;
   _pulser.intervalSec = 0.0008;

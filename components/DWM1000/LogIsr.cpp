@@ -33,7 +33,7 @@ void LogIsr::log(const char* file, uint32_t line, const char* fmt, ...)
 
 LogIsr::LogIsr(Thread& thr)
     : Actor(thr),_buffer(256),
-      logTimer(thr,1,50,true)
+      logTimer(thr,50,true)
 {
     _me = this;
 }

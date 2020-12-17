@@ -84,7 +84,7 @@ class Poller : public Actor {
  public:
   ValueFlow<bool> connected;
   ValueFlow<uint32_t> interval = 500;
-  Poller(Thread &t) : Actor(t), _pollInterval(t, 1, 500, true) {
+  Poller(Thread &t) : Actor(t), _pollInterval(t,  500, true) {
     _pollInterval >> [&](const TimerMsg tm) {
       if (_requestables.size() && connected())
         _requestables[_idx++ % _requestables.size()]->request();
@@ -301,7 +301,7 @@ extern "C" void app_main(void) {
   Sink<int, 3> intSink([](int i) { INFO("received an int %d", i); });
   mqtt.fromTopic<int>("os/int") >> intSink;
 
-  TimerSource logTimer(thisThread, 1, 5000, true);
+  TimerSource logTimer(thisThread,  5000, true);
 
   logTimer >> ([](const TimerMsg &tm) {
     /*   Register conf("CONF",

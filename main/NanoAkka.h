@@ -14,7 +14,7 @@
 typedef std::string NanoString;
 #endif
 //--------------------------------------------------  ESP8266
-#ifdef ESP_OPEN_RTOS
+#if defined(ESP_OPEN_RTOS) || defined(ESP_PLATFORM) // ESP_PLATFORM for ESP8266_RTOS_SDK
 #define FREERTOS
 #define NO_ATOMIC
 #include <FreeRTOS.h>
@@ -145,7 +145,7 @@ class Requestable {
 //
 #define BUSY (1 << 15)  // busy read or write ptr
 
-#if defined(ESP_OPEN_RTOS) || defined(ESP8266_IDF)
+#if defined(ESP_OPEN_RTOS) || defined(ESP8266_IDF) || defined(ESP_PLATFORM)
 // Set Interrupt Level
 // level (0-15),
 // level 15 will disable ALL interrupts,
@@ -424,14 +424,14 @@ class ValueSource : public Source<T> {
 //
 class TimerMsg {
  public:
-  uint32_t id;
+  const char* name;
 };
 
 class TimerSource : public Source<TimerMsg> {
   uint32_t _interval = UINT32_MAX;
   bool _repeat = false;
   uint64_t _expireTime = UINT64_MAX;
-  uint32_t _id = 0;
+
   void setNewExpireTime() {
     uint64_t now = Sys::millis();
     _expireTime += _interval;
@@ -439,18 +439,20 @@ class TimerSource : public Source<TimerMsg> {
   }
 
  public:
-  TimerSource(Thread &thr, int id, uint32_t interval, bool repeat) {
-    _id = id;
+   const char* name="undefined";
+
+  TimerSource(Thread &thr,  uint32_t interval, bool repeat,const char* nme="unknownTimer1") {
     _interval = interval;
     _repeat = repeat;
+    name=nme;
     if (repeat) start();
     thr.addTimer(this);
   }
-  TimerSource(Thread &thr) : TimerSource(thr, 0, UINT32_MAX, false) {
+  TimerSource(Thread &thr,const char* name="unknownTimer2") : TimerSource(thr, UINT32_MAX, false,name) {
     thr.addTimer(this);
   }
 
-  TimerSource() { _expireTime = Sys::now() + _interval; };
+  TimerSource(const char* nme="unknownTimer3") { name=nme; _expireTime = Sys::now() + _interval; };
   ~TimerSource() { WARN(" timer destructor. Really ? "); }
 
   void attach(Thread &thr) { thr.addTimer(this); }
@@ -468,7 +470,7 @@ class TimerSource : public Source<TimerMsg> {
         setNewExpireTime();
       else
         _expireTime = Sys::millis() + UINT32_MAX;
-      TimerMsg tm = {_id};
+      TimerMsg tm = {name};
       this->emit(tm);
     }
   }

@@ -61,7 +61,7 @@ template <class T> class TimeoutFlow : public Flow<T, T> {
 	public:
 		TimerSource timer;
 		TimeoutFlow(Thread& thr,uint32_t timeout, T defaultValue)
-			: _defaultValue(defaultValue), timer(thr,1, timeout, true) {
+			: _defaultValue(defaultValue), timer(thr, timeout, true) {
 			timer >> ([&](TimerMsg tm) { this->emit(_defaultValue); });
 		}
 		void on(const T &t) {

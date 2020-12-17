@@ -9,8 +9,8 @@ Remote::Remote(Thread& thr) : Actor(thr),
     _buttonRight(DigitalIn::create(16)),
     _adcLeft(ADC::create(36)),
     _adcRight(ADC::create(39)),
-    _measureTimer(thr,1,100,true),
-    _defaultTimer(thr,1,500,true),
+    _measureTimer(thr,100,true),
+    _defaultTimer(thr,500,true),
     _leftButton( _buttonLeft,buttonLeft),
     _rightButton( _buttonRight,buttonRight)
 {

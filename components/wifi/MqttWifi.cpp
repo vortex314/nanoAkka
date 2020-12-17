@@ -24,7 +24,7 @@
 //
 MqttWifi::MqttWifi(Thread &thread)
     : Mqtt(thread),
-      _reportTimer(thread, 1, 500, true),
+      _reportTimer(thread,  500, true),
       _keepAliveTimer(thread) {
   _lwt_message = "false";
   incoming.async(thread);
@@ -100,7 +100,7 @@ void MqttWifi::onNext(const MqttMessage &m) {
 //________________________________________________________________________
 //
 void MqttWifi::onNext(const TimerMsg &tm) {
-  if (tm.id == TIMER_KEEP_ALIVE && connected()) {
+  if ( connected()) {
     onNext({_lwt_topic.c_str(), "true"});
   }
 }

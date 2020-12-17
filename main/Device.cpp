@@ -1,6 +1,6 @@
 #include "Device.h"
 
-Device::Device(Thread& thr) :watchdogTimer(thr,1,UINT32_MAX,true),deviceMessage("")
+Device::Device(Thread& thr) :watchdogTimer(thr,UINT32_MAX,true),deviceMessage("")
 {
     pause("INIT");
     watchdogTimer >> ([&](const TimerMsg& tm) {

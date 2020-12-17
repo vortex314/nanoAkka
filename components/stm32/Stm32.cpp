@@ -56,8 +56,8 @@ Stm32::Stm32(Thread& thr, int pinTxd, int pinRxd, int pinBoot0, int pinReset)
       _uart(UART::create(2, pinTxd, pinRxd)),
       _reset(DigitalOut::create(pinReset)),
       _boot0(DigitalOut::create(pinBoot0)),
-      _timer(thread(), 1, 1000, false),
-      _testTimer(thread(), 1, 1000, true),
+      _timer(thread(), 1000, false),
+      _testTimer(thread(), 1000, true),
       progBaudrate("stm32/progBaudrate", 512000),
       logBaudrate("stm32/logBaudrate", 115200),
       flashStartAddress("stm32/flashStartAddress", 0x8000000) {}

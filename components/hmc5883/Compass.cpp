@@ -4,7 +4,7 @@ Compass::Compass(Thread& thread,Connector& connector) :
     Actor(thread),
     Device(thread),
     _uext(connector),
-    measureTimer(thread,1,100,true),
+    measureTimer(thread,100,true),
     _v(
 {
     0, 0, 0

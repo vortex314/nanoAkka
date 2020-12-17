@@ -1,7 +1,7 @@
 #include "UltraSonic.h"
 
 UltraSonic::UltraSonic(Thread& thr,Connector* connector)
-    : Actor(thr),_pollTimer(thr,1, 1000, true)
+    : Actor(thr),_pollTimer(thr, 1000, true)
 {
     _connector = connector;
     _hcsr = new HCSR04(*_connector);

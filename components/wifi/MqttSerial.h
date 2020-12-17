@@ -17,7 +17,7 @@
 #define TIMER_CONNECT 2
 #define TIMER_SERIAL 3
 
-class MqttSerial : public Mqtt, public Sink<TimerMsg, 3> {
+class MqttSerial : public Mqtt {
   StaticJsonDocument<3000> _jsonBuffer;
   NanoString _clientId;
   NanoString _address;

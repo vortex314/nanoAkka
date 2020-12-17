@@ -19,10 +19,10 @@ Servo::Servo(Thread& thr,uint32_t pinPot, uint32_t pinIS,
 	Device(thr),
 	_bts7960(pinIS, pinIS, pinLeftEnable, pinRightEnable, pinLeftPwm,pinRightPwm),
 	_adcPot(ADC::create(pinPot)),
-	_pulseTimer(thr,1,5000,true),
-	_reportTimer(thr,2,100,true),
-	_controlTimer(thr,3,CONTROL_INTERVAL_MS,true),
-	_measureTimer(thr,4,10,true) {
+	_pulseTimer(thr,5000,true),
+	_reportTimer(thr,100,true),
+	_controlTimer(thr,CONTROL_INTERVAL_MS,true),
+	_measureTimer(thr,10,true) {
 	_bts7960.setPwmUnit(0);
 	_bts7960.setMaxPwm(MAX_PWM);
 }
