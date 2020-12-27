@@ -49,7 +49,7 @@ class Mqtt : public Actor {
   ValueFlow<MqttBlock> blocks;
   ValueSource<bool> connected;
   TimerSource keepAliveTimer;
-  Mqtt(Thread &thr) : Actor(thr) {
+  Mqtt(Thread &thr) : Actor(thr),outgoing("mqtt.outgoing") {
     dstPrefix = "dst/";
     dstPrefix += Sys::hostname();
     dstPrefix += "/";
